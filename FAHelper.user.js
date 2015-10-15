@@ -1,6 +1,5 @@
 // ==UserScript==
 // @name         L-E's FA Helper
-// @namespace    http://your.homepage/
 // @version      0.1
 // @description  Useful tools to improve your FA experience.
 // @author       Elizabeth Harper <elliefops@gmail.com>
