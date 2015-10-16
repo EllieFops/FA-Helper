@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         L-E's FA Helper
-// @version      0.2
+// @version      0.2.1
 // @description  Useful tools to improve your FA experience.
 // @author       Elizabeth Harper <elliefops@gmail.com>
 // @match        https://www.furaffinity.net/*
@@ -56,12 +56,12 @@
     {
       _location = window.location.href;
       _utils    = new Utils(this);
-      _settings = GM_getValue("octFASettings", _defSet);
       _self     = this;
       _defSet   = {
         previewSize:  400,
         showPreviews: true
       };
+      _settings = GM_getValue("octFASettings", _defSet);
 
       init();
     }
