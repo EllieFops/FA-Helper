@@ -46,19 +46,19 @@ octFAH.module.MessageModule = (function ()
    *
    * @returns {{key: string, action: string, name: string}|*}
    */
-  function fetchData(user)
-  {
-    var req, con, data;
-
-    con  = FAHConfig;
-    data = {key: "", action: "shout", name: ""};
-
-    req = new XMLHttpRequest();
-    req.open("GET", con.userPage + user);
-    req.addEventListener("load", parseForKey(req, data));
-
-    return data;
-  }
+  //function fetchData(user)
+  //{
+  //  var req, con, data;
+  //
+  //  con  = octFAH.core.Config;
+  //  data = {key: "", action: "shout", name: ""};
+  //
+  //  req = new XMLHttpRequest();
+  //  req.open("GET", con.userPage + user);
+  //  req.addEventListener("load", parseForKey(req, data));
+  //
+  //  return data;
+  //}
 
   /**
    * Parse Page Content for Key data.
@@ -71,20 +71,20 @@ octFAH.module.MessageModule = (function ()
    *
    * @returns {Function}
    */
-  function parseForKey(req, data)
-  {
-    return function (e)
-    {
-      var el;
-      try {
-        el        = req.responseXML.getElementById("form");
-        data.key  = el.querySelector("input[name=key]").getAttribute("value");
-        data.name = el.querySelector("input[name=name]").getAttribute("value");
-      } catch (e) {
-
-      }
-    };
-  }
+  //function parseForKey(req, data)
+  //{
+  //  return function ()
+  //  {
+  //    var el;
+  //    try {
+  //      el        = req.responseXML.getElementById("form");
+  //      data.key  = el.querySelector("input[name=key]").getAttribute("value");
+  //      data.name = el.querySelector("input[name=name]").getAttribute("value");
+  //    } catch (e) {
+  //
+  //    }
+  //  };
+  //}
 
   /**
    * Submit A Shout
@@ -95,32 +95,28 @@ octFAH.module.MessageModule = (function ()
    * @param shout {String}
    * @param func [Function]
    */
-  function submitShout(key, name, action, shout, func)
-  {
-    var post;
-
-    post = new PostRequest();
-    post.setHeader("Content-type", "application/x-www-form-urlencoded")
-      .setData(
-      "action=" + action
-      + "&key=" + key
-      + "&name=" + name
-      + "&shout=" + shout
-      + "&chars_left=" + (_charLimit - shout.length).toString()
-    );
-
-    if (func) {
-      post.onAny(func);
-    }
-
-    post.send();
-  }
+  //function submitShout(key, name, action, shout, func)
+  //{
+  //  var post;
+  //
+  //  post = new octFAH.http.PostRequest();
+  //  post.setHeader("Content-type", "application/x-www-form-urlencoded")
+  //    .setData(
+  //    "action=" + action + "&key=" + key + "&name=" + name + "&shout=" + shout + "&chars_left=" + (_charLimit - shout.length).toString()
+  //  );
+  //
+  //  if (func) {
+  //    post.onAny(func);
+  //  }
+  //
+  //  post.send();
+  //}
 
   function modUI()
   {
     var watches, watchControls, swButt, u;
 
-    u             = _app.getUtil();
+    u             = _app.getHTMLUtil();
     watches       = document.getElementById("messages-watches");
     watchControls = watches.querySelector("li.section-controls");
 
@@ -137,7 +133,7 @@ octFAH.module.MessageModule = (function ()
   {
     var form, div, text, check, send, sett, curText, util, cLab, tLab, bDiv, para;
 
-    util    = _app.getUtil();
+    util    = _app.getHTMLUtil();
     sett    = _app.getSettings();
     curText = "";
 
@@ -201,12 +197,12 @@ octFAH.module.MessageModule = (function ()
    *
    * @param e {MouseEvent}
    */
-  function checkChangeHandler(e)
-  {
-    if (e.target.checked) {
-
-    }
-  }
+  //function checkChangeHandler(e)
+  //{
+  //  if (e.target.checked) {
+  //
+  //  }
+  //}
 
   /**
    * Show the Shout to Watchers div
@@ -215,14 +211,15 @@ octFAH.module.MessageModule = (function ()
    */
   function showShoutWatchDiv(e)
   {
-    var u;
-    u = _app.getUtil();
+    var u, v;
+    u = _app.getHTMLUtil();
+    v = _app.getHelperUtil();
     u.applyStyle(
       _shoutWatchDiv,
       {
         display: "block",
-        top:     u.toPx(e.clientY + window.scrollY),
-        left:    u.toPx(e.clientX + window.scrollX)
+        top:     v.toPx(e.clientY + window.scrollY),
+        left:    v.toPx(e.clientX + window.scrollX)
       }
     );
   }

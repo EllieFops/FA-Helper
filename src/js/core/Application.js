@@ -12,10 +12,14 @@
 octFAH.core.Application = (function ()
 {
   var
+    _browser,
     _location,
     _htmlUtil,
     _helperUtil,
+    _module,
     _settings,
+    _settingsMenu,
+    _storage,
     _self,
     _defSet;
 
@@ -29,7 +33,11 @@ octFAH.core.Application = (function ()
     _location   = window.location.href;
     _htmlUtil   = new octFAH.util.HTMLUtils(this);
     _helperUtil = new octFAH.util.Helpers(this);
-    _settings   = GM_getValue("octFASettings", _defSet);
+    _storage    = new octFAH.util.Storage();
+    _browser    = new octFAH.util.Browser();
+
+    _settings   = _storage.fetchValue("octFASettings", _defSet);
+    _module     = null;
     _self       = this;
     _defSet     = {
       previewSize:    400,
@@ -51,18 +59,8 @@ octFAH.core.Application = (function ()
     updateSettings(context);
     initGlobalListeners();
     getModule();
-    new SettingsMenuManager(_self);
+    _settingsMenu = new octFAH.component.SettingsMenu(_self);
   }
-
-  /**
-   * Get Application Utils
-   *
-   * @returns {Utils}
-   */
-  Application.prototype.getUtil = function ()
-  {
-    return _utils;
-  };
 
   /**
    * Get Application Settings
@@ -84,7 +82,27 @@ octFAH.core.Application = (function ()
    */
   Application.prototype.pushSettings = function ()
   {
-    GM_setValue('octFASettings', _settings);
+    _storage.pushValue("octFASettings", _settings);
+  };
+
+  /**
+   * Get HTML Helper Utility
+   *
+   * @returns {octFAH.util.HTMLUtils|HTMLUtils}
+   */
+  Application.prototype.getHTMLUtil = function ()
+  {
+    return _htmlUtil;
+  };
+
+  /**
+   * Get General Helper Utility
+   *
+   * @returns {octFAH.util.Helpers|Helpers}
+   */
+  Application.prototype.getHelperUtil = function ()
+  {
+    return _helperUtil;
   };
 
   /**
@@ -93,17 +111,21 @@ octFAH.core.Application = (function ()
    */
   function getModule()
   {
-    var f = FAHConfig;
-    if (_location.indexOf(f.subPage) !== -1) {
-      new SubmissionManager(_self);
-    } else if (_location.indexOf(f.browsePage) !== -1) {
-      new BrowseModule(_self);
-    } else if (_location.indexOf(f.searchPage) !== -1) {
-      new SearchManager(_self);
-    } else if (_location.indexOf(f.userPage) !== -1) {
-      new UserPageManager(_self);
-    } else if (_location.indexOf(f.watchesPage) !== -1) {
-      new MessageManager(_self);
+    var c, m;
+
+    c = octFAH.core.Config;
+    m = octFAH.module;
+
+    if (_location.indexOf(c.subPage) !== -1) {
+      _module = new m.SubmissionModule(_self);
+    } else if (_location.indexOf(c.browsePage) !== -1) {
+      _module = new m.BrowseModule(_self);
+    } else if (_location.indexOf(c.searchPage) !== -1) {
+      _module = new m.SearchModule(_self);
+    } else if (_location.indexOf(c.userPage) !== -1) {
+      //new UserPageModule(_self);
+    } else if (_location.indexOf(c.watchesPage) !== -1) {
+      _module = new m.MessageModule(_self);
     }
   }
 
@@ -115,7 +137,7 @@ octFAH.core.Application = (function ()
    */
   Application.prototype.makeArtLink = function (i)
   {
-    return FAHConfig.viewPage + i;
+    return octFAH.core.Config.viewPage + i;
   };
 
   /**
@@ -125,7 +147,7 @@ octFAH.core.Application = (function ()
    */
   Application.prototype.openArtTab = function (link)
   {
-    GM_openInTab(link, false);
+    _browser.makeNewTab(link, false);
   };
 
   /**
@@ -154,7 +176,7 @@ octFAH.core.Application = (function ()
         continue;
       }
 
-      if (typeof _settings[key] == "undefined") {
+      if (typeof _settings[key] === "undefined") {
         update         = true;
         _settings[key] = _defSet[key];
       }
@@ -177,7 +199,6 @@ octFAH.core.Application = (function ()
           if (!(c instanceof HTMLElement)) {
             break;
           }
-          console.log(c);
           if (c.classList.contains("octModalContent") || c.classList.contains("octModalShow")) {
             return;
           }

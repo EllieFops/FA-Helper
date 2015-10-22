@@ -16,19 +16,22 @@ octFAH.component.HoverView = (function ()
   /**
    * Image Hover Preview
    *
-   * @param app {Application}
+   * @param app {octFAH.core.Application|Application}
    *
    * @constructor
    */
   function HoverView(app)
   {
-    _app      = app;
     _pane     = document.createElement("DIV");
+    _app      = app;
     _img      = document.createElement("IMG");
     _settings = app.getSettings();
 
-    init();
+    octFAH.component.Component.call(this, app, _pane);
+    init(this);
   }
+
+  HoverView.prototype = Object.create(octFAH.component.Component.prototype);
 
   /**
    * Handle MouseOver events
@@ -49,30 +52,32 @@ octFAH.component.HoverView = (function ()
    *
    * @param e {Event}
    */
-  function handleMouseMove(e)
+  function handleMouseMove(self)
   {
-    if (!_settings.showPreviews) {
-      return;
-    }
+    return function (e)
+    {
+      if (!_settings.showPreviews) {
+        return;
+      }
 
-    var x, y, i;
-    i = _img.getBoundingClientRect();
+      var x, y, i;
+      i = _img.getBoundingClientRect();
 
-    x = e.clientX + window.scrollX + 30;
-    if (x + i.width > window.innerWidth) {
-      x = e.clientX + window.scrollX - i.width - 30;
-    }
+      x = e.clientX + window.scrollX + 30;
+      if (x + i.width > window.innerWidth) {
+        x = e.clientX + window.scrollX - i.width - 30;
+      }
 
-    y = (e.clientY - i.height / 2) + window.scrollY;
+      y = (e.clientY - i.height / 2) + window.scrollY;
 
-    if (y < window.scrollY) {
-      y += window.scrollY - y;
-    } else if (y + i.height > window.innerHeight + window.scrollY) {
-      y -= y + i.height - (window.innerHeight + window.scrollY);
-    }
+      if (y < window.scrollY) {
+        y += window.scrollY - y;
+      } else if (y + i.height > window.innerHeight + window.scrollY) {
+        y -= y + i.height - (window.innerHeight + window.scrollY);
+      }
 
-    _pane.style.top  = y.toString() + "px";
-    _pane.style.left = x.toString() + "px";
+      self.topLeft(y, x);
+    };
   }
 
   /**
@@ -86,12 +91,12 @@ octFAH.component.HoverView = (function ()
   /**
    * Initialize HoverView Elements
    */
-  function init()
+  function init(self)
   {
 
     // Init Elements
     _pane.appendChild(_img);
-    _app.getUtil().applyStyle(
+    _app.getHTMLUtil().applyStyle(
       _pane,
       {
         display:  "none",
@@ -108,7 +113,7 @@ octFAH.component.HoverView = (function ()
     for (i = 0; i < a.length; i++) {
       a[i].addEventListener("mouseover", handleMouseOver);
       a[i].addEventListener("mouseout", handleMouseOut);
-      a[i].addEventListener("mousemove", handleMouseMove);
+      a[i].addEventListener("mousemove", handleMouseMove(self));
     }
   }
 

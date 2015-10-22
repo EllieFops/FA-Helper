@@ -18,17 +18,23 @@ octFAH.component.StatusBox = (function ()
    * Status Box Manager
    *
    * @param app {Application}
+   *
    * @constructor
    */
   function StatusBox(app)
   {
     _app            = app;
-    this.completion = 0;
-    this.outer      = null;
-    this.progress   = null;
+    var outer = document.createElement("div");
 
-    init(this);
+    octFAH.component.Component.call(this, app, outer);
+
+    this._completion = 0;
+    this._progress   = null;
+
+    init(this, outer);
   }
+
+  StatusBox.prototype = Object.create(octFAH.component.Component.prototype);
 
   /**
    * Set Completion Percent
@@ -37,7 +43,7 @@ octFAH.component.StatusBox = (function ()
    */
   StatusBox.prototype.setCompletion = function (percent)
   {
-    this.completion = percent;
+    this._completion = percent;
     updateProgress(this);
   };
 
@@ -48,53 +54,36 @@ octFAH.component.StatusBox = (function ()
    */
   StatusBox.prototype.getCompletion = function ()
   {
-    return this.completion;
+    return this._completion;
   };
 
-  /**
-   * Hide This Status Box
-   */
-  StatusBox.prototype.hide = function ()
-  {
-    this.outer.style.display = "none";
-  };
-
-  /**
-   * Show This Status Box
-   */
-  StatusBox.prototype.show = function ()
-  {
-    this.outer.style.display = "block";
-  };
 
   /**
    * Initialize
    *
-   * @param self {StatusBoxManager}
+   * @param self  {octFAH.component.StatusBox|StatusBox}
+   * @param outer {HTMLElement}
    */
-  function init(self)
+  function init(self, outer)
   {
     var s;
 
-    self.progress = makeProgressBar();
-    self.outer    = makeOuterDiv();
-    s             = makeProgressContainer();
+    makeOuterDiv(outer);
+    self._progress = makeProgressBar();
 
-    s.appendChild(self.progress);
-    self.outer.appendChild(s);
+
+    s = makeProgressContainer();
+
+    s.appendChild(self._progress);
+    outer.appendChild(s);
   }
 
   /**
    * Make Outer Div
-   *
-   * @returns {HTMLElement}
    */
-  function makeOuterDiv()
+  function makeOuterDiv(div)
   {
-    var div;
-
-    div = document.createElement("div");
-    _app.getUtil().applyStyle(
+    _app.getHTMLUtil().applyStyle(
       div,
       {
         padding:      "25px",
@@ -107,7 +96,6 @@ octFAH.component.StatusBox = (function ()
       }
     );
 
-    return div;
   }
 
   /**
@@ -120,7 +108,7 @@ octFAH.component.StatusBox = (function ()
     var div;
 
     div = document.createElement("div");
-    _app.getUtil().applyStyle(
+    _app.getHTMLUtil().applyStyle(
       div,
       {
         height:       "24px",
@@ -144,7 +132,7 @@ octFAH.component.StatusBox = (function ()
     var div;
 
     div = document.createElement("div");
-    _app.getUtil().applyStyle(
+    _app.getHTMLUtil().applyStyle(
       div,
       {
         height:          "100%",
@@ -158,11 +146,11 @@ octFAH.component.StatusBox = (function ()
   /**
    * Update Progress
    *
-   * @param con {StatusBoxManager}
+   * @param con {octFAH.component.StatusBox|StatusBox}
    */
   function updateProgress(con)
   {
-    con.progress.style.width = con.toString() + "%";
+    con._progress.style.width = con.toString() + "%";
   }
 
   return StatusBox;

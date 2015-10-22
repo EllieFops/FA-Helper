@@ -12,7 +12,7 @@
 octFAH.component.Component = (function ()
 {
 
-  var _app, _element;
+  var _app;
 
   /**
    * UI Component
@@ -25,46 +25,109 @@ octFAH.component.Component = (function ()
   function Component(app, element)
   {
     _app     = app;
-    _element = element;
+    this._element = element;
   }
 
+  /**
+   * Show This Component
+   *
+   * @return {octFAH.component.Component|Component}
+   */
   Component.prototype.show = function ()
   {
-    _element.style.display = "block";
+    this._element.style.display = "block";
+
+    return this;
   };
 
+  /**
+   * Hide this component
+   *
+   * @returns {octFAH.component.Component|Component}
+   */
   Component.prototype.hide = function ()
   {
-    _element.style.display = "none";
+    this._element.style.display = "none";
+
+    return this;
   };
 
+  /**
+   * Update this component's position relative to the top and left of the
+   * screen.
+   *
+   * @param top  {int}
+   * @param left {int}
+   *
+   * @returns {octFAH.component.Component|Component}
+   */
   Component.prototype.topLeft = function (top, left)
   {
-    _element.style.top = top.toString() + "px";
-    _element.style.left = left.toString() + "px";
+    this._element.style.top = top.toString() + "px";
+    this._element.style.left = left.toString() + "px";
+
+    return this;
   };
 
+  /**
+   * Update this component's position relative to the top and right of the
+   * screen.
+   *
+   * @param top   {int}
+   * @param right {int}
+   *
+   * @returns {octFAH.component.Component|Component}
+   */
   Component.prototype.topRight = function (top, right)
   {
-    _element.style.top = top.toString() + "px";
-    _element.style.right = right.toString() + "px";
+    this._element.style.top = top.toString() + "px";
+    this._element.style.right = right.toString() + "px";
+
+    return this;
   };
 
+  /**
+   * Update this component's position relative to the bottom and left of the
+   * screen.
+   *
+   * @param bottom {int}
+   * @param left   {int}
+   *
+   * @returns {octFAH.component.Component|Component}
+   */
   Component.prototype.bottomLeft = function (bottom, left)
   {
-    _element.style.bottom = bottom.toString() + "px";
-    _element.style.left = left.toString() + "px";
+    this._element.style.bottom = bottom.toString() + "px";
+    this._element.style.left = left.toString() + "px";
+
+    return this;
   };
 
+  /**
+   * Update this component's position relative to the bottom and right of the
+   * screen.
+   *
+   * @param bottom {int}
+   * @param right  {int}
+   *
+   * @returns {octFAH.component.Component|Component}
+   */
   Component.prototype.bottomRight = function (bottom, right)
   {
-    _element.style.bottom = bottom.toString() + "px";
-    _element.style.right = right.toString() + "px";
+    this._element.style.bottom = bottom.toString() + "px";
+    this._element.style.right = right.toString() + "px";
+
+    return this;
   };
 
+  /**
+   * Get the backing element for this component.
+   *
+   * @returns {HTMLElement}
+   */
   Component.prototype.getElement = function()
   {
-    return _element;
+    return this._element;
   };
 
   return Component;

@@ -52,8 +52,8 @@ octFAH.util.HTMLUtils = (function() {
    * @param element {HTMLElement|HTMLElement[]}
    * @param style   {object}
    *
-   * @return {HTMLElement|null} Returns first argument only if it was an
-   *                            HTMLElement.
+   * @return {HTMLElement|*} Returns first argument only if it was an
+   *                         HTMLElement.
    */
   HTMLUtils.prototype.applyStyle = function (element, style)
   {
@@ -69,9 +69,11 @@ octFAH.util.HTMLUtils = (function() {
 
     css = element.style;
     for (key in style) {
+      if (!style.hasOwnProperty(key)) {
+        continue;
+      }
 
-      // skip bad entries
-      if (!style.hasOwnProperty(key) || typeof css[key] == "undefined") {
+      if (typeof css[key] === "undefined") {
         continue;
       }
 
@@ -135,7 +137,7 @@ octFAH.util.HTMLUtils = (function() {
    * Make an HTML Option element.
    *
    * @param val  {string|int} Element Value
-   * @param text {string} Element Text
+   * @param text {string}     Element Text
    *
    * @returns {Element}
    */
@@ -164,8 +166,8 @@ octFAH.util.HTMLUtils = (function() {
   /**
    * Make A Label Containing an Element
    *
-   * @param text    {String}      Label Text
-   * @param element {HTMLElement} Element to wrap
+   * @param text      {String}      Label Text
+   * @param element   {HTMLElement} Element to wrap
    * @param [before]  {boolean}     Place text before element
    *
    * @returns {Element}
@@ -173,7 +175,7 @@ octFAH.util.HTMLUtils = (function() {
   HTMLUtils.prototype.makeWrapperLabel = function (text, element, before)
   {
     var label, span;
-    before = (typeof before == 'undefined') ? true : before;
+    before = (typeof before === 'undefined') ? true : before;
 
     label = document.createElement('label');
     span  = document.createElement('span');
@@ -185,5 +187,5 @@ octFAH.util.HTMLUtils = (function() {
     return label;
   };
 
-  return HTMLUtils
+  return HTMLUtils;
 })();

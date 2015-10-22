@@ -9,9 +9,9 @@
  * @namespace octFAH.module
  */
 
-octFAH.module.BrowseModule (function ()
+octFAH.module.BrowseModule = (function ()
 {
-  var _app;
+  var _app, _hoverView;
 
   /**
    * Browse Page Manager
@@ -31,7 +31,7 @@ octFAH.module.BrowseModule (function ()
    */
   function init()
   {
-    new HoverView(_app);
+    _hoverView = new octFAH.component.HoverView(_app);
   }
 
   return BrowseModule;

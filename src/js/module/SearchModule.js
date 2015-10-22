@@ -11,7 +11,7 @@
 
 octFAH.module.SearchModule = (function ()
 {
-  var _app;
+  var _app, _hoverView;
 
   /**
    * Search Page Manager
@@ -30,7 +30,7 @@ octFAH.module.SearchModule = (function ()
    */
   function init()
   {
-    new HoverView(_app);
+    _hoverView = new octFAH.component.HoverView(_app);
   }
 
   return SearchModule;

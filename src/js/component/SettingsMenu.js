@@ -13,7 +13,6 @@ octFAH.component.SettingsMenu = (function ()
 {
   var
     _app,
-    _div,
     _self
     ;
 
@@ -28,15 +27,30 @@ octFAH.component.SettingsMenu = (function ()
   {
     _self = this;
     _app  = app;
-    _div  = document.createElement("div");
+    var div  = document.createElement("div");
 
-    init();
+    octFAH.component.Component.call(this, app, div);
+    /** @namespace octFAH.component.Component.prototype */
+
+    init(this, div);
   }
 
-  function show(e)
+  SettingsMenu.prototype = Object.create(octFAH.component.Component.prototype);
+
+  function init(self, div)
   {
-    var u = _app.getUtil();
-    u.applyStyle(_div, {padding: "5px", top: u.toPx(e.clientY + 5), left: u.toPx(e.clientX - 25), display: "block"});
+    initDiv(div);
+    initForm(div);
+    modUI(self);
+  }
+
+  function handleShow(self)
+  {
+    return function(e)
+    {
+      self.topLeft(e.clientY + 5, e.clientX + 5);
+      self.show();
+    };
   }
 
   function previewSizeChange(e)
@@ -51,23 +65,16 @@ octFAH.component.SettingsMenu = (function ()
     _app.pushSettings();
   }
 
-  function init()
-  {
-    initDiv();
-    initForm();
-    modUI();
-  }
-
   /**
    * Make Needed Alterations to the Default UI
    */
-  function modUI()
+  function modUI(self)
   {
     var el, but, li;
     but = document.createElement('a');
 
     but.setAttribute('class', 'octModalShow');
-    but.addEventListener('click', show);
+    but.addEventListener('click', handleShow(self));
 
     li = document.createElement('li');
     li.appendChild(but);
@@ -87,17 +94,17 @@ octFAH.component.SettingsMenu = (function ()
     el.parentNode.insertBefore(li, el);
   }
 
-  function initDiv()
+  function initDiv(div)
   {
-    var title, ts, u;
+    var title, u;
 
-    u = _app.getUtil();
+    u = _app.getHTMLUtil();
 
-    _div.setAttribute('class', 'octModalContent');
+    div.setAttribute('class', 'octModalContent');
 
     u.applyStyle(
-      _div,
-      {display: "none", border: "2px solid pink", position: "absolute", zIndex: 10000}
+      div,
+      {display: "none", border: "2px solid pink", position: "absolute", zIndex: 10000, padding: "5px"}
     );
 
     title = u.makeSpan('FA Helper Settings');
@@ -106,16 +113,17 @@ octFAH.component.SettingsMenu = (function ()
       {fontWeight: "bold", fontSize: "1.2em", display: "block", textAlign: "center", padding: "0 20px 10px 20px"}
     );
 
-    _div.appendChild(title);
+    div.appendChild(title);
 
-    document.querySelector('body').appendChild(_div);
+    document.querySelector('body').appendChild(div);
   }
 
-  function initForm()
+  function initForm(div)
   {
-    var form, util, select, i, labels, opt, check, text;
+    var form, util, select, i, labels, opt, check, text, v;
 
-    util   = _app.getUtil();
+    util   = _app.getHTMLUtil();
+    v      = _app.getHelperUtil();
     form   = document.createElement('form');
     select = document.createElement('select');
     text   = document.createElement('textarea');
@@ -134,7 +142,7 @@ octFAH.component.SettingsMenu = (function ()
       'input', function ()
       {
         _app.getSettings().watchShoutText = text.value || "";
-        _app.pushSettings()
+        _app.pushSettings();
       }
     );
 
@@ -150,8 +158,8 @@ octFAH.component.SettingsMenu = (function ()
 
     // Select Options
     for (i = 200; i <= 400; i += 100) {
-      opt = util.makeSelectOption(i, util.toPx(i));
-      if (i == _app.getSettings().previewSize) {
+      opt = util.makeSelectOption(i, v.toPx(i));
+      if (i === _app.getSettings().previewSize) {
         opt.setAttribute('selected', 'selected');
       }
       select.appendChild(opt);
@@ -166,7 +174,7 @@ octFAH.component.SettingsMenu = (function ()
       util.applyStyle(labels[i], {display: "block", padding: "5px", fontSize: "1.1em", width: "200px"});
     }
 
-    _div.appendChild(form);
+    div.appendChild(form);
   }
 
   return SettingsMenu;

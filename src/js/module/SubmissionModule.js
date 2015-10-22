@@ -14,7 +14,8 @@ octFAH.module.SubmissionModule = (function ()
   var
     _app,
     _form,
-    _self
+    _self,
+    _hoverView
   ;
 
   /**
@@ -38,7 +39,7 @@ octFAH.module.SubmissionModule = (function ()
    */
   function init()
   {
-    new HoverView(_app);
+    _hoverView = new octFAH.component.HoverView(_app);
     modSubmissionUI();
   }
 
@@ -61,7 +62,7 @@ octFAH.module.SubmissionModule = (function ()
    */
   function makeTabsButton()
   {
-    var button = _app.getUtil().makeButton("Load In Tabs", handleTabsButton)
+    var button = _app.getHTMLUtil().makeButton("Load In Tabs", handleTabsButton);
     button.setAttribute("class", "octoTabsButton button");
     return button;
   }
