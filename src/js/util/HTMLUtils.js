@@ -8,7 +8,6 @@
  *
  * @namespace octFAH.util
  */
-
 octFAH.util.HTMLUtils = (function() {
 
   var _app;
@@ -185,6 +184,60 @@ octFAH.util.HTMLUtils = (function() {
     label.appendChild(before ? element : span);
 
     return label;
+  };
+
+  /**
+   *
+   * @param search {string}
+   * @param ref    {Node}
+   *
+   * @return {Node|null}
+   */
+  HTMLUtils.prototype.parent = function (search, ref)
+  {
+    var parent, i;
+
+    parent = ref.parentNode;
+
+    for (i = 0; i < 300; i++) {
+      if (this.matches(search, parent)) {
+        return parent;
+      }
+
+      parent = parent.parentNode;
+    }
+
+    return null;
+  };
+
+  /**
+   * Check whether or not a given element matches a query selector
+   *
+   * @param selector {string}
+   * @param ref      {Element}
+   *
+   * @returns {boolean}
+   */
+  HTMLUtils.prototype.matches = function (selector, ref)
+  {
+    if (typeof ref.matches === "function") {
+      return ref.matches(selector);
+    }
+
+    if (typeof ref.webkitMatchesSelector === "function") {
+      return ref.webkitMatchesSelector(selector);
+    }
+
+    if (typeof ref.mozMatchesSelector === "function") {
+      return ref.mozMatchesSelector(selector);
+    }
+
+    if (typeof ref.msMatchesSelector === "function") {
+      return ref.msMatchesSelector(selector);
+    }
+
+
+    return false;
   };
 
   return HTMLUtils;

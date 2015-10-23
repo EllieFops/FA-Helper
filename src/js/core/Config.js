@@ -8,7 +8,6 @@
  *
  * @namespace octFAH.core
  */
-
 octFAH.core.Config = {
   viewPage:    "//www.furaffinity.net/view/",
   subPage:     "//www.furaffinity.net/msg/submissions/",

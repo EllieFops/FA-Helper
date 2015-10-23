@@ -8,7 +8,6 @@
  *
  * @namespace octFAH.http
  */
-
 octFAH.http.PostRequest = (function ()
 {
   /**

@@ -8,7 +8,6 @@
  *
  * @namespace octFAH.module
  */
-
 octFAH.module.SubmissionModule = (function ()
 {
   var

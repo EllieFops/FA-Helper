@@ -8,7 +8,6 @@
  *
  * @namespace octFAH.module
  */
-
 octFAH.module.BrowseModule = (function ()
 {
   var _app, _hoverView;

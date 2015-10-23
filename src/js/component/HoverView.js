@@ -8,7 +8,6 @@
  *
  * @namespace octFAH.component
  */
-
 octFAH.component.HoverView = (function ()
 {
   var _app, _img, _pane, _settings;

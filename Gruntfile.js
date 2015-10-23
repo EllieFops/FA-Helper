@@ -43,10 +43,12 @@ module.exports = function (grunt)
       },
 
       concat: {
+
         monkeyHeader : {
           src: ["rel/monkey/src/js/tm-header.js", monkeyOut],
           dest: monkeyOut
         },
+
         monkey: {
           options: {
             separator: '\n'
@@ -86,6 +88,15 @@ module.exports = function (grunt)
           unused:    true,
           undef:     true,
           browser:   true
+        },
+
+        pre: {
+          options: {
+            globals: {
+              "octFAH": true
+            }
+          },
+          src: "src/js/**/*.js"
         },
 
         monkey: {
@@ -144,5 +155,5 @@ module.exports = function (grunt)
   grunt.registerTask("monkey", ["concat:monkey", "jshint:monkey"]);
   grunt.registerTask("chrome", ["concat:chrome", "jshint:chrome"]);
 
-  grunt.registerTask("dev", ["clean", "monkey", "chrome", "concat:monkeyHeader"]);
+  grunt.registerTask("dev", ["jshint:pre", "clean", "monkey", "chrome", "comments", "concat:monkeyHeader"]);
 };

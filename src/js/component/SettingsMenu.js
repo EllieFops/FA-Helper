@@ -8,7 +8,6 @@
  *
  * @namespace octFAH.component
  */
-
 octFAH.component.SettingsMenu = (function ()
 {
   var
@@ -25,9 +24,9 @@ octFAH.component.SettingsMenu = (function ()
    */
   function SettingsMenu(app)
   {
-    _self = this;
-    _app  = app;
-    var div  = document.createElement("div");
+    _self   = this;
+    _app    = app;
+    var div = document.createElement("div");
 
     octFAH.component.Component.call(this, app, div);
     /** @namespace octFAH.component.Component.prototype */
@@ -46,7 +45,7 @@ octFAH.component.SettingsMenu = (function ()
 
   function handleShow(self)
   {
-    return function(e)
+    return function (e)
     {
       self.topLeft(e.clientY + 5, e.clientX + 5);
       self.show();
@@ -104,7 +103,14 @@ octFAH.component.SettingsMenu = (function ()
 
     u.applyStyle(
       div,
-      {display: "none", border: "2px solid pink", position: "absolute", zIndex: 10000, padding: "5px"}
+      {
+        display:      "none",
+        border:       "2px solid pink",
+        position:     "absolute",
+        zIndex:       "10000",
+        padding:      "5px",
+        borderRadius: "7px"
+      }
     );
 
     title = u.makeSpan('FA Helper Settings');
@@ -120,8 +126,9 @@ octFAH.component.SettingsMenu = (function ()
 
   function initForm(div)
   {
-    var form, util, select, i, labels, opt, check, text, v;
+    var form, util, select, i, labels, opt, check, text, v, sett;
 
+    sett   = _app.getSettings();
     util   = _app.getHTMLUtil();
     v      = _app.getHelperUtil();
     form   = document.createElement('form');
@@ -141,11 +148,12 @@ octFAH.component.SettingsMenu = (function ()
     text.addEventListener(
       'input', function ()
       {
-        _app.getSettings().watchShoutText = text.value || "";
+        sett.watchShoutText = text.value || "";
         _app.pushSettings();
       }
     );
 
+    text.value        = sett.watchShoutText || "";
     text.style.width  = "200px";
     text.style.height = "5em";
 
@@ -159,7 +167,7 @@ octFAH.component.SettingsMenu = (function ()
     // Select Options
     for (i = 200; i <= 400; i += 100) {
       opt = util.makeSelectOption(i, v.toPx(i));
-      if (i === _app.getSettings().previewSize) {
+      if (i === sett.previewSize || i.toString() === sett.previewSize.toString()) {
         opt.setAttribute('selected', 'selected');
       }
       select.appendChild(opt);

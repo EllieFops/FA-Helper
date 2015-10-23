@@ -8,7 +8,6 @@
  *
  * @namespace octFAH.component
  */
-
 octFAH.component.StatusBox = (function ()
 {
 

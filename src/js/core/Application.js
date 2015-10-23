@@ -8,20 +8,40 @@
  *
  * @namespace octFAH.core
  */
-
 octFAH.core.Application = (function ()
 {
-  var
-    _browser,
-    _location,
-    _htmlUtil,
-    _helperUtil,
-    _module,
-    _settings,
-    _settingsMenu,
-    _storage,
-    _self,
-    _defSet;
+  /**
+   * @type {octFAH.util.Browser|Browser}
+   */
+  var _browserUtil;
+  var _browser;
+  var _defSet;
+
+  /**
+   * @type {octFAH.util.Helpers|Helpers}
+   */
+  var _helperUtil;
+
+  var _html;
+
+  /**
+   * @type {octFAH.util.HTMLUtils|HTMLUtils}
+   */
+  var _htmlUtil;
+
+  /**
+   * @type {string}
+   */
+  var _location;
+  var _module;
+  var _self;
+  var _settings;
+  var _settingsMenu;
+
+  /**
+   * @type {octFAH.util.Storage|Storage}
+   */
+  var _storage;
 
   /**
    * Fur Affinity Helper
@@ -30,11 +50,13 @@ octFAH.core.Application = (function ()
    */
   function Application()
   {
-    _location   = window.location.href;
-    _htmlUtil   = new octFAH.util.HTMLUtils(this);
-    _helperUtil = new octFAH.util.Helpers(this);
-    _storage    = new octFAH.util.Storage();
-    _browser    = new octFAH.util.Browser();
+    _location    = window.location.href;
+    _htmlUtil    = new octFAH.util.HTMLUtils(this);
+    _helperUtil  = new octFAH.util.Helpers(this);
+    _storage     = new octFAH.util.Storage();
+    _browserUtil = new octFAH.util.Browser();
+    _html        = octFAH.util.HTML;
+    _browser     = _helperUtil.getBrowserType();
 
     _settings   = _storage.fetchValue("octFASettings", _defSet);
     _module     = null;
@@ -57,7 +79,6 @@ octFAH.core.Application = (function ()
   function init(context)
   {
     updateSettings(context);
-    initGlobalListeners();
     getModule();
     _settingsMenu = new octFAH.component.SettingsMenu(_self);
   }
@@ -147,7 +168,7 @@ octFAH.core.Application = (function ()
    */
   Application.prototype.openArtTab = function (link)
   {
-    _browser.makeNewTab(link, false);
+    _browserUtil.makeNewTab(link, false);
   };
 
   /**
@@ -187,33 +208,6 @@ octFAH.core.Application = (function ()
     }
   }
 
-  function initGlobalListeners()
-  {
-    document.addEventListener(
-      'click', function (e)
-      {
-        var c, i, a, b;
-        c = e.target;
-
-        for (i = 0; i < 200; i++) {
-          if (!(c instanceof HTMLElement)) {
-            break;
-          }
-          if (c.classList.contains("octModalContent") || c.classList.contains("octModalShow")) {
-            return;
-          }
-
-          c = c.parentNode;
-        }
-
-        b = document.querySelectorAll(".octModalContent");
-        for (a = 0; a < b.length; a++) {
-          b[a].style.display = "none";
-        }
-      }
-    );
-  }
-
   /**
    * Get Helper Utilities
    *
@@ -222,6 +216,16 @@ octFAH.core.Application = (function ()
   Application.prototype.getHelperUtil = function ()
   {
     return _helperUtil;
+  };
+
+  /**
+   * HTML Element helper
+   *
+   * @param element {octFAH.util.HTML|HTML}
+   */
+  Application.prototype.wrap = function(element)
+  {
+    return new _html(element);
   };
 
   return Application;
