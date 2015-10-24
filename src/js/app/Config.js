@@ -6,9 +6,9 @@
  *
  * @author Elizabeth Harper
  *
- * @namespace octFAH.core
+ * @namespace octFAH.app
  */
-octFAH.core.Config = {
+octFAH.app.Config = {
   viewPage:    "//www.furaffinity.net/view/",
   subPage:     "//www.furaffinity.net/msg/submissions/",
   basePage:    "//www.furaffinity.net/",

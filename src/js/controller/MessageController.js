@@ -1,19 +1,21 @@
 /**
  * Message Page Module
  *
- * @version 1.0
+ * @version 1.1
  * @since   0.4
  *
  * @author Elizabeth Harper
  *
- * @namespace octFAH.module
+ * @augments octFAH.controller.Controller
+ * @namespace octFAH.controller
  */
-octFAH.module.MessageModule = (function () {
+octFAH.controller.MessageController = (function ()
+{
 
   "use strict";
 
   /**
-   * @type {octFAH.core.Application|Application}
+   * @type {octFAH.app.Application|Application}
    */
   var _app;
 
@@ -84,46 +86,62 @@ octFAH.module.MessageModule = (function () {
   /**
    * Message Page Manager
    *
-   * @param application {octFAH.core.Application|Application}
+   * @param app {octFAH.app.Application|Application}
    *
+   * @augments octFAH.controller.Controller
    * @constructor
    */
-  function MessageModule(application) {
-    _app       = application;
+  function MessageController(app)
+  {
+    _app       = app;
     _charLimit = 222;
     _selected  = [];
 
-    init();
+    octFAH.controller.Controller.call(this, app);
   }
 
+  MessageController.prototype = Object.create(octFAH.controller.Controller.prototype);
+
   /**
-   * Initialize Message Page Module Elements
+   * Initialize Message Page Controller Elements
+   *
+   * @override
    */
-  function init() {
-    _watchesForm      = document.getElementById("messages-watches");
+  MessageController.prototype.init = function ()
+  {
+    _watchesForm = document.getElementById("messages-watches");
     _watchesForm.addEventListener(
-      "click", function () {
+      "click", function ()
+      {
         fetchSelected();
         _shoutForm.setSelCount(_selected.length);
       }
     );
-    _shoutForm = new octFAH.component.WatchShoutForm(_app);
+    _shoutForm   = new octFAH.component.WatchShoutForm(_app);
     _shoutForm.getSendButton().addEventListener("click", submitShouts);
 
+  };
+
+  /**
+   * @override
+   */
+  MessageController.prototype.run = function ()
+  {
     modUI();
-  }
+  };
 
   /**
    * Rebuild Selected User Array
    */
-  function fetchSelected() {
+  function fetchSelected()
+  {
     var i, butt, ht;
 
     ht   = [];
     butt = _watchesForm.querySelectorAll("table input:checked");
 
     for (i = 0; i < butt.length; i++) {
-      ht.push(_app.wrap(butt[i]).parent("table").element().querySelector("a").getAttribute("href"));
+      ht.push(_app.build(butt[i]).parent("table").element().querySelector("a").getAttribute("href"));
     }
 
     _selected = ht;
@@ -139,12 +157,13 @@ octFAH.module.MessageModule = (function () {
    *
    * @returns {{key: string, action: string, name: string}|*}
    */
-  function fetchData(url) {
+  function fetchData(url)
+  {
     var req, data;
 
     data = {key: "", action: "shout", name: ""};
 
-    req = new XMLHttpRequest();
+    req              = new XMLHttpRequest();
     req.open("GET", url);
     req.responseType = "document";
     req.addEventListener("load", parseForKey(req, data));
@@ -156,12 +175,14 @@ octFAH.module.MessageModule = (function () {
     return data;
   }
 
-  function subOutGets() {
+  function subOutGets()
+  {
     _outGets--;
     send();
   }
 
-  function subOutPosts() {
+  function subOutPosts()
+  {
     _outPosts--;
     removeSelected();
   }
@@ -177,8 +198,10 @@ octFAH.module.MessageModule = (function () {
    *
    * @returns {Function}
    */
-  function parseForKey(req, data) {
-    return function () {
+  function parseForKey(req, data)
+  {
+    return function ()
+    {
       var el;
       try {
         el          = req.responseXML.getElementById("JSForm");
@@ -193,7 +216,8 @@ octFAH.module.MessageModule = (function () {
     };
   }
 
-  function send() {
+  function send()
+  {
     var i, text, temp;
 
     if (_outGets !== 0) {
@@ -203,7 +227,9 @@ octFAH.module.MessageModule = (function () {
     text = _shoutForm.getShoutTextElement().value;
 
     for (i in _collected) {
-      if (!_collected.hasOwnProperty(i)) {continue;}
+      if (!_collected.hasOwnProperty(i)) {
+        continue;
+      }
       temp = _collected[i];
 
       if (!temp.name || !temp.action || !temp.key) {
@@ -223,11 +249,12 @@ octFAH.module.MessageModule = (function () {
    * @param shout  {String}
    * @param [func] {Function}
    */
-  function submitShout(key, name, action, shout, func) {
+  function submitShout(key, name, action, shout, func)
+  {
     var post;
 
     post = new octFAH.http.PostRequest();
-    post.setUrl(octFAH.core.Config.userPage + name);
+    post.setUrl(octFAH.app.Config.userPage + name);
     post.setHeader("Content-type", "application/x-www-form-urlencoded")
       .setData(
       "action=" + action + "&key=" + key + "&name=" + name + "&shout=" + shout + "&chars_left=" + (_charLimit - shout.length).toString()
@@ -242,7 +269,8 @@ octFAH.module.MessageModule = (function () {
     _outPosts++;
   }
 
-  function modUI() {
+  function modUI()
+  {
     var watches, watchControls, swButt, u;
 
     u             = _app.getHTMLUtil();
@@ -258,21 +286,23 @@ octFAH.module.MessageModule = (function () {
   /**
    * Show the Shout to Watchers div
    */
-  function showShoutWatchDiv() {
+  function showShoutWatchDiv()
+  {
     _shoutForm.show();
   }
 
   /**
    *
    */
-  function submitShouts() {
+  function submitShouts()
+  {
     var i, l, d;
 
     l = _selected.length;
 
     for (i = 0; i < l; i++) {
       try {
-        d = fetchData(_selected[i]);
+        d                  = fetchData(_selected[i]);
         _collected[d.name] = d;
       } catch (err) {
       }
@@ -284,10 +314,13 @@ octFAH.module.MessageModule = (function () {
   /**
    *
    */
-  function removeSelected() {
-    if (_outPosts > 0) {return;}
+  function removeSelected()
+  {
+    if (_outPosts > 0) {
+      return;
+    }
     _watchesForm.querySelector("input.remove").click();
   }
 
-  return MessageModule;
+  return MessageController;
 })();

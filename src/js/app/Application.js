@@ -1,14 +1,15 @@
 /**
  * FAHelper Core Application
  *
- * @version 1.0
+ * @version 1.1
  * @since   0.1
  *
  * @author Elizabeth Harper
  *
- * @namespace octFAH.core
+ * @namespace octFAH.app
  */
-octFAH.core.Application = (function () {
+octFAH.app.Application = (function ()
+{
   "use strict";
 
   /**
@@ -68,7 +69,7 @@ octFAH.core.Application = (function () {
   var _module;
 
   /**
-   * @type {octFAH.core.Application|Application}
+   * @type {octFAH.app.Application|Application}
    *
    * @private
    * @static
@@ -100,12 +101,19 @@ octFAH.core.Application = (function () {
   var _storage;
 
   /**
+   * @type {octFAH.util.Router|Router}
+   */
+  var _router;
+
+  /**
    * Fur Affinity Helper
    *
    * @constructor
    */
-  function Application() {
+  function Application()
+  {
     _location    = window.location.href;
+    _router      = new octFAH.util.Router();
     _htmlUtil    = new octFAH.util.HTMLUtils(this);
     _helperUtil  = new octFAH.util.Helpers(this);
     _storage     = new octFAH.util.Storage();
@@ -121,18 +129,32 @@ octFAH.core.Application = (function () {
     _module      = null;
     _self        = this;
 
-    init(this);
+    boot(this);
+    init();
+    run();
+  }
+
+  function boot(app)
+  {
+    _router.registerRoute("/browse/", new octFAH.controller.BrowseController(app));
+    _router.registerRoute("/search/", new octFAH.controller.SearchController(app));
+    _router.registerRoute("/msg/submissions/", new octFAH.controller.SubmissionController(app));
+    _router.registerRoute("/msg/others/", new octFAH.controller.MessageController(app));
+
+    updateSettings(app);
   }
 
   /**
    * Initialize Application
-   *
-   * @param context {Application}
    */
-  function init(context) {
-    updateSettings(context);
-    getModule();
+  function init()
+  {
     _settingsMenu = new octFAH.component.SettingsMenu(_self);
+  }
+
+  function run()
+  {
+    _router.route(window.location.pathname);
   }
 
   /**
@@ -145,14 +167,16 @@ octFAH.core.Application = (function () {
      *   favShoutText:   string
      * }}
    */
-  Application.prototype.getSettings = function () {
+  Application.prototype.getSettings = function ()
+  {
     return _settings;
   };
 
   /**
    * Push Settings To Browser Storage
    */
-  Application.prototype.pushSettings = function () {
+  Application.prototype.pushSettings = function ()
+  {
     _storage.pushValue("octFASettings", _settings);
   };
 
@@ -161,7 +185,8 @@ octFAH.core.Application = (function () {
    *
    * @returns {octFAH.util.HTMLUtils|HTMLUtils}
    */
-  Application.prototype.getHTMLUtil = function () {
+  Application.prototype.getHTMLUtil = function ()
+  {
     return _htmlUtil;
   };
 
@@ -170,50 +195,9 @@ octFAH.core.Application = (function () {
    *
    * @returns {octFAH.util.Helpers|Helpers}
    */
-  Application.prototype.getHelperUtil = function () {
+  Application.prototype.getHelperUtil = function ()
+  {
     return _helperUtil;
-  };
-
-  /**
-   * Determine which module should be loaded for the current page and load
-   * that module.
-   */
-  function getModule() {
-    var c, m;
-
-    c = octFAH.core.Config;
-    m = octFAH.module;
-
-    if (_location.indexOf(c.subPage) !== -1) {
-      _module = new m.SubmissionModule(_self);
-    } else if (_location.indexOf(c.browsePage) !== -1) {
-      _module = new m.BrowseModule(_self);
-    } else if (_location.indexOf(c.searchPage) !== -1) {
-      _module = new m.SearchModule(_self);
-    } else if (_location.indexOf(c.userPage) !== -1) {
-      //new UserPageModule(_self);
-    } else if (_location.indexOf(c.watchesPage) !== -1) {
-      _module = new m.MessageModule(_self);
-    }
-  }
-
-  /**
-   * Make Submission Link
-   *
-   * @param i {int}
-   * @returns {string}
-   */
-  Application.prototype.makeArtLink = function (i) {
-    return octFAH.core.Config.viewPage + i;
-  };
-
-  /**
-   * Open Submission In Background Tab
-   *
-   * @param link {string}
-   */
-  Application.prototype.openArtTab = function (link) {
-    _browserUtil.makeNewTab(link, false);
   };
 
   /**
@@ -221,8 +205,19 @@ octFAH.core.Application = (function () {
    *
    * @returns {string}
    */
-  Application.prototype.getLocation = function () {
+  Application.prototype.getLocation = function ()
+  {
     return _location;
+  };
+
+  /**
+   * Get Browser Utility
+   *
+   * @returns {octFAH.util.Browser|Browser}
+   */
+  Application.prototype.getBrowserUtil = function ()
+  {
+    return _browserUtil;
   };
 
   /**
@@ -230,7 +225,8 @@ octFAH.core.Application = (function () {
    *
    * @param self {Application}
    */
-  function updateSettings(self) {
+  function updateSettings(self)
+  {
     var update, key;
 
     update = false;
@@ -256,7 +252,8 @@ octFAH.core.Application = (function () {
    *
    * @returns {Helpers}
    */
-  Application.prototype.getHelperUtil = function () {
+  Application.prototype.getHelperUtil = function ()
+  {
     return _helperUtil;
   };
 
@@ -267,7 +264,8 @@ octFAH.core.Application = (function () {
    *
    * @return {octFAH.util.HTML|HTML}
    */
-  Application.prototype.wrap = function (element) {
+  Application.prototype.build = function (element)
+  {
     return new octFAH.util.HTML(element);
   };
 

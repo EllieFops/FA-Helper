@@ -8,7 +8,8 @@
  *
  * @namespace octFAH.component
  */
-octFAH.component.StatusBox = (function () {
+octFAH.component.StatusBox = (function ()
+{
 
   "use strict";
 
@@ -21,7 +22,8 @@ octFAH.component.StatusBox = (function () {
    *
    * @constructor
    */
-  function StatusBox(app) {
+  function StatusBox(app)
+  {
     _app      = app;
     var outer = document.createElement("div");
 
@@ -40,7 +42,8 @@ octFAH.component.StatusBox = (function () {
    *
    * @param percent {int}
    */
-  StatusBox.prototype.setCompletion = function (percent) {
+  StatusBox.prototype.setCompletion = function (percent)
+  {
     this._completion = percent;
     updateProgress(this);
   };
@@ -50,7 +53,8 @@ octFAH.component.StatusBox = (function () {
    *
    * @returns {number|int}
    */
-  StatusBox.prototype.getCompletion = function () {
+  StatusBox.prototype.getCompletion = function ()
+  {
     return this._completion;
   };
 
@@ -60,7 +64,8 @@ octFAH.component.StatusBox = (function () {
    * @param self  {octFAH.component.StatusBox|StatusBox}
    * @param outer {HTMLElement}
    */
-  function init(self, outer) {
+  function init(self, outer)
+  {
     var s;
 
     makeOuterDiv(outer);
@@ -75,7 +80,8 @@ octFAH.component.StatusBox = (function () {
   /**
    * Make Outer Div
    */
-  function makeOuterDiv(div) {
+  function makeOuterDiv(div)
+  {
     _app.getHTMLUtil().style(
       div,
       {
@@ -96,7 +102,8 @@ octFAH.component.StatusBox = (function () {
    *
    * @returns {HTMLElement}
    */
-  function makeProgressContainer() {
+  function makeProgressContainer()
+  {
     var div;
 
     div = document.createElement("div");
@@ -119,7 +126,8 @@ octFAH.component.StatusBox = (function () {
    *
    * @return {HTMLElement}
    */
-  function makeProgressBar() {
+  function makeProgressBar()
+  {
     var div;
 
     div = document.createElement("div");
@@ -139,7 +147,8 @@ octFAH.component.StatusBox = (function () {
    *
    * @param con {octFAH.component.StatusBox|StatusBox}
    */
-  function updateProgress(con) {
+  function updateProgress(con)
+  {
     con._progress.style.width = con.toString() + "%";
   }
 

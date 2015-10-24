@@ -8,7 +8,8 @@
  *
  * @namespace octFAH.util
  */
-octFAH.util.Helpers = (function () {
+octFAH.util.Helpers = (function ()
+{
   "use strict";
 
   var app;
@@ -18,11 +19,12 @@ octFAH.util.Helpers = (function () {
   /**
    * Helper Utilities
    *
-   * @param application {octFAH.core.Application|Application}
+   * @param application {octFAH.app.Application|Application}
    *
    * @constructor
    */
-  function Helpers(application) {
+  function Helpers(application)
+  {
     app = application;
   }
 
@@ -33,7 +35,8 @@ octFAH.util.Helpers = (function () {
    *
    * @returns {string}
    */
-  Helpers.prototype.toPx = function (i) {
+  Helpers.prototype.toPx = function (i)
+  {
     return i.toString() + "px";
   };
 
@@ -42,7 +45,8 @@ octFAH.util.Helpers = (function () {
    *
    * @returns {{name: string, version: number}}
    */
-  Helpers.prototype.getBrowserType = function () {
+  Helpers.prototype.getBrowserType = function ()
+  {
     var agent, tem, matches;
 
     agent   = navigator.userAgent;
@@ -99,7 +103,8 @@ octFAH.util.Helpers = (function () {
    * @param collection {Array|Object}
    * @param func       {Function}
    */
-  Helpers.prototype.forEach = function (collection, func) {
+  Helpers.prototype.forEach = function (collection, func)
+  {
     var length, i, key, a, keys, s;
 
     s = this.getParamNames(func).length;
@@ -142,7 +147,8 @@ octFAH.util.Helpers = (function () {
    *
    * @returns {Array|Object}
    */
-  Helpers.prototype.getParamNames = function (func) {
+  Helpers.prototype.getParamNames = function (func)
+  {
     var fnStr, result;
 
     fnStr  = func.toString().replace(STRIP_COMMENTS, "");

@@ -8,14 +8,15 @@
  *
  * @namespace octFAH.util
  */
-octFAH.util.HTMLUtils = (function () {
+octFAH.util.HTMLUtils = (function ()
+{
 
   "use strict";
 
   /**
    * Application
    *
-   * @type {octFAH.core.Application|Application}
+   * @type {octFAH.app.Application|Application}
    *
    * @private
    * @static
@@ -29,8 +30,9 @@ octFAH.util.HTMLUtils = (function () {
    *
    * @constructor
    */
-  function HTMLUtils(app) {
-    _app  = app;
+  function HTMLUtils(app)
+  {
+    _app = app;
   }
 
   /**
@@ -41,7 +43,8 @@ octFAH.util.HTMLUtils = (function () {
    *
    * @return {HTMLElement}
    */
-  HTMLUtils.prototype.append = function (element, children) {
+  HTMLUtils.prototype.append = function (element, children)
+  {
     var i;
 
     for (i = 0; i < children.length; i++) {
@@ -60,7 +63,8 @@ octFAH.util.HTMLUtils = (function () {
    * @return {HTMLElement|*} Returns first argument only if it was an
    *                         HTMLElement.
    */
-  HTMLUtils.prototype.style = function (element, style) {
+  HTMLUtils.prototype.style = function (element, style)
+  {
     var key, css, i;
 
     if (element instanceof Array) {
@@ -95,7 +99,8 @@ octFAH.util.HTMLUtils = (function () {
    *
    * @return {HTMLElement}
    */
-  HTMLUtils.prototype.makeButton = function (text, click) {
+  HTMLUtils.prototype.makeButton = function (text, click)
+  {
     var el = document.createElement("input");
     el.setAttribute("type", "button");
     el.setAttribute("value", text);
@@ -116,7 +121,8 @@ octFAH.util.HTMLUtils = (function () {
    *
    * @returns {Element}
    */
-  HTMLUtils.prototype.makeCheckBox = function (name, value, checked) {
+  HTMLUtils.prototype.makeCheckBox = function (name, value, checked)
+  {
     var check = document.createElement("input");
     check.setAttribute("type", "checkbox");
 
@@ -143,7 +149,8 @@ octFAH.util.HTMLUtils = (function () {
    *
    * @returns {Element}
    */
-  HTMLUtils.prototype.makeSelectOption = function (val, text) {
+  HTMLUtils.prototype.makeSelectOption = function (val, text)
+  {
     var o       = document.createElement("option");
     o.setAttribute("value", val);
     o.innerHTML = text;
@@ -157,7 +164,8 @@ octFAH.util.HTMLUtils = (function () {
    *
    * @returns {Element}
    */
-  HTMLUtils.prototype.makeSpan = function (text) {
+  HTMLUtils.prototype.makeSpan = function (text)
+  {
     var s       = document.createElement("span");
     s.innerHTML = text;
     return s;
@@ -172,7 +180,8 @@ octFAH.util.HTMLUtils = (function () {
    *
    * @returns {Element}
    */
-  HTMLUtils.prototype.makeWrapperLabel = function (text, element, before) {
+  HTMLUtils.prototype.makeWrapperLabel = function (text, element, before)
+  {
     var label, span;
     before = (typeof before === "undefined") ? true : before;
 
@@ -193,7 +202,8 @@ octFAH.util.HTMLUtils = (function () {
    *
    * @return {Node|null}
    */
-  HTMLUtils.prototype.parent = function (search, ref) {
+  HTMLUtils.prototype.parent = function (search, ref)
+  {
     var parent, i;
 
     parent = ref.parentNode;
@@ -217,7 +227,8 @@ octFAH.util.HTMLUtils = (function () {
    *
    * @returns {boolean}
    */
-  HTMLUtils.prototype.matches = function (selector, ref) {
+  HTMLUtils.prototype.matches = function (selector, ref)
+  {
     if (typeof ref.matches === "function") {
       return ref.matches(selector);
     }
@@ -252,10 +263,11 @@ octFAH.util.HTMLUtils = (function () {
    *
    * @return {Element}
    */
-  HTMLUtils.prototype.jsonToHTML = function (json) {
+  HTMLUtils.prototype.jsonToHTML = function (json)
+  {
     var e, t;
 
-    t = _app.wrap(json.type);
+    t = _app.build(json.type);
 
     if (json.id) {
       t.attribute("id", json.id);

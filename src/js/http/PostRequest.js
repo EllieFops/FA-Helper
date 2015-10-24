@@ -8,7 +8,8 @@
  *
  * @namespace octFAH.http
  */
-octFAH.http.PostRequest = (function () {
+octFAH.http.PostRequest = (function ()
+{
 
   "use strict";
 
@@ -19,7 +20,8 @@ octFAH.http.PostRequest = (function () {
    *
    * @constructor
    */
-  function PostRequest(u) {
+  function PostRequest(u)
+  {
     this.url   = u || "";
     this.data  = "";
     this.load  = [];
@@ -36,7 +38,8 @@ octFAH.http.PostRequest = (function () {
    *
    * @returns {octFAH.http.PostRequest|PostRequest}
    */
-  PostRequest.prototype.onLoad = function (func) {
+  PostRequest.prototype.onLoad = function (func)
+  {
     this.load.push(func);
     return this;
   };
@@ -48,7 +51,8 @@ octFAH.http.PostRequest = (function () {
    *
    * @returns {octFAH.http.PostRequest|PostRequest}
    */
-  PostRequest.prototype.onError = function (func) {
+  PostRequest.prototype.onError = function (func)
+  {
     this.error.push(func);
     return this;
   };
@@ -60,7 +64,8 @@ octFAH.http.PostRequest = (function () {
    *
    * @returns {octFAH.http.PostRequest|PostRequest}
    */
-  PostRequest.prototype.onAbort = function (func) {
+  PostRequest.prototype.onAbort = function (func)
+  {
     this.abort.push(func);
     return this;
   };
@@ -72,7 +77,8 @@ octFAH.http.PostRequest = (function () {
    *
    * @returns {octFAH.http.PostRequest|PostRequest}
    */
-  PostRequest.prototype.onAny = function (func) {
+  PostRequest.prototype.onAny = function (func)
+  {
     this.onAbort(func);
     this.onError(func);
     this.onLoad(func);
@@ -87,7 +93,8 @@ octFAH.http.PostRequest = (function () {
    *
    * @returns {octFAH.http.PostRequest|PostRequest}
    */
-  PostRequest.prototype.setUrl = function (url) {
+  PostRequest.prototype.setUrl = function (url)
+  {
     this.url = url;
     return this;
   };
@@ -99,7 +106,8 @@ octFAH.http.PostRequest = (function () {
    *
    * @returns {octFAH.http.PostRequest|PostRequest}
    */
-  PostRequest.prototype.setData = function (data) {
+  PostRequest.prototype.setData = function (data)
+  {
     this.data = data;
     return this;
   };
@@ -112,7 +120,8 @@ octFAH.http.PostRequest = (function () {
    *
    * @returns {octFAH.http.PostRequest|PostRequest}
    */
-  PostRequest.prototype.setHeader = function (key, val) {
+  PostRequest.prototype.setHeader = function (key, val)
+  {
     this.head[key] = val;
     return this;
   };
@@ -120,7 +129,8 @@ octFAH.http.PostRequest = (function () {
   /**
    * Send Post Request
    */
-  PostRequest.prototype.send = function () {
+  PostRequest.prototype.send = function ()
+  {
     var i;
     this.http.open("POST", this.url);
 
@@ -145,8 +155,10 @@ octFAH.http.PostRequest = (function () {
    *
    * @returns {Function}
    */
-  function genHandler(backs, self) {
-    return function (e) {
+  function genHandler(backs, self)
+  {
+    return function (e)
+    {
       var i;
       for (i = 0; i < backs.length; i++) {
         backs[i](e, self.http);

@@ -56,8 +56,32 @@ module.exports = function (grunt)
           src:     [
             "src/start.txt",
             "src/declarations.js",
-            "src/js/**/*.js",
-            "rel/monkey/src/js/util/*.js",
+
+            "src/js/app/Config.js",
+            "src/js/app/Application.js",
+
+            "src/js/component/Component.js",
+            "src/js/component/ModalComponent.js",
+            "src/js/component/HoverView.js",
+            "src/js/component/SettingsMenu.js",
+            "src/js/component/StatusBox.js",
+            "src/js/component/WatchShoutForm.js",
+
+            "src/js/controller/Controller.js",
+            "src/js/controller/BrowseController.js",
+            "src/js/controller/MessageController.js",
+            "src/js/controller/SearchController.js",
+            "src/js/controller/SubmissionController.js",
+
+            "src/js/http/PostRequest.js",
+
+            "src/js/util/Helpers.js",
+            "src/js/util/HTML.js",
+            "src/js/util/HTMLUtils.js",
+            "src/js/util/Router.js",
+
+            "rel/monkey/src/js/util/Browser.js",
+            "rel/monkey/src/js/util/Storage.js",
             "src/end.txt"
           ],
           dest:    monkeyOut
@@ -70,8 +94,32 @@ module.exports = function (grunt)
           src:     [
             "src/start.txt",
             "src/declarations.js",
-            "src/js/**/*.js",
-            "rel/chrome/src/js/util/*.js",
+
+            "src/js/app/Config.js",
+            "src/js/app/Application.js",
+
+            "src/js/component/Component.js",
+            "src/js/component/ModalComponent.js",
+            "src/js/component/HoverView.js",
+            "src/js/component/SettingsMenu.js",
+            "src/js/component/StatusBox.js",
+            "src/js/component/WatchShoutForm.js",
+
+            "src/js/controller/Controller.js",
+            "src/js/controller/BrowseController.js",
+            "src/js/controller/MessageController.js",
+            "src/js/controller/SearchController.js",
+            "src/js/controller/SubmissionController.js",
+
+            "src/js/http/PostRequest.js",
+
+            "src/js/util/Helpers.js",
+            "src/js/util/HTML.js",
+            "src/js/util/HTMLUtils.js",
+            "src/js/util/Router.js",
+
+            "rel/chrome/src/js/util/Browser.js",
+            "rel/chrome/src/js/util/Storage.js",
             "src/end.txt"
           ],
           dest:    chromeOut

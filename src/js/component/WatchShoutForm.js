@@ -11,14 +11,15 @@
  * @augments  ModalComponent
  * @namespace octFAH.component
  */
-octFAH.component.WatchShoutForm = (function () {
+octFAH.component.WatchShoutForm = (function ()
+{
 
   "use strict";
 
   /**
    * Application
    *
-   * @type {octFAH.core.Application|Application}
+   * @type {octFAH.app.Application|Application}
    *
    * @private
    * @static
@@ -28,13 +29,14 @@ octFAH.component.WatchShoutForm = (function () {
   /**
    * Image Hover Preview
    *
-   * @param application {octFAH.core.Application|Application}
+   * @param application {octFAH.app.Application|Application}
    *
    * @augments  ModalComponent
    *
    * @constructor
    */
-  function WatchShoutForm(application) {
+  function WatchShoutForm(application)
+  {
     _app = application;
 
     /**
@@ -92,7 +94,8 @@ octFAH.component.WatchShoutForm = (function () {
    *
    * @param num {int}
    */
-  WatchShoutForm.prototype.setSelCount = function (num) {
+  WatchShoutForm.prototype.setSelCount = function (num)
+  {
     this._num.value = num;
   };
 
@@ -101,7 +104,8 @@ octFAH.component.WatchShoutForm = (function () {
    *
    * @returns {Element}
    */
-  WatchShoutForm.prototype.getUseDefaultElement = function () {
+  WatchShoutForm.prototype.getUseDefaultElement = function ()
+  {
     return this._check;
   };
 
@@ -110,11 +114,13 @@ octFAH.component.WatchShoutForm = (function () {
    *
    * @returns {Element}
    */
-  WatchShoutForm.prototype.getShoutTextElement = function () {
+  WatchShoutForm.prototype.getShoutTextElement = function ()
+  {
     return this._text;
   };
 
-  WatchShoutForm.prototype.getSendButton = function () {
+  WatchShoutForm.prototype.getSendButton = function ()
+  {
     return this._sendButton;
   };
 
@@ -123,7 +129,8 @@ octFAH.component.WatchShoutForm = (function () {
    *
    * @private
    */
-  WatchShoutForm.prototype._setupForm = function () {
+  WatchShoutForm.prototype._setupForm = function ()
+  {
 
     var sett, util, cLab, tLab, nLab, self;
 
@@ -133,12 +140,12 @@ octFAH.component.WatchShoutForm = (function () {
 
     this.shoutText = "";
 
-    this._num = _app.wrap("input")
+    this._num = _app.build("input")
       .attributes({disabled: "disabled", type: "number", "default": "0"})
       .style({width: "25px"})
       .element();
 
-    this._text = _app.wrap("textarea")
+    this._text = _app.build("textarea")
       .style({width: "200px", height: "8em"})
       .element();
 
@@ -160,7 +167,8 @@ octFAH.component.WatchShoutForm = (function () {
 
     this._check.addEventListener(
       "change",
-      function () {
+      function ()
+      {
         if (self._check.checked) {
           self._text.setAttribute("disabled", "disabled");
           self.shoutText   = self._text.value || "";
@@ -174,14 +182,14 @@ octFAH.component.WatchShoutForm = (function () {
       }
     );
 
-    _app.wrap(this._div).attribute("id", "octWatchShoutDiv").addClass("octModal").append(
-      _app.wrap("form").style({margin: "25px"}).append(
+    _app.build(this._div).attribute("id", "octWatchShoutDiv").addClass("octModal").append(
+      _app.build("form").style({margin: "25px"}).append(
         [
-          _app.wrap("p").style({fontSize: "1.1em"}).html("Warning: do not use this on slow connections!").element(),
+          _app.build("p").style({fontSize: "1.1em"}).html("Warning: do not use this on slow connections!").element(),
           nLab,
           cLab,
           tLab,
-          _app.wrap("div").style({textAlign: "right"}).append([this._sendButton]).element()
+          _app.build("div").style({textAlign: "right"}).append([this._sendButton]).element()
         ]
       )
         .element()

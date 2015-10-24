@@ -8,7 +8,8 @@
  *
  * @namespace octFAH.util
  */
-octFAH.util.HTML = (function () {
+octFAH.util.HTML = (function ()
+{
 
   "use strict";
 
@@ -19,7 +20,8 @@ octFAH.util.HTML = (function () {
    *
    * @constructor
    */
-  function HTML(element) {
+  function HTML(element)
+  {
     this._element = (element instanceof Element) ? element : document.createElement(element);
   }
 
@@ -30,7 +32,8 @@ octFAH.util.HTML = (function () {
    *
    * @return {octFAH.util.HTML|HTML}
    */
-  HTML.prototype.append = function (children) {
+  HTML.prototype.append = function (children)
+  {
     var i;
 
     if (children instanceof HTML || children instanceof octFAH.util.HTML) {
@@ -54,7 +57,8 @@ octFAH.util.HTML = (function () {
    * @return {octFAH.util.HTML|HTML} Returns first argument only if it was an
    *                                 HTMLElement.
    */
-  HTML.prototype.style = function (style) {
+  HTML.prototype.style = function (style)
+  {
     var key, css, e;
     e = this._element;
 
@@ -81,7 +85,8 @@ octFAH.util.HTML = (function () {
    *
    * @return {octFAH.util.HTML|HTML|null}
    */
-  HTML.prototype.parent = function (search) {
+  HTML.prototype.parent = function (search)
+  {
     var parent, i;
 
     parent = this._element.parentNode;
@@ -102,7 +107,8 @@ octFAH.util.HTML = (function () {
    *
    * @returns {Element}
    */
-  HTML.prototype.element = function () {
+  HTML.prototype.element = function ()
+  {
     return this._element;
   };
 
@@ -113,7 +119,8 @@ octFAH.util.HTML = (function () {
    *
    * @return {octFAH.util.HTML|HTML}
    */
-  HTML.prototype.click = function (func) {
+  HTML.prototype.click = function (func)
+  {
     this._element.addEventListener("click", func);
     return this;
   };
@@ -125,7 +132,8 @@ octFAH.util.HTML = (function () {
    *
    * @return {octFAH.util.HTML|HTML}
    */
-  HTML.prototype.input = function (func) {
+  HTML.prototype.input = function (func)
+  {
     this._element.addEventListener("input", func);
     return this;
   };
@@ -137,7 +145,8 @@ octFAH.util.HTML = (function () {
    *
    * @return {octFAH.util.HTML|HTML}
    */
-  HTML.prototype.change = function (func) {
+  HTML.prototype.change = function (func)
+  {
     this._element.addEventListener("change", func);
     return this;
   };
@@ -150,7 +159,8 @@ octFAH.util.HTML = (function () {
    *
    * @return {octFAH.util.HTML|HTML|string}
    */
-  HTML.prototype.attribute = function (key, val) {
+  HTML.prototype.attribute = function (key, val)
+  {
     if (typeof val === "undefined") {
       return this._element.getAttribute(key);
     }
@@ -167,7 +177,8 @@ octFAH.util.HTML = (function () {
    *
    * @return {octFAH.util.HTML|HTML}
    */
-  HTML.prototype.attributes = function (vals) {
+  HTML.prototype.attributes = function (vals)
+  {
     var a;
 
     for (a in vals) {
@@ -189,7 +200,8 @@ octFAH.util.HTML = (function () {
    *
    * @returns {boolean}
    */
-  HTML.prototype.matches = function (selector, ref) {
+  HTML.prototype.matches = function (selector, ref)
+  {
     if (typeof ref.matches === "function") {
       return ref.matches(selector);
     }
@@ -216,7 +228,8 @@ octFAH.util.HTML = (function () {
    *
    * @return {HTML|octFAH.util.HTML}
    */
-  HTML.prototype.addClass = function (c) {
+  HTML.prototype.addClass = function (c)
+  {
     var a;
 
     a = this._element.classList;
@@ -237,7 +250,8 @@ octFAH.util.HTML = (function () {
    *
    * @returns {string|HTML|octFAH.util.HTML}
    */
-  HTML.prototype.html = function (inner) {
+  HTML.prototype.html = function (inner)
+  {
     if (typeof inner === "undefined") {
       return this._element.innerHTML;
     }

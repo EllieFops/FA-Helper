@@ -3,8 +3,8 @@
  */
 var octFAH = {
   component: {},
-  core: {},
+  app: {},
   http: {},
-  module: {},
+  controller: {},
   util: {}
 };

@@ -9,7 +9,8 @@
  * @augments  ModalComponent
  * @namespace octFAH.component
  */
-octFAH.component.SettingsMenu = (function () {
+octFAH.component.SettingsMenu = (function ()
+{
 
   "use strict";
 
@@ -24,7 +25,8 @@ octFAH.component.SettingsMenu = (function () {
    * @augments ModalComponent
    * @constructor
    */
-  function SettingsMenu(app) {
+  function SettingsMenu(app)
+  {
     _self = this;
     _app  = app;
 
@@ -37,7 +39,8 @@ octFAH.component.SettingsMenu = (function () {
 
   SettingsMenu.prototype = Object.create(octFAH.component.ModalComponent.prototype);
 
-  function init(self, div) {
+  function init(self, div)
+  {
     initDiv(div);
     initForm(div);
     modUI(self);
@@ -50,8 +53,10 @@ octFAH.component.SettingsMenu = (function () {
    *
    * @returns {Function}
    */
-  function handleShow(self) {
-    return function () {
+  function handleShow(self)
+  {
+    return function ()
+    {
       self.show();
     };
   }
@@ -61,7 +66,8 @@ octFAH.component.SettingsMenu = (function () {
    *
    * @param e {Event}
    */
-  function previewSizeChange(e) {
+  function previewSizeChange(e)
+  {
     _app.getSettings().previewSize = e.target.value;
     _app.pushSettings();
   }
@@ -71,7 +77,8 @@ octFAH.component.SettingsMenu = (function () {
    *
    * @param e {Event}
    */
-  function previewToggle(e) {
+  function previewToggle(e)
+  {
     _app.getSettings().showPreviews = e.target.checked;
     _app.pushSettings();
   }
@@ -79,10 +86,11 @@ octFAH.component.SettingsMenu = (function () {
   /**
    * Make Needed Alterations to the Default UI
    */
-  function modUI(self) {
+  function modUI(self)
+  {
     var el, but, li;
 
-    but = _app.wrap("a")
+    but = _app.build("a")
       .click(handleShow(self))
       .style({cursor: "pointer", color: "#cfcfcf"})
       .element();
@@ -108,11 +116,11 @@ octFAH.component.SettingsMenu = (function () {
    *
    * @param div {Element}
    */
-  function initDiv(div) {
+  function initDiv(div)
+  {
     var title;
 
-
-    title = _app.wrap("span")
+    title = _app.build("span")
       .html("FA Helper Settings")
       .style(
       {
@@ -124,10 +132,11 @@ octFAH.component.SettingsMenu = (function () {
       }
     );
 
-    _app.wrap(div).addClass("octModal").append(title);
+    _app.build(div).addClass("octModal").append(title);
   }
 
-  function initForm(div) {
+  function initForm(div)
+  {
     var form, util, select, i, labels, opt, check, text, v, sett;
 
     sett = _app.getSettings();
@@ -135,16 +144,17 @@ octFAH.component.SettingsMenu = (function () {
     v    = _app.getHelperUtil();
 
     select = _app
-      .wrap("select")
+      .build("select")
       .attribute("id", "octPrevSizeSel")
       .change(previewSizeChange)
       .element();
 
     text = _app
-      .wrap("textarea")
+      .build("textarea")
       .style({width: "300px", height: "5em"})
       .input(
-      function () {
+      function ()
+      {
         sett.watchShoutText = text.value || "";
         _app.pushSettings();
       }
@@ -152,13 +162,13 @@ octFAH.component.SettingsMenu = (function () {
       .element();
 
     check = _app
-      .wrap(util.makeCheckBox("", "", _app.getSettings().showPreviews))
+      .build(util.makeCheckBox("", "", _app.getSettings().showPreviews))
       .change(previewToggle)
       .element();
 
     form = _app
-      .wrap("form")
-      .style({margin:"10px"})
+      .build("form")
+      .style({margin: "10px"})
       .append(
       [
         util.makeWrapperLabel("Enable Previews", check),
