@@ -8,13 +8,14 @@
  *
  * @namespace octFAH.util
  */
+octFAH.util.Storage = (function () {
 
-octFAH.util.Storage = (function() {
-  function Storage()
-  {}
+  "use strict";
 
-  Storage.prototype.fetchValue = function (key, defValue)
-  {
+  function Storage() {
+  }
+
+  Storage.prototype.fetchValue = function (key, defValue) {
     return chrome.storage.get(key) || defValue;
   };
 
@@ -24,9 +25,8 @@ octFAH.util.Storage = (function() {
    * @param key   {string}
    * @param value {*}
    */
-  Storage.prototype.pushValue = function (key, value)
-  {
-    var object = {};
+  Storage.prototype.pushValue = function (key, value) {
+    var object  = {};
     object[key] = value;
     chrome.storage.sync.set(object);
   };

@@ -8,24 +8,26 @@
  *
  * @namespace octFAH.module
  */
-octFAH.module.SubmissionModule = (function ()
-{
-  var
-    _app,
-    _form,
-    _self,
-    _hoverView
-  ;
+octFAH.module.SubmissionModule = (function () {
+  "use strict";
+
+  /**
+   * @type {octFAH.core.Application|Application}
+   */
+  var _app;
+
+  var _form;
+  var _self;
+  var _hoverView;
 
   /**
    * Fur Affinity Submissions Page Manager
    *
-   * @param app {Application}
+   * @param app {octFAH.core.Application|Application}
    *
    * @constructor
    */
-  function SubmissionModule(app)
-  {
+  function SubmissionModule(app) {
     _app  = app;
     _form = document.getElementById("messages-form");
     _self = this;
@@ -36,8 +38,7 @@ octFAH.module.SubmissionModule = (function ()
   /**
    * Initialize
    */
-  function init()
-  {
+  function init() {
     _hoverView = new octFAH.component.HoverView(_app);
     modSubmissionUI();
   }
@@ -45,10 +46,9 @@ octFAH.module.SubmissionModule = (function ()
   /**
    * Modify the Submissions User Interface
    */
-  function modSubmissionUI()
-  {
+  function modSubmissionUI() {
     var forms;
-    forms = document.querySelectorAll('.actions');
+    forms = document.querySelectorAll(".actions");
     for (var i = 0; i < forms.length; i++) {
       forms[i].appendChild(makeTabsButton());
     }
@@ -59,19 +59,18 @@ octFAH.module.SubmissionModule = (function ()
    *
    * @returns {Element}
    */
-  function makeTabsButton()
-  {
-    var button = _app.getHTMLUtil().makeButton("Load In Tabs", handleTabsButton);
-    button.setAttribute("class", "octoTabsButton button");
-    return button;
+  function makeTabsButton() {
+    return _app
+      .wrap(_app.getHTMLUtil().makeButton("Load In Tabs", handleTabsButton))
+      .attribute("class", "octoTabsButton button")
+      .element();
   }
 
   /**
    * Handle "Load In Tabs" Button Click
    */
-  function handleTabsButton()
-  {
-    var boxes = _form.querySelectorAll('input[type=checkbox]:checked');
+  function handleTabsButton() {
+    var boxes = _form.querySelectorAll("input[type=checkbox]:checked");
     var id, i;
 
     for (i = 0; i < boxes.length; i++) {

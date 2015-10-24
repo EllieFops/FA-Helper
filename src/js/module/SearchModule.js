@@ -8,27 +8,28 @@
  *
  * @namespace octFAH.module
  */
-octFAH.module.SearchModule = (function ()
-{
-  var _app, _hoverView;
+octFAH.module.SearchModule = (function () {
+  "use strict";
+
+  /**
+   * @type {octFAH.core.Application|Application}
+   */
+  var _app;
+
+  /**
+   * @type {octFAH.component.HoverView}
+   */
+  var _hoverView;
 
   /**
    * Search Page Manager
    *
-   * @param app {Application}
+   * @param app {octFAH.core.Application|Application}
+   *
    * @constructor
    */
-  function SearchModule(app)
-  {
-    _app = app;
-    init();
-  }
-
-  /**
-   * Initialize Search Module Elements
-   */
-  function init()
-  {
+  function SearchModule(app) {
+    _app       = app;
     _hoverView = new octFAH.component.HoverView(_app);
   }
 

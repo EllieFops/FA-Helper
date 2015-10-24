@@ -8,20 +8,19 @@
  *
  * @namespace octFAH.util
  */
+octFAH.util.Storage = (function () {
+  "use strict";
 
-octFAH.util.Storage = (function() {
-  function Storage()
-  {}
+  function Storage() {
+  }
 
-  Storage.prototype.fetchValue = function (key, defValue)
-  {
+  Storage.prototype.fetchValue = function (key, defValue) {
     return GM_getValue(key, defValue);
   };
 
-  Storage.prototype.pushValue = function (key, value)
-  {
+  Storage.prototype.pushValue = function (key, value) {
     GM_setValue(key, value);
   };
-  
+
   return Storage;
 })();

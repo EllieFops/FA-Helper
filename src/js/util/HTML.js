@@ -8,33 +8,39 @@
  *
  * @namespace octFAH.util
  */
-octFAH.util.HTML = (function ()
-{
+octFAH.util.HTML = (function () {
+
+  "use strict";
+
   /**
    * UI Component
    *
-   * @param element {String|Element}
+   * @param element {String|Element|Node}
    *
    * @constructor
    */
-  function HTML(element)
-  {
-    this.element = (element instanceof Element) ? element : document.createElement(element);
+  function HTML(element) {
+    this._element = (element instanceof Element) ? element : document.createElement(element);
   }
 
   /**
    * Append children to given element.
    *
-   * @param children {HTMLElement[]}
+   * @param children {Element|Element[]|HTML|octFAH.util.HTML}
    *
    * @return {octFAH.util.HTML|HTML}
    */
-  HTML.prototype.appendChildren = function (children)
-  {
+  HTML.prototype.append = function (children) {
     var i;
 
-    for (i = 0; i < children.length; i++) {
-      this.element.appendChild(children[i]);
+    if (children instanceof HTML || children instanceof octFAH.util.HTML) {
+      this._element.appendChild(children.element());
+    } else if (children instanceof Element) {
+      this._element.appendChild(children);
+    } else if (children instanceof Array) {
+      for (i = 0; i < children.length; i++) {
+        this._element.appendChild(children[i]);
+      }
     }
 
     return this;
@@ -48,10 +54,9 @@ octFAH.util.HTML = (function ()
    * @return {octFAH.util.HTML|HTML} Returns first argument only if it was an
    *                                 HTMLElement.
    */
-  HTML.prototype.applyStyle = function (style)
-  {
+  HTML.prototype.style = function (style) {
     var key, css, e;
-    e = this.element;
+    e = this._element;
 
     css = e.style;
     for (key in style) {
@@ -70,16 +75,16 @@ octFAH.util.HTML = (function ()
   };
 
   /**
+   * Locate Parent Node by Query String
    *
    * @param search {string}
    *
    * @return {octFAH.util.HTML|HTML|null}
    */
-  HTML.prototype.parent = function (search)
-  {
+  HTML.prototype.parent = function (search) {
     var parent, i;
 
-    parent = this.element.parentNode;
+    parent = this._element.parentNode;
 
     for (i = 0; i < 300; i++) {
       if (this.matches(search, parent)) {
@@ -97,9 +102,8 @@ octFAH.util.HTML = (function ()
    *
    * @returns {Element}
    */
-  HTML.prototype.getElement = function ()
-  {
-    return this.element;
+  HTML.prototype.element = function () {
+    return this._element;
   };
 
   /**
@@ -109,10 +113,32 @@ octFAH.util.HTML = (function ()
    *
    * @return {octFAH.util.HTML|HTML}
    */
-  HTML.prototype.click = function (func)
-  {
-    this.element.addEventListener('click', func);
+  HTML.prototype.click = function (func) {
+    this._element.addEventListener("click", func);
+    return this;
+  };
 
+  /**
+   * Add an onInput event handler
+   *
+   * @param func {Function}
+   *
+   * @return {octFAH.util.HTML|HTML}
+   */
+  HTML.prototype.input = function (func) {
+    this._element.addEventListener("input", func);
+    return this;
+  };
+
+  /**
+   * Add an onChange event handler
+   *
+   * @param func {Function}
+   *
+   * @return {octFAH.util.HTML|HTML}
+   */
+  HTML.prototype.change = function (func) {
+    this._element.addEventListener("change", func);
     return this;
   };
 
@@ -124,13 +150,12 @@ octFAH.util.HTML = (function ()
    *
    * @return {octFAH.util.HTML|HTML|string}
    */
-  HTML.prototype.attribute = function (key, val)
-  {
+  HTML.prototype.attribute = function (key, val) {
     if (typeof val === "undefined") {
-      return this.element.getAttribute(key);
+      return this._element.getAttribute(key);
     }
 
-    this.element.setAttribute(key, val);
+    this._element.setAttribute(key, val);
 
     return this;
   };
@@ -142,15 +167,15 @@ octFAH.util.HTML = (function ()
    *
    * @return {octFAH.util.HTML|HTML}
    */
-  HTML.prototype.attributes = function(vals)
-  {
+  HTML.prototype.attributes = function (vals) {
     var a;
+
     for (a in vals) {
       if (!vals.hasOwnProperty(a)) {
         continue;
       }
 
-      this.element.setAttribute(a, vals[a]);
+      this._element.setAttribute(a, vals[a]);
     }
 
     return this;
@@ -164,8 +189,7 @@ octFAH.util.HTML = (function ()
    *
    * @returns {boolean}
    */
-  HTML.prototype.matches = function (selector, ref)
-  {
+  HTML.prototype.matches = function (selector, ref) {
     if (typeof ref.matches === "function") {
       return ref.matches(selector);
     }
@@ -185,5 +209,42 @@ octFAH.util.HTML = (function ()
     return false;
   };
 
+  /**
+   * Add Classes
+   *
+   * @param c {string|string[]}
+   *
+   * @return {HTML|octFAH.util.HTML}
+   */
+  HTML.prototype.addClass = function (c) {
+    var a;
+
+    a = this._element.classList;
+
+    if (c instanceof Array) {
+      a.add.apply(a, c);
+    } else if (typeof c === "string") {
+      a.add(c);
+    }
+
+    return this;
+  };
+
+  /**
+   * Get/Set Inner HTML
+   *
+   * @param inner {string}
+   *
+   * @returns {string|HTML|octFAH.util.HTML}
+   */
+  HTML.prototype.html = function (inner) {
+    if (typeof inner === "undefined") {
+      return this._element.innerHTML;
+    }
+
+    this._element.innerHTML = inner;
+    return this;
+  };
+
   return HTML;
-})();
+}());

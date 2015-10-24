@@ -8,8 +8,9 @@
  *
  * @namespace octFAH.component
  */
-octFAH.component.StatusBox = (function ()
-{
+octFAH.component.StatusBox = (function () {
+
+  "use strict";
 
   var _app;
 
@@ -20,9 +21,8 @@ octFAH.component.StatusBox = (function ()
    *
    * @constructor
    */
-  function StatusBox(app)
-  {
-    _app            = app;
+  function StatusBox(app) {
+    _app      = app;
     var outer = document.createElement("div");
 
     octFAH.component.Component.call(this, app, outer);
@@ -40,8 +40,7 @@ octFAH.component.StatusBox = (function ()
    *
    * @param percent {int}
    */
-  StatusBox.prototype.setCompletion = function (percent)
-  {
+  StatusBox.prototype.setCompletion = function (percent) {
     this._completion = percent;
     updateProgress(this);
   };
@@ -51,11 +50,9 @@ octFAH.component.StatusBox = (function ()
    *
    * @returns {number|int}
    */
-  StatusBox.prototype.getCompletion = function ()
-  {
+  StatusBox.prototype.getCompletion = function () {
     return this._completion;
   };
-
 
   /**
    * Initialize
@@ -63,13 +60,11 @@ octFAH.component.StatusBox = (function ()
    * @param self  {octFAH.component.StatusBox|StatusBox}
    * @param outer {HTMLElement}
    */
-  function init(self, outer)
-  {
+  function init(self, outer) {
     var s;
 
     makeOuterDiv(outer);
     self._progress = makeProgressBar();
-
 
     s = makeProgressContainer();
 
@@ -80,9 +75,8 @@ octFAH.component.StatusBox = (function ()
   /**
    * Make Outer Div
    */
-  function makeOuterDiv(div)
-  {
-    _app.getHTMLUtil().applyStyle(
+  function makeOuterDiv(div) {
+    _app.getHTMLUtil().style(
       div,
       {
         padding:      "25px",
@@ -102,12 +96,11 @@ octFAH.component.StatusBox = (function ()
    *
    * @returns {HTMLElement}
    */
-  function makeProgressContainer()
-  {
+  function makeProgressContainer() {
     var div;
 
     div = document.createElement("div");
-    _app.getHTMLUtil().applyStyle(
+    _app.getHTMLUtil().style(
       div,
       {
         height:       "24px",
@@ -126,12 +119,11 @@ octFAH.component.StatusBox = (function ()
    *
    * @return {HTMLElement}
    */
-  function makeProgressBar()
-  {
+  function makeProgressBar() {
     var div;
 
     div = document.createElement("div");
-    _app.getHTMLUtil().applyStyle(
+    _app.getHTMLUtil().style(
       div,
       {
         height:          "100%",
@@ -147,8 +139,7 @@ octFAH.component.StatusBox = (function ()
    *
    * @param con {octFAH.component.StatusBox|StatusBox}
    */
-  function updateProgress(con)
-  {
+  function updateProgress(con) {
     con._progress.style.width = con.toString() + "%";
   }
 

@@ -8,22 +8,22 @@
  *
  * @namespace octFAH.util
  */
-octFAH.util.Helpers = (function ()
-{
-  var _app;
+octFAH.util.Helpers = (function () {
+  "use strict";
+
+  var app;
   var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
   var ARGUMENT_NAMES = /([^\s,]+)/g;
 
   /**
    * Helper Utilities
    *
-   * @param app {Application}
+   * @param application {octFAH.core.Application|Application}
    *
    * @constructor
    */
-  function Helpers(app)
-  {
-    _app = app;
+  function Helpers(application) {
+    app = application;
   }
 
   /**
@@ -33,9 +33,8 @@ octFAH.util.Helpers = (function ()
    *
    * @returns {string}
    */
-  Helpers.prototype.toPx = function (i)
-  {
-    return i.toString() + 'px';
+  Helpers.prototype.toPx = function (i) {
+    return i.toString() + "px";
   };
 
   /**
@@ -43,8 +42,7 @@ octFAH.util.Helpers = (function ()
    *
    * @returns {{name: string, version: number}}
    */
-  Helpers.prototype.getBrowserType = function ()
-  {
+  Helpers.prototype.getBrowserType = function () {
     var agent, tem, matches;
 
     agent   = navigator.userAgent;
@@ -52,19 +50,20 @@ octFAH.util.Helpers = (function ()
 
     if (/trident/i.test(matches[1])) {
       tem = /\brv[ :]+(\d+)/g.exec(agent) || [];
-      return {name: 'IE', version: (tem[1] || '')};
+      return {name: "IE", version: (tem[1] || "")};
     }
 
-    if (matches[1] === 'Chrome') {
+    if (matches[1] === "Chrome") {
       tem = agent.match(/\bOPR\/(\d+)/);
       if (tem !== null) {
-        return {name: 'Opera', version: tem[1]};
+        return {name: "Opera", version: tem[1]};
       }
     }
 
-    matches = matches[2] ? [matches[1], matches[2]] : [navigator.appName, navigator.appVersion, '-?'];
+    matches = matches[2] ? [matches[1], matches[2]] : [navigator.appName, navigator.appVersion, "-?"];
 
-    if ((tem = agent.match(/version\/(\d+)/i)) !== null) {
+    tem = agent.match(/version\/(\d+)/i);
+    if (tem !== null) {
       matches.splice(1, 1, tem[1]);
     }
 
@@ -100,24 +99,23 @@ octFAH.util.Helpers = (function ()
    * @param collection {Array|Object}
    * @param func       {Function}
    */
-  Helpers.prototype.forEach = function (collection, func)
-  {
+  Helpers.prototype.forEach = function (collection, func) {
     var length, i, key, a, keys, s;
 
     s = this.getParamNames(func).length;
 
     if (collection instanceof Array) {
-      a = true;
+      a      = true;
       length = collection.length;
     } else if (collection instanceof Object) {
-      a = false;
+      a      = false;
       keys   = Object.keys(collection);
       length = keys.length;
     } else {
       return false;
     }
 
-    for (i = 0; i < length;) {
+    for (i = 0; i < length; i++) {
       key = a ? i : keys[i];
 
       if (s === 1) {
@@ -147,10 +145,10 @@ octFAH.util.Helpers = (function ()
   Helpers.prototype.getParamNames = function (func) {
     var fnStr, result;
 
-    fnStr  = func.toString().replace(STRIP_COMMENTS, '');
-    result = fnStr.slice(fnStr.indexOf('(')+1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
+    fnStr  = func.toString().replace(STRIP_COMMENTS, "");
+    result = fnStr.slice(fnStr.indexOf("(") + 1, fnStr.indexOf(")")).match(ARGUMENT_NAMES);
 
-    if(result === null){
+    if (result === null) {
       result = [];
     }
 
@@ -158,4 +156,4 @@ octFAH.util.Helpers = (function ()
   };
 
   return Helpers;
-})();
+}());

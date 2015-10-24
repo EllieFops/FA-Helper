@@ -8,38 +8,94 @@
  *
  * @namespace octFAH.core
  */
-octFAH.core.Application = (function ()
-{
+octFAH.core.Application = (function () {
+  "use strict";
+
   /**
    * @type {octFAH.util.Browser|Browser}
+   *
+   * @private
+   * @static
    */
   var _browserUtil;
+
+  /**
+   * @type {string}
+   *
+   * @private
+   * @static
+   */
   var _browser;
+
+  /**
+   * @type {object}
+   *
+   * @private
+   * @static
+   */
   var _defSet;
 
   /**
    * @type {octFAH.util.Helpers|Helpers}
+   *
+   * @private
+   * @static
    */
   var _helperUtil;
 
-  var _html;
-
   /**
    * @type {octFAH.util.HTMLUtils|HTMLUtils}
+   *
+   * @private
+   * @static
    */
   var _htmlUtil;
 
   /**
    * @type {string}
+   *
+   * @private
+   * @static
    */
   var _location;
+
+  /**
+   * @type {object}
+   *
+   * @private
+   * @static
+   */
   var _module;
+
+  /**
+   * @type {octFAH.core.Application|Application}
+   *
+   * @private
+   * @static
+   */
   var _self;
+
+  /**
+   * @type {object}
+   *
+   * @private
+   * @static
+   */
   var _settings;
+
+  /**
+   * @type {octFAH.component.SettingsMenu}
+   *
+   * @private
+   * @static
+   */
   var _settingsMenu;
 
   /**
    * @type {octFAH.util.Storage|Storage}
+   *
+   * @private
+   * @static
    */
   var _storage;
 
@@ -48,25 +104,22 @@ octFAH.core.Application = (function ()
    *
    * @constructor
    */
-  function Application()
-  {
+  function Application() {
     _location    = window.location.href;
     _htmlUtil    = new octFAH.util.HTMLUtils(this);
     _helperUtil  = new octFAH.util.Helpers(this);
     _storage     = new octFAH.util.Storage();
     _browserUtil = new octFAH.util.Browser();
-    _html        = octFAH.util.HTML;
     _browser     = _helperUtil.getBrowserType();
-
-    _settings   = _storage.fetchValue("octFASettings", _defSet);
-    _module     = null;
-    _self       = this;
-    _defSet     = {
+    _defSet      = {
       previewSize:    400,
       showPreviews:   true,
       watchShoutText: "",
       favShoutText:   ""
     };
+    _settings    = _storage.fetchValue("octFASettings", _defSet);
+    _module      = null;
+    _self        = this;
 
     init(this);
   }
@@ -76,8 +129,7 @@ octFAH.core.Application = (function ()
    *
    * @param context {Application}
    */
-  function init(context)
-  {
+  function init(context) {
     updateSettings(context);
     getModule();
     _settingsMenu = new octFAH.component.SettingsMenu(_self);
@@ -93,16 +145,14 @@ octFAH.core.Application = (function ()
      *   favShoutText:   string
      * }}
    */
-  Application.prototype.getSettings = function ()
-  {
+  Application.prototype.getSettings = function () {
     return _settings;
   };
 
   /**
    * Push Settings To Browser Storage
    */
-  Application.prototype.pushSettings = function ()
-  {
+  Application.prototype.pushSettings = function () {
     _storage.pushValue("octFASettings", _settings);
   };
 
@@ -111,8 +161,7 @@ octFAH.core.Application = (function ()
    *
    * @returns {octFAH.util.HTMLUtils|HTMLUtils}
    */
-  Application.prototype.getHTMLUtil = function ()
-  {
+  Application.prototype.getHTMLUtil = function () {
     return _htmlUtil;
   };
 
@@ -121,8 +170,7 @@ octFAH.core.Application = (function ()
    *
    * @returns {octFAH.util.Helpers|Helpers}
    */
-  Application.prototype.getHelperUtil = function ()
-  {
+  Application.prototype.getHelperUtil = function () {
     return _helperUtil;
   };
 
@@ -130,8 +178,7 @@ octFAH.core.Application = (function ()
    * Determine which module should be loaded for the current page and load
    * that module.
    */
-  function getModule()
-  {
+  function getModule() {
     var c, m;
 
     c = octFAH.core.Config;
@@ -156,8 +203,7 @@ octFAH.core.Application = (function ()
    * @param i {int}
    * @returns {string}
    */
-  Application.prototype.makeArtLink = function (i)
-  {
+  Application.prototype.makeArtLink = function (i) {
     return octFAH.core.Config.viewPage + i;
   };
 
@@ -166,8 +212,7 @@ octFAH.core.Application = (function ()
    *
    * @param link {string}
    */
-  Application.prototype.openArtTab = function (link)
-  {
+  Application.prototype.openArtTab = function (link) {
     _browserUtil.makeNewTab(link, false);
   };
 
@@ -176,8 +221,7 @@ octFAH.core.Application = (function ()
    *
    * @returns {string}
    */
-  Application.prototype.getLocation = function ()
-  {
+  Application.prototype.getLocation = function () {
     return _location;
   };
 
@@ -186,8 +230,7 @@ octFAH.core.Application = (function ()
    *
    * @param self {Application}
    */
-  function updateSettings(self)
-  {
+  function updateSettings(self) {
     var update, key;
 
     update = false;
@@ -213,20 +256,20 @@ octFAH.core.Application = (function ()
    *
    * @returns {Helpers}
    */
-  Application.prototype.getHelperUtil = function ()
-  {
+  Application.prototype.getHelperUtil = function () {
     return _helperUtil;
   };
 
   /**
    * HTML Element helper
    *
-   * @param element {octFAH.util.HTML|HTML}
+   * @param element(string|Element)
+   *
+   * @return {octFAH.util.HTML|HTML}
    */
-  Application.prototype.wrap = function(element)
-  {
-    return new _html(element);
+  Application.prototype.wrap = function (element) {
+    return new octFAH.util.HTML(element);
   };
 
   return Application;
-})();
+}());

@@ -8,10 +8,11 @@
  *
  * @namespace octFAH.util
  */
+octFAH.util.Browser = (function () {
+  "use strict";
 
-octFAH.util.Browser = (function() {
-  function Browser()
-  {}
+  function Browser() {
+  }
 
   /**
    * Create a new browser tab
@@ -19,8 +20,7 @@ octFAH.util.Browser = (function() {
    * @param url        {string}
    * @param background {boolean}
    */
-  Browser.prototype.makeNewTab = function (url, background)
-  {
+  Browser.prototype.makeNewTab = function (url, background) {
     chrome.tabs.create({url: "url", selected: background});
   };
 

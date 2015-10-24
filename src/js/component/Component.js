@@ -8,8 +8,8 @@
  *
  * @namespace octFAH.component
  */
-octFAH.component.Component = (function ()
-{
+octFAH.component.Component = (function () {
+  "use strict";
 
   var _app;
 
@@ -21,9 +21,8 @@ octFAH.component.Component = (function ()
    *
    * @constructor
    */
-  function Component(app, element)
-  {
-    _app     = app;
+  function Component(app, element) {
+    _app          = app;
     this._element = element;
   }
 
@@ -32,8 +31,7 @@ octFAH.component.Component = (function ()
    *
    * @return {octFAH.component.Component|Component}
    */
-  Component.prototype.show = function ()
-  {
+  Component.prototype.show = function () {
     this._element.style.display = "block";
 
     return this;
@@ -44,8 +42,7 @@ octFAH.component.Component = (function ()
    *
    * @returns {octFAH.component.Component|Component}
    */
-  Component.prototype.hide = function ()
-  {
+  Component.prototype.hide = function () {
     this._element.style.display = "none";
 
     return this;
@@ -60,9 +57,8 @@ octFAH.component.Component = (function ()
    *
    * @returns {octFAH.component.Component|Component}
    */
-  Component.prototype.topLeft = function (top, left)
-  {
-    this._element.style.top = top.toString() + "px";
+  Component.prototype.topLeft = function (top, left) {
+    this._element.style.top  = top.toString() + "px";
     this._element.style.left = left.toString() + "px";
 
     return this;
@@ -77,9 +73,8 @@ octFAH.component.Component = (function ()
    *
    * @returns {octFAH.component.Component|Component}
    */
-  Component.prototype.topRight = function (top, right)
-  {
-    this._element.style.top = top.toString() + "px";
+  Component.prototype.topRight = function (top, right) {
+    this._element.style.top   = top.toString() + "px";
     this._element.style.right = right.toString() + "px";
 
     return this;
@@ -94,10 +89,9 @@ octFAH.component.Component = (function ()
    *
    * @returns {octFAH.component.Component|Component}
    */
-  Component.prototype.bottomLeft = function (bottom, left)
-  {
+  Component.prototype.bottomLeft = function (bottom, left) {
     this._element.style.bottom = bottom.toString() + "px";
-    this._element.style.left = left.toString() + "px";
+    this._element.style.left   = left.toString() + "px";
 
     return this;
   };
@@ -111,10 +105,9 @@ octFAH.component.Component = (function ()
    *
    * @returns {octFAH.component.Component|Component}
    */
-  Component.prototype.bottomRight = function (bottom, right)
-  {
+  Component.prototype.bottomRight = function (bottom, right) {
     this._element.style.bottom = bottom.toString() + "px";
-    this._element.style.right = right.toString() + "px";
+    this._element.style.right  = right.toString() + "px";
 
     return this;
   };
@@ -124,8 +117,7 @@ octFAH.component.Component = (function ()
    *
    * @returns {HTMLElement}
    */
-  Component.prototype.getElement = function()
-  {
+  Component.prototype.element = function () {
     return this._element;
   };
 

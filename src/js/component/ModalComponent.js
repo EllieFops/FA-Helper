@@ -9,8 +9,9 @@
  * @augments Component
  * @namespace octFAH.component
  */
-octFAH.component.ModalComponent = (function ()
-{
+octFAH.component.ModalComponent = (function () {
+
+  "use strict";
 
   var _app;
   var _curtain;
@@ -24,8 +25,7 @@ octFAH.component.ModalComponent = (function ()
    * @augments Component
    * @constructor
    */
-  function ModalComponent(app, element)
-  {
+  function ModalComponent(app, element) {
     _app          = app;
     this._element = element;
     octFAH.component.Component.call(this, app, element);
@@ -35,14 +35,12 @@ octFAH.component.ModalComponent = (function ()
 
   ModalComponent.prototype = Object.create(octFAH.component.Component.prototype);
 
-  ModalComponent.prototype.show = function()
-  {
+  ModalComponent.prototype.show = function () {
     octFAH.component.Component.prototype.show.call(this);
     _curtain.style.display = "block";
   };
 
-  function init(self)
-  {
+  function init(self) {
     if (typeof _curtain === "undefined") {
       initCurtain();
     }
@@ -52,37 +50,35 @@ octFAH.component.ModalComponent = (function ()
   /**
    * Initialize Background Curtain
    */
-  function initCurtain()
-  {
+  function initCurtain() {
     _curtain = _app
       .wrap("div")
-      .applyStyle(
-        {
-          position:   "absolute",
-          top:        "0px",
-          bottom:     "0px",
-          left:       "0px",
-          right:      "0px",
-          width:      "100%",
-          height:     "100%",
-          zIndex:     "9999",
-          background: "#333",
-          opacity:    "0.8",
-          display:    "none"
-        }
-      )
+      .style(
+      {
+        position:   "fixed",
+        top:        "0px",
+        bottom:     "0px",
+        left:       "0px",
+        right:      "0px",
+        width:      "100%",
+        height:     "100%",
+        zIndex:     "9999",
+        background: "#333",
+        opacity:    "0.8",
+        display:    "none"
+      }
+    )
       .attribute("class", "octModal")
       .click(
-        function ()
-        {
-          var i, a;
-          a = document.querySelectorAll(".octModal");
-          for (i = 0; i < a.length; i++) {
-            a[i].style.display = "none";
-          }
+      function () {
+        var i, a;
+        a = document.querySelectorAll(".octModal");
+        for (i = 0; i < a.length; i++) {
+          a[i].style.display = "none";
         }
+      }
     )
-      .getElement();
+      .element();
 
     document.querySelector("body").appendChild(_curtain);
   }
@@ -92,15 +88,14 @@ octFAH.component.ModalComponent = (function ()
    *
    * @param self {octFAH.component.ModalComponent|ModalComponent}
    */
-  function initElement(self)
-  {
+  function initElement(self) {
     var e = self._element;
 
     _app
       .wrap(e)
-      .applyStyle(
+      .style(
       {
-        position:     "absolute",
+        position:     "fixed",
         display:      "none",
         zIndex:       "10000",
         border:       "15px solid #666",

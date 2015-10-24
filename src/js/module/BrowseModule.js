@@ -10,26 +10,28 @@
  */
 octFAH.module.BrowseModule = (function ()
 {
-  var _app, _hoverView;
+  "use strict";
+
+  /**
+   * @type {octFAH.core.Application|Application}
+   */
+  var _app;
+
+  /**
+   * @type {octFAH.component.HoverView}
+   */
+  var _hoverView;
 
   /**
    * Browse Page Manager
    *
-   * @param app {Application}
+   * @param app {octFAH.core.Application|Application}
    *
    * @constructor
    */
   function BrowseModule(app)
   {
     _app = app;
-    init();
-  }
-
-  /**
-   * Initialize Browse Module Elements
-   */
-  function init()
-  {
     _hoverView = new octFAH.component.HoverView(_app);
   }
 

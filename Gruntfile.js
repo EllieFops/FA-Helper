@@ -7,8 +7,8 @@ module.exports = function (grunt)
   // Project configuration.
   grunt.initConfig(
     {
-      pkg:    grunt.file.readJSON('package.json'),
-      clean:  ['build'],
+      pkg:    grunt.file.readJSON("package.json"),
+      clean:  ["build"],
       less:   {
         options: {
           compress:     true,
@@ -16,7 +16,7 @@ module.exports = function (grunt)
         },
         dev:     {
           files: {
-            'dist/<%= pkg.name %>-<%= pkg.version %>-<%= pkg.build %>/<%= pkg.name %>-<%= pkg.version %>-<%= pkg.build %>.min.css': 'src/EF.less'
+            "dist/<%= pkg.name %>-<%= pkg.version %>-<%= pkg.build %>/<%= pkg.name %>-<%= pkg.version %>-<%= pkg.build %>.min.css": "src/EF.less"
           }
         }
       },
@@ -32,11 +32,11 @@ module.exports = function (grunt)
           files: [
             {
               expand: true,
-              cwd:    'build/',
-              src:    ['./**/*.js'],
-              dest:   'build/',
-              ext:    '.js',
-              extDot: 'first'
+              cwd:    "build/",
+              src:    ["./**/*.js"],
+              dest:   "build/",
+              ext:    ".js",
+              extDot: "first"
             }
           ]
         }
@@ -51,7 +51,7 @@ module.exports = function (grunt)
 
         monkey: {
           options: {
-            separator: '\n'
+            separator: "\n"
           },
           src:     [
             "src/start.txt",
@@ -65,7 +65,7 @@ module.exports = function (grunt)
 
         chrome: {
           options: {
-            separator: '\n'
+            separator: "\n"
           },
           src:     [
             "src/start.txt",
@@ -87,7 +87,8 @@ module.exports = function (grunt)
           nonew:     true,
           unused:    true,
           undef:     true,
-          browser:   true
+          browser:   true,
+          newcap:    false
         },
 
         pre: {
@@ -122,12 +123,12 @@ module.exports = function (grunt)
 
       yuidoc: {
         compile: {
-          name:        '<%= pkg.name %>',
-          description: '<%= pkg.description %>',
-          version:     '<%= pkg.version %>',
+          name:        "<%= pkg.name %>",
+          description: "<%= pkg.description %>",
+          version:     "<%= pkg.version %>",
           options:     {
-            paths:  'src/', //'src/**/*.js',
-            outdir: 'doc/<%= pkg.name %>-<%= pkg.version %>/'
+            paths:  "src/", //"src/**/*.js",
+            outdir: "doc/<%= pkg.name %>-<%= pkg.version %>/"
           }
         }
       },
@@ -143,13 +144,13 @@ module.exports = function (grunt)
     }
   );
 
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks("grunt-contrib-jshint");
+  grunt.loadNpmTasks("grunt-contrib-concat");
+  grunt.loadNpmTasks("grunt-contrib-clean");
+  grunt.loadNpmTasks("grunt-contrib-uglify");
   grunt.loadNpmTasks("grunt-stripcomments");
 
-  grunt.registerTask('default', ['clean', "jshint", 'concat', "jshint", 'uglify']);
+  grunt.registerTask("default", ["clean", "jshint", "concat", "jshint", "uglify"]);
 
   // Tampermonkey / Greasemonkey
   grunt.registerTask("monkey", ["concat:monkey", "jshint:monkey"]);

@@ -8,13 +8,13 @@
  *
  * @namespace octFAH.util
  */
+octFAH.util.Browser = (function () {
+  "use strict";
 
-octFAH.util.Browser = (function() {
-  function Browser()
-  {}
+  function Browser() {
+  }
 
-  Browser.prototype.makeNewTab = function (url, background)
-  {
+  Browser.prototype.makeNewTab = function (url, background) {
     GM_openInTab(url, background);
   };
 

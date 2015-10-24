@@ -8,8 +8,9 @@
  *
  * @namespace octFAH.component
  */
-octFAH.component.HoverView = (function ()
-{
+octFAH.component.HoverView = (function () {
+  "use strict";
+
   var _app, _img, _pane, _settings;
 
   /**
@@ -19,8 +20,7 @@ octFAH.component.HoverView = (function ()
    *
    * @constructor
    */
-  function HoverView(app)
-  {
+  function HoverView(app) {
     _pane     = document.createElement("DIV");
     _app      = app;
     _img      = document.createElement("IMG");
@@ -37,8 +37,7 @@ octFAH.component.HoverView = (function ()
    *
    * @param e {Event}
    */
-  function handleMouseOver(e)
-  {
+  function handleMouseOver(e) {
     if (!_settings.showPreviews) {
       return;
     }
@@ -51,10 +50,8 @@ octFAH.component.HoverView = (function ()
    *
    * @param e {Event}
    */
-  function handleMouseMove(self)
-  {
-    return function (e)
-    {
+  function handleMouseMove(self) {
+    return function (e) {
       if (!_settings.showPreviews) {
         return;
       }
@@ -82,20 +79,18 @@ octFAH.component.HoverView = (function ()
   /**
    * Handle MouseOut Event
    */
-  function handleMouseOut()
-  {
+  function handleMouseOut() {
     _pane.style.display = "none";
   }
 
   /**
    * Initialize HoverView Elements
    */
-  function init(self)
-  {
+  function init(self) {
 
     // Init Elements
     _pane.appendChild(_img);
-    _app.getHTMLUtil().applyStyle(
+    _app.getHTMLUtil().style(
       _pane,
       {
         display:  "none",
