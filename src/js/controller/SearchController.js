@@ -1,54 +1,29 @@
 /**
  * Search Page Module
  *
- * @version 1.1
+ * @namespace octFAH.controller.SearchController
+ * @augments octFAH.controller.Controller
+ *
+ * @author  Elizabeth Harper (elliefops@gmail.com)
+ * @version 1.2
  * @since   0.1
  *
- * @author Elizabeth Harper
+ * @param app {octFAH.app.Application|Application}
  *
- * @augments octFAH.controller.Controller
- * @namespace octFAH.controller
+ * @constructor
  */
-octFAH.controller.SearchController = (function ()
-{
-  "use strict";
-
-  /**
-   * @type {octFAH.app.Application|Application}
-   */
-  var _app;
+octFAH.controller.SearchController = function (app) {
+  octFAH.controller.Controller.call(this, app);
 
   /**
    * @type {octFAH.component.HoverView}
    */
-  var _hoverView;
+  this._hoverView = null;
+};
 
-  /**
-   * Search Page Manager
-   *
-   * @param app {octFAH.app.Application|Application}
-   *
-   * @augments octFAH.controller.Controller
-   * @constructor
-   */
-  function SearchController(app)
+octFAH.controller.SearchController.prototype = Object.create(
+  octFAH.controller.Controller.prototype,
   {
-    _app = app;
-
-    octFAH.controller.Controller.call(this, app);
+    init: function () {this._hoverView = new octFAH.component.HoverView(this._app);}
   }
-
-  SearchController.prototype = Object.create(octFAH.controller.Controller.prototype);
-
-  /**
-   * Initialize Controller
-   *
-   * @override
-   */
-  SearchController.prototype.init = function ()
-  {
-    _hoverView = new octFAH.component.HoverView(_app);
-  };
-
-  return SearchController;
-})();
+);

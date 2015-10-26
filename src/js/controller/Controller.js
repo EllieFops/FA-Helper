@@ -1,39 +1,30 @@
 /**
  * Controller
  *
- * @version 1.0
+ * @namespace octFAH.controller.Controller
+ *
+ * @author Elizabeth Harper (elliefops@gmail.com)
+ * @version 1.1
  * @since   0.5
  *
- * @author Elizabeth Harper
+ * @param app {octFAH.app.Application}
  *
- * @namespace octFAH.controller
+ * @constructor
  */
-octFAH.controller.Controller = (function ()
-{
-  "use strict";
-
+octFAH.controller.Controller = function (app) {
   /**
+   * Application
    *
-   * @param app {Application|octFAH.app.Application}
-   * @constructor
+   * @type {octFAH.app.Application}
+   * @protected
    */
-  function Controller(app)
+  this._app = app;
+};
+
+octFAH.controller.Controller.prototype = Object.create(
+  Object.prototype,
   {
-    /**
-     * Application
-     *
-     * @type {Application|octFAH.app.Application}
-     * @private
-     */
-    this._app = app;
+    _init: function () {},
+    _run:  function () {}
   }
-
-  Controller.prototype.init = function ()
-  {
-  };
-  Controller.prototype.run  = function ()
-  {
-  };
-
-  return Controller;
-}());
+);

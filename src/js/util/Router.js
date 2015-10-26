@@ -1,45 +1,42 @@
 /**
  * Router
  *
+ * @namespace octFAH.util.Router
+ *
+ * @author  Elizabeth Harper (elliefops@gmail.com)
  * @version 1.0
  * @since   0.5
  *
- * @author Elizabeth Harper
- *
- * @namespace octFAH.util
+ * @constructor
  */
-octFAH.util.Router = (function ()
-{
-  "use strict";
+octFAH.util.Router = function () {
+  this._routes = {};
+};
 
-  function Router()
+octFAH.util.Router.prototype = Object.create(
+  Object.prototype,
   {
-    this._routes = {};
-  }
+    /**
+     *
+     * @param route      {string}
+     * @param controller {octFAH.controller.Controller|Controller}
+     */
+    registerRoute: function (route, controller) {
+      this._routes[route] = controller;
+    },
 
-  /**
-   *
-   * @param route      {string}
-   * @param controller {octFAH.controller.Controller|Controller}
-   */
-  Router.prototype.registerRoute = function (route, controller)
-  {
-    this._routes[route] = controller;
-  };
-
-  /**
-   *
-   * @param route {string}
-   *
-   * @returns {*}
-   */
-  Router.prototype.route = function (route)
-  {
-    if (this._routes.hasOwnProperty(route)) {
-      this._routes[route].init();
-      this._routes[route].run();
+    /**
+     *
+     * @param route {string}
+     *
+     * @returns {*}
+     */
+    route: function (route) {
+      if (this._routes.hasOwnProperty(route)) {
+        this._routes[route]._init();
+        this._routes[route]._run();
+      }
     }
-  };
 
-  return Router;
-}());
+  }
+);

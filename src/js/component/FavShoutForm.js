@@ -1,22 +1,22 @@
 /**
- * Watch Shout Component
+ * Favorite Shout Component
  *
  * Modal form for submitting mass shouts to watchers.
  *
- * @namespace octFAH.component.WatchShoutForm
- * @augments  octFAH.component.ModalComponent
+ * @namespace octFAH.component.FavShoutForm
+ * @augments  octFAH.component.ShoutForm
  *
- * @author Elizabeth Harper (elliefops@gmail.com)
- * @version 1.1
- * @since   0.4
+ * @author  Elizabeth Harper (elliefops@gmail.com)
+ * @version 1.0
+ * @since   0.5
  *
  * @param app {octFAH.app.Application}
  *
  * @constructor
  */
-octFAH.component.WatchShoutForm = function (app) {octFAH.component.ShoutForm.call(this, app);};
+octFAH.component.FavShoutForm = function (app) {octFAH.component.ShoutForm.call(this, app);};
 
-octFAH.component.WatchShoutForm.prototype = Object.create(
+octFAH.component.FavShoutForm.prototype = Object.create(
   octFAH.component.ShoutForm.prototype,
   {
     /**
@@ -26,20 +26,22 @@ octFAH.component.WatchShoutForm.prototype = Object.create(
     _setupForm: function ()
     {
       var sett, util, cLab, tLab, nLab, self, a;
+      octFAH.component.ShoutForm.prototype._setupForm.call(this);
 
-      a    = this._app;
+      a = this._app;
+
       self = this;
       util = a.htmlUtil;
       sett = a.settings;
 
-      this._text.value = sett.watchShoutText || "";
+      this._text.value = sett.favShoutText || "";
       if (this._text.value.length >= 4) {
         this._text.setAttribute("disabled", "disabled");
         this._check.setAttribute("checked", "checked");
       }
 
-      nLab = util.makeWrapperLabel("Selected Watchers", this._num);
-      cLab = util.makeWrapperLabel("Use default watcher shout", this._check, false);
+      nLab = util.makeWrapperLabel("Selected Users", this._num);
+      cLab = util.makeWrapperLabel("Use default new favorite shout", this._check, false);
       tLab = util.makeWrapperLabel("Shout Text", this._text);
 
       util.style([tLab.firstElementChild, cLab, tLab, nLab.firstElementChild], {display: "block"});
@@ -52,7 +54,7 @@ octFAH.component.WatchShoutForm.prototype = Object.create(
           if (self._check.checked) {
             self._text.setAttribute("disabled", "disabled");
             self.shoutText   = self._text.value || "";
-            self._text.value = sett.watchShoutText;
+            self._text.value = sett.favShoutText;
           } else {
             self._text.removeAttribute("disabled");
             if (self.shoutText.length) {
@@ -62,7 +64,7 @@ octFAH.component.WatchShoutForm.prototype = Object.create(
         }
       );
 
-      a.build(this._div).attribute("id", "octWatchShoutDiv").addClass("octModal").append(
+      a.build(this._div).attribute("id", "octFav-ShoutDiv").addClass("octModal").append(
         a.build("form").style({margin: "25px"}).append(
           [
             a.build("p").style({fontSize: "1.1em"}).html("Warning: do not use this on slow connections!").element(),

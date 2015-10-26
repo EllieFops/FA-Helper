@@ -1,122 +1,123 @@
 /**
  * Hover Preview Component
  *
- * @version 1.0
+ * @namespace octFAH.component.HoverView
+ * @augments  octFAH.component.Component
+ *
+ * @author Elizabeth Harper (elliefops@gmail.com)
+ * @version 1.1
  * @since   0.1
  *
- * @author Elizabeth Harper
+ * @param app {octFAH.app.Application}
  *
- * @namespace octFAH.component
+ * @constructor
  */
-octFAH.component.HoverView = (function ()
-{
-  "use strict";
-
-  var _app, _img, _pane, _settings;
+octFAH.component.HoverView = function (app) {
+  octFAH.component.Component.call(this, app, document.createElement("div"));
 
   /**
-   * Image Hover Preview
+   * Image
    *
-   * @param app {octFAH.app.Application|Application}
-   *
-   * @constructor
+   * @type {Element}
+   * @private
    */
-  function HoverView(app)
-  {
-    _pane     = document.createElement("DIV");
-    _app      = app;
-    _img      = document.createElement("IMG");
-    _settings = app.getSettings();
-
-    octFAH.component.Component.call(this, app, _pane);
-    init(this);
-  }
-
-  HoverView.prototype = Object.create(octFAH.component.Component.prototype);
+  this._img = document.createElement("img");
 
   /**
-   * Handle MouseOver events
    *
-   * @param e {Event}
+   * @type {{previewSize: int, showPreviews: boolean, watchShoutText: string, favShoutText: string}}
+   * @private
    */
-  function handleMouseOver(e)
+  this._settings = app.settings;
+
+  this._init();
+};
+
+octFAH.component.HoverView.prototype = Object.create(
+  octFAH.component.Component.prototype,
   {
-    if (!_settings.showPreviews) {
-      return;
+    /**
+     * Initialize HoverView Elements
+     */
+    _init: function () {
+      // Init Elements
+      this._htmlElement.appendChild(this._img);
+      this._app.htmlUtil.style(
+        this._htmlElement,
+        {
+          display: "none",
+          position: "absolute",
+          zIndex: 10000,
+          border: "2px solid pink"
+        }
+      );
+
+      document.querySelector("body").appendChild(this._htmlElement);
+      // Init Handlers
+      var i, a;
+      a = document.querySelectorAll("b img");
+      for (i = 0; i < a.length; i++) {
+        a[i].addEventListener("mouseover", this._handleMouseOver());
+        a[i].addEventListener("mouseout", this._handleMouseOut());
+        a[i].addEventListener("mousemove", this._handleMouseMove());
+      }
+    },
+
+    /**
+     * Handle MouseOver events
+     *
+     * @private
+     */
+    _handleMouseOver: function () {
+      var self = this;
+      return function (e) {
+        if (!self._settings.showPreviews) {return;}
+        self._htmlElement.style.display = "block";
+        self._img.setAttribute(
+          "src",
+          e.target.getAttribute("src").replace("@200", "@" + self._settings.previewSize.toString())
+        );
+      };
+    },
+
+    /**
+     * Handle MouseMove events
+     */
+    _handleMouseMove: function () {
+      var self = this;
+
+      return function (e) {
+        if (!self._settings.showPreviews) {
+          return;
+        }
+
+        var x, y, i;
+        i = self._img.getBoundingClientRect();
+
+        x = e.clientX + window.scrollX + 30;
+        if (x + i.width > window.innerWidth) {
+          x = e.clientX + window.scrollX - i.width - 30;
+        }
+
+        y = (e.clientY - i.height / 2) + window.scrollY;
+
+        if (y < window.scrollY) {
+          y += window.scrollY - y;
+        } else if (y + i.height > window.innerHeight + window.scrollY) {
+          y -= y + i.height - (window.innerHeight + window.scrollY);
+        }
+
+        self.topLeft(y, x);
+      };
+    },
+
+    /**
+     * Handle MouseOut Event
+     */
+    _handleMouseOut: function () {
+      var self = this;
+      return function () {self._htmlElement.style.display = "none";};
     }
-    _pane.style.display = "block";
-    _img.setAttribute("src", e.target.getAttribute("src").replace("@200", "@" + _settings.previewSize.toString()));
+
   }
-
-  /**
-   * Handle MouseMove events
-   *
-   * @param e {Event}
-   */
-  function handleMouseMove(self)
-  {
-    return function (e)
-    {
-      if (!_settings.showPreviews) {
-        return;
-      }
-
-      var x, y, i;
-      i = _img.getBoundingClientRect();
-
-      x = e.clientX + window.scrollX + 30;
-      if (x + i.width > window.innerWidth) {
-        x = e.clientX + window.scrollX - i.width - 30;
-      }
-
-      y = (e.clientY - i.height / 2) + window.scrollY;
-
-      if (y < window.scrollY) {
-        y += window.scrollY - y;
-      } else if (y + i.height > window.innerHeight + window.scrollY) {
-        y -= y + i.height - (window.innerHeight + window.scrollY);
-      }
-
-      self.topLeft(y, x);
-    };
-  }
-
-  /**
-   * Handle MouseOut Event
-   */
-  function handleMouseOut()
-  {
-    _pane.style.display = "none";
-  }
-
-  /**
-   * Initialize HoverView Elements
-   */
-  function init(self)
-  {
-
-    // Init Elements
-    _pane.appendChild(_img);
-    _app.getHTMLUtil().style(
-      _pane,
-      {
-        display:  "none",
-        position: "absolute",
-        zIndex:   10000,
-        border:   "2px solid pink"
-      }
-    );
-    document.querySelector("body").appendChild(_pane);
-
-    // Init Handlers
-    var i, a;
-    a = document.querySelectorAll("b img");
-    for (i = 0; i < a.length; i++) {
-      a[i].addEventListener("mouseover", handleMouseOver);
-      a[i].addEventListener("mouseout", handleMouseOut);
-      a[i].addEventListener("mousemove", handleMouseMove(self));
-    }
-  }
-
-  return HoverView;
-})();
+);

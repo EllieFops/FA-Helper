@@ -1,20 +1,22 @@
 /**
  * Static Configuration
  *
- * @version 1.0
+ * @namespace octFAH.app.Config
+ *
+ * @author  Elizabeth Harper (elliefops@gmail.com)
+ * @version 1.1
  * @since   0.1
- *
- * @author Elizabeth Harper
- *
- * @namespace octFAH.app
  */
-octFAH.app.Config = {
-  viewPage:    "//www.furaffinity.net/view/",
-  subPage:     "//www.furaffinity.net/msg/submissions/",
-  basePage:    "//www.furaffinity.net/",
-  browsePage:  "//www.furaffinity.net/browse/",
-  userPage:    "//www.furaffinity.net/user/",
-  searchPage:  "//www.furaffinity.net/search/",
-  watchesPage: "//www.furaffinity.net/msg/others/",
-  previewPage: "//t.facdn.net/"
-};
+octFAH.app.Config = Object.create(
+  Object.prototype,
+  {
+  get basePage()    {return "//www.furaffinity.net/";},
+  get browsePage()  {return "//www.furaffinity.net/browse/";},
+  get viewPage()    {return "//www.furaffinity.net/view/";},
+  get subPage()     {return "//www.furaffinity.net/msg/submissions/";},
+  get userPage()    {return "//www.furaffinity.net/user/";},
+  get searchPage()  {return "//www.furaffinity.net/search/";},
+  get watchesPage() {return "//www.furaffinity.net/msg/others/";},
+  get previewPage() {return "//t.facdn.net/";}
+  }
+);

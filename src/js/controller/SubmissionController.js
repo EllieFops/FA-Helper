@@ -1,106 +1,85 @@
 /**
  * New Submissions Page Controller
  *
- * @version 1.1
+ * @namespace octFAH.controller.SubmissionController
+ * @augments octFAH.controller.Controller
+ *
+ * @author  Elizabeth Harper (elliefops@gmail.com)
+ * @version 1.2
  * @since   0.1
  *
- * @author Elizabeth Harper
+ * @param app {octFAH.app.Application}
  *
- * @augments octFAH.controller.Controller
- * @namespace octFAH.controller
+ * @constructor
  */
-octFAH.controller.SubmissionController = (function ()
-{
-  "use strict";
-
-  /**
-   * @type {octFAH.app.Application|Application}
-   */
-  var _app;
+octFAH.controller.SubmissionController = function (app) {
+  octFAH.controller.Controller.call(this, app);
 
   /**
    * Notification Removal Form
    *
    * @type {Element}
    */
-  var _form;
+  this._form = null;
 
   /**
    * OnHover Image Preview
    *
    * @type {octFAH.component.HoverView}
    */
-  var _hoverView;
+  this._hoverView = null;
+};
 
-  /**
-   * Fur Affinity Submissions Page Manager
-   *
-   * @param app {octFAH.app.Application|Application}
-   *
-   * @augments octFAH.controller.Controller
-   * @constructor
-   */
-  function SubmissionController(app)
+octFAH.controller.SubmissionController.prototype = Object.create(
+  octFAH.controller.Controller.prototype,
   {
-    _app = app;
+    init: function () {
+      this._form      = document.getElementById("messages-form");
+      this._hoverView = new octFAH.component.HoverView(this._app);
 
-    octFAH.controller.Controller.call(this, app);
-  }
+      this._modSubmissionUI();
+    },
 
-  SubmissionController.prototype = Object.create(octFAH.controller.Controller.prototype);
-
-  /**
-   * Initialize Controller
-   *
-   * @override
-   */
-  SubmissionController.prototype.init = function ()
-  {
-    _form      = document.getElementById("messages-form");
-    _hoverView = new octFAH.component.HoverView(_app);
-    modSubmissionUI();
-  };
-
-  /**
-   * Modify the Submissions User Interface
-   */
-  function modSubmissionUI()
-  {
-    var forms;
-    forms = document.querySelectorAll(".actions");
-    for (var i = 0; i < forms.length; i++) {
-      forms[i].appendChild(makeTabsButton());
-    }
-  }
-
-  /**
-   * Make "Load In Tabs" Button
-   *
-   * @returns {Element}
-   */
-  function makeTabsButton()
-  {
-    return _app
-      .build(_app.getHTMLUtil().makeButton("Load In Tabs", handleTabsButton))
-      .attribute("class", "octoTabsButton button")
-      .element();
-  }
-
-  /**
-   * Handle "Load In Tabs" Button Click
-   */
-  function handleTabsButton()
-  {
-    var boxes = _form.querySelectorAll("input[type=checkbox]:checked");
-    var id, i;
-
-    for (i = 0; i < boxes.length; i++) {
-      id = parseInt(boxes[i].getAttribute("value"));
-      if (id > 0) {
-        _app.getBrowserUtil().makeNewTab(octFAH.app.Config.viewPage + id, true);
+    /**
+     * Modify the Submissions User Interface
+     */
+    _modSubmissionUI: function () {
+      var forms;
+      forms = document.querySelectorAll(".actions");
+      for (var i = 0; i < forms.length; i++) {
+        forms[i].appendChild(this._makeTabsButton());
       }
+    },
+
+    /**
+     * Make "Load In Tabs" Button
+     *
+     * @returns {Element}
+     */
+    _makeTabsButton: function () {
+      return this._app
+        .build(this._app.htmlUtil.makeButton("Load In Tabs", this._handleTabsButton))
+        .attribute("class", "octoTabsButton button")
+        .element();
+    },
+
+    /**
+     * Handle "Load In Tabs" Button Click
+     */
+    _handleTabsButton: function () {
+      var self = this;
+
+      return function () {
+        var boxes = self._form.querySelectorAll("input[type=checkbox]:checked");
+        var id, i;
+
+        for (i = 0; i < boxes.length; i++) {
+          id = parseInt(boxes[i].getAttribute("value"));
+          if (id > 0) {
+            self._app.browserUtil.makeNewTab(octFAH.app.Config.viewPage + id, true);
+          }
+        }
+      };
     }
   }
-
-  return SubmissionController;
-})();
+);

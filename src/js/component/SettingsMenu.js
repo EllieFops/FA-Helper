@@ -1,209 +1,248 @@
 /**
  * Settings Menu Component
  *
- * @version 1.0
- * @since   0.1
+ * @namespace octFAH.component.SettingsMenu
+ * @augments  octFAH.component.ModalComponent
  *
- * @author Elizabeth Harper
+ * @author  Elizabeth Harper (elliefops@gmail.com)
+ * @version 1.1
+ * @since   0.2
  *
- * @augments  ModalComponent
- * @namespace octFAH.component
+ * @param app {octFAH.app.Application}
+ *
+ * @constructor
  */
-octFAH.component.SettingsMenu = (function ()
-{
-
-  "use strict";
-
-  var _app;
-  var _self;
+octFAH.component.SettingsMenu = function (app) {
+  octFAH.component.ModalComponent.call(this, app, document.createElement("div"));
 
   /**
-   * Settings Menu
+   * Hover Preview Checkbox
    *
-   * @param app {Application}
-   *
-   * @augments ModalComponent
-   * @constructor
+   * @type {octFAH.util.HTML}
+   * @private
    */
-  function SettingsMenu(app)
-  {
-    _self = this;
-    _app  = app;
+  this._hoverPreviewCheckbox = this._app
+    .build(app.htmlUtil.makeCheckBox("", "", app.settings.showPreviews))
+    .change(this._previewToggle());
 
-    var div = document.createElement("div");
-
-    octFAH.component.ModalComponent.call(this, app, div);
-
-    init(this, div);
-  }
-
-  SettingsMenu.prototype = Object.create(octFAH.component.ModalComponent.prototype);
-
-  function init(self, div)
-  {
-    initDiv(div);
-    initForm(div);
-    modUI(self);
-  }
 
   /**
-   * Handle Show Settings
+   * Preview Size Select Element
    *
-   * @param self {octFAH.component.ModalComponent|ModalComponent}
-   *
-   * @returns {Function}
+   * @type {octFAH.util.HTML}
+   * @private
    */
-  function handleShow(self)
-  {
-    return function ()
-    {
-      self.show();
-    };
-  }
+  this._previewSizeSelect = app
+    .build("select")
+    .attribute("id", "octPrevSizeSel")
+    .change(this._previewSizeChange());
+
 
   /**
-   * Preview Size Change
+   * Watcher Shout Default Text Element
    *
-   * @param e {Event}
+   * @type {octFAH.util.HTML}
+   * @private
    */
-  function previewSizeChange(e)
-  {
-    _app.getSettings().previewSize = e.target.value;
-    _app.pushSettings();
-  }
+  this._watcherShoutTextarea = app
+    .build("textarea")
+    .style({width: "300px", height: "5em"})
+    .input(this._handleWatchShoutTextChange());
+
 
   /**
-   * Preview Toggle
+   * Favorite Shout Default Text Element
    *
-   * @param e {Event}
+   * @type {octFAH.util.HTML}
+   * @private
    */
-  function previewToggle(e)
-  {
-    _app.getSettings().showPreviews = e.target.checked;
-    _app.pushSettings();
-  }
+  this._favoriteShoutTextarea = app
+    .build("textarea")
+    .style({width: "300px", height: "5em"});
+
 
   /**
-   * Make Needed Alterations to the Default UI
-   */
-  function modUI(self)
-  {
-    var el, but, li;
-
-    but = _app.build("a")
-      .click(handleShow(self))
-      .style({cursor: "pointer", color: "#cfcfcf"})
-      .element();
-
-    li = document.createElement("li");
-    li.appendChild(but);
-
-    el = document.querySelector("table.block-menu-top ul.dropdown-left li:nth-child(2)");
-
-    if (!el) {
-      el = document.querySelector("#nav li:nth-child(4)");
-    } else {
-      but.style.fontWeight = "bold";
-    }
-
-    but.innerHTML = "Helper";
-
-    el.parentNode.insertBefore(li, el);
-  }
-
-  /**
-   * Initialize Container Div
+   * Base Form Element
    *
-   * @param div {Element}
+   * @type {octFAH.util.HTML}
+   * @private
    */
-  function initDiv(div)
-  {
-    var title;
+  this._baseForm = app
+    .build("form")
+    .style({margin: "10px"});
 
-    title = _app.build("span")
-      .html("FA Helper Settings")
-      .style(
-      {
-        fontWeight: "bold",
-        fontSize:   "1.2em",
-        display:    "block",
-        textAlign:  "center",
-        padding:    "0 20px 10px 20px"
+  this._init();
+};
+
+octFAH.component.SettingsMenu.prototype = Object.create(
+  octFAH.component.ModalComponent.prototype,
+  {
+    _init: function () {
+      this._initDiv();
+      this._initForm();
+      this._modUI();
+    },
+
+    get hoverPreviewCheckbox() {return this._hoverPreviewCheckbox.element;},
+    get previewSizeSelect()    {return this._previewSizeSelect.element;},
+    get watcherShoutTextarea() {return this._watcherShoutTextarea.element;},
+    get baseForm()             {return this._baseForm.element;},
+
+    /**
+     * Make Needed Alterations to the Default UI
+     */
+    _modUI: function () {
+      var el, but, li;
+
+      but = this._app.build("a")
+        .click(this._handleShow())
+        .style({cursor: "pointer", color: "#cfcfcf"})
+        .element();
+
+      li = document.createElement("li");
+      li.appendChild(but);
+
+      el = document.querySelector("table.block-menu-top ul.dropdown-left li:nth-child(2)");
+
+      if (!el) {
+        el = document.querySelector("#nav li:nth-child(4)");
+      } else {
+        but.style.fontWeight = "bold";
       }
-    );
 
-    _app.build(div).addClass("octModal").append(title);
-  }
+      but.innerHTML = "Helper";
 
-  function initForm(div)
-  {
-    var form, util, select, i, labels, opt, check, text, v, sett;
+      el.parentNode.insertBefore(li, el);
+    },
 
-    sett = _app.getSettings();
-    util = _app.getHTMLUtil();
-    v    = _app.getHelperUtil();
+    /**
+     * Initialize Container Div
+     *
+     * @private
+     */
+    _initDiv: function () {
+      var title;
 
-    select = _app
-      .build("select")
-      .attribute("id", "octPrevSizeSel")
-      .change(previewSizeChange)
-      .element();
+      title = this._app.build("span")
+        .html("FA Helper Settings")
+        .style(
+        {
+          fontWeight: "bold",
+          fontSize:   "1.2em",
+          display:    "block",
+          textAlign:  "center",
+          padding:    "0 20px 10px 20px"
+        }
+      );
 
-    text = _app
-      .build("textarea")
-      .style({width: "300px", height: "5em"})
-      .input(
-      function ()
-      {
-        sett.watchShoutText = text.value || "";
-        _app.pushSettings();
+      this._app.build(this._htmlElement).addClass("octModal").append(title);
+    },
+
+    _initForm: function () {
+      var u, i, labels, opt, v, s;
+
+      s = this._app.settings;
+      u = this._app.htmlUtil;
+      v    = this._app.helperUtil;
+
+      this._baseForm.append(
+        [
+          u.makeWrapperLabel("Enable Previews",          this._hoverPreviewCheckbox.element),
+          u.makeWrapperLabel("Preview Size",             this._previewSizeSelect.element),
+          u.makeWrapperLabel("Watcher Auto Shout Text",  this._watcherShoutTextarea.element),
+          u.makeWrapperLabel("Favorite Auto Shout Text", this._favoriteShoutTextarea.element)
+        ]
+      );
+
+      // Previously saved watcher shout value
+      if (s.watchShoutText.length > 0) {
+        this._watcherShoutTextarea.value(s.watchShoutText);
+      } else {
+        this._watcherShoutTextarea.value("");
       }
-    )
-      .element();
 
-    check = _app
-      .build(util.makeCheckBox("", "", _app.getSettings().showPreviews))
-      .change(previewToggle)
-      .element();
-
-    form = _app
-      .build("form")
-      .style({margin: "10px"})
-      .append(
-      [
-        util.makeWrapperLabel("Enable Previews", check),
-        util.makeWrapperLabel("Preview Size", select),
-        util.makeWrapperLabel("Watcher Auto Shout Text", text)
-      ]
-    )
-      .element();
-
-    if (sett.watchShoutText.length > 0) {
-      text.value = sett.watchShoutText;
-    } else {
-      text.value = "";
-    }
-
-    // Select Options
-    for (i = 200; i <= 400; i += 100) {
-      opt = util.makeSelectOption(i, v.toPx(i));
-      if (i === sett.previewSize || i.toString() === sett.previewSize.toString()) {
-        opt.setAttribute("selected", "selected");
+      // Previously saved new fav shout value
+      if (s.favShoutText.length > 0) {
+        this._favoriteShoutTextarea.value(s.favShoutText);
+      } else {
+        this._favoriteShoutTextarea.value("");
       }
-      select.appendChild(opt);
+
+      // Select Options
+      for (i = 200; i <= 400; i += 100) {
+        opt = u.makeSelectOption(i, v.toPx(i));
+        if (i === s.previewSize || i.toString() === s.previewSize.toString()) {
+          opt.setAttribute("selected", "selected");
+        }
+        this._previewSizeSelect.append(opt);
+      }
+
+      // Style Labels
+      labels = this._baseForm.element.querySelectorAll("label > span");
+      for (i = 0; i < labels.length; i++) {
+        labels[i].parentNode.style.display = "block";
+        labels[i].parentNode.style.marginBottom = "5px";
+        u.style(labels[i], {display: "block", padding: "5px", fontSize: "1.1em", width: "200px"});
+      }
+
+      this._htmlElement.appendChild(this._baseForm.element);
+    },
+
+    /**
+     * Handle Show Settings
+     *
+     * @private
+     *
+     * @returns {Function}
+     */
+    _handleShow: function () {
+      var self = this;
+      return function () {self.show();};
+    },
+
+    /**
+     * Preview Size Change
+     *
+     * @private
+     *
+     * @returns {Function}
+     */
+    _previewSizeChange: function () {
+      var self = this;
+      return function (e) {
+        self._app.settings.previewSize = e.target.value;
+        self._app.pushSettings();
+      };
+    },
+
+    /**
+     * Preview Toggle
+     *
+     * @private
+     *
+     * @returns {Function}
+     */
+    _previewToggle: function () {
+      var self = this;
+      return function (e) {
+        self._app.settings().showPreviews = e.target.checked;
+        self._app.pushSettings();
+      };
+    },
+
+    /**
+     * Handle Mass Watch Shout Default Text Update
+     *
+     * @private
+     *
+     * @returns {Function}
+     */
+    _handleWatchShoutTextChange: function () {
+      var self = this;
+      return function () {
+        self._app.settings.watchShoutText = self._watcherShoutTextarea.element().value || "";
+        self._app.pushSettings();
+      };
     }
-
-    // Style Labels
-    labels = form.querySelectorAll("label > span");
-    for (i = 0; i < labels.length; i++) {
-      labels[i].parentNode.style.display      = "block";
-      labels[i].parentNode.style.marginBottom = "5px";
-
-      util.style(labels[i], {display: "block", padding: "5px", fontSize: "1.1em", width: "200px"});
-    }
-
-    div.appendChild(form);
   }
-
-  return SettingsMenu;
-})();
+);

@@ -1,28 +1,19 @@
 /**
- * Message Page Module
+ * Message Page Controller
  *
- * @version 1.1
+ * @namespace octFAH.controller.MessageController
+ * @augments octFAH.controller.Controller
+ *
+ * @author  Elizabeth Harper (elliefops@gmail.com)
+ * @version 1.2
  * @since   0.4
  *
- * @author Elizabeth Harper
+ * @param app {octFAH.app.Application|Application}
  *
- * @augments octFAH.controller.Controller
- * @namespace octFAH.controller
+ * @constructor
  */
-octFAH.controller.MessageController = (function ()
-{
-
-  "use strict";
-
-  /**
-   * @type {octFAH.app.Application|Application}
-   */
-  var _app;
-
-  /**
-   * @type {int}
-   */
-  var _charLimit;
+octFAH.controller.MessageController = function (app) {
+  octFAH.controller.Controller.call(this, app);
 
   /**
    * Selected Watcher URLs
@@ -30,29 +21,60 @@ octFAH.controller.MessageController = (function ()
    * @type {string[]}
    *
    * @private
-   * @static
    */
-  var _selected = [];
+  this._selectedWatchers = [];
+
+  /**
+   * Selected Fav Notice URLs
+   *
+   * @type {string[]}
+   *
+   * @private
+   */
+  this._selectedFavs = [];
 
   /**
    * Watchers Shout Form
    *
-   * @type {octFAH.component.WatchShoutForm|WatchShoutForm}
+   * @type {octFAH.component.WatchShoutForm}
    *
    * @private
-   * @static
    */
-  var _shoutForm = null;
+  this._wShoutForm = null;
 
   /**
-   * Parent Form Element
+   * New Favorite Shout Form
+   *
+   * @type {octFAH.component.FavShoutForm}
+   *
+   * @private
+   */
+  this._fShoutForm = null;
+
+  /**
+   * Parent Form for new Watchers
    *
    * @type {Element}
    *
    * @private
-   * @static
    */
-  var _watchesForm = null;
+  this._watchesForm = null;
+
+  /**
+   * Message Type (ENUM)
+   *
+   * @type {object}
+   * @private
+   */
+  this._messageType = Object.create(
+    null,
+    {
+      /** @returns {int} */ get WATCH() {return 0;},
+      /** @returns {int} */ get FAVORITE() {return 1;}
+      ///** @returns {int} */ get COMMENT()  {return 2;},
+      ///** @returns {int} */ get JORNAL()   {return 3;}
+    }
+  );
 
   /**
    * Outgoing Get Requests
@@ -60,9 +82,8 @@ octFAH.controller.MessageController = (function ()
    * @type {int}
    *
    * @private
-   * @static
    */
-  var _outGets = 0;
+  this._outGets = 0;
 
   /**
    * Outgoing Put Requests
@@ -70,257 +91,377 @@ octFAH.controller.MessageController = (function ()
    * @type {int}
    *
    * @private
-   * @static
    */
-  var _outPosts = 0;
+  this._outPosts = 0;
+
+  this._charLimit = 222;
 
   /**
+   * Parent form for new Favorites
    *
+   * @type {Element}
+   *
+   * @private
+   */
+  this._favsForm = null;
+
+  /**
+   * Current running type.
+   *
+   * -1 if none.
+   *
+   * @type {int}
+   * @private
+   */
+  this._runningType = -1;
+
+  /**
    * @type {object}
    *
    * @private
-   * @static
    */
-  var _collected = {};
+  this._collected = {};
+};
 
-  /**
-   * Message Page Manager
-   *
-   * @param app {octFAH.app.Application|Application}
-   *
-   * @augments octFAH.controller.Controller
-   * @constructor
-   */
-  function MessageController(app)
+octFAH.controller.MessageController.prototype = Object.create(
+  octFAH.controller.Controller.prototype,
   {
-    _app       = app;
-    _charLimit = 222;
-    _selected  = [];
+    get messageType() {return this._messageType;},
 
-    octFAH.controller.Controller.call(this, app);
-  }
+    /**
+     * Initialize Message Page Controller Elements
+     *
+     * @public
+     * @override
+     */
+    init: function () {
+      var self = this;
 
-  MessageController.prototype = Object.create(octFAH.controller.Controller.prototype);
+      this._initWatchForm();
+      this._initFavForm();
 
-  /**
-   * Initialize Message Page Controller Elements
-   *
-   * @override
-   */
-  MessageController.prototype.init = function ()
-  {
-    _watchesForm = document.getElementById("messages-watches");
-    _watchesForm.addEventListener(
-      "click", function ()
-      {
-        fetchSelected();
-        _shoutForm.setSelCount(_selected.length);
-      }
-    );
-    _shoutForm   = new octFAH.component.WatchShoutForm(_app);
-    _shoutForm.getSendButton().addEventListener("click", submitShouts);
-
-  };
-
-  /**
-   * @override
-   */
-  MessageController.prototype.run = function ()
-  {
-    modUI();
-  };
-
-  /**
-   * Rebuild Selected User Array
-   */
-  function fetchSelected()
-  {
-    var i, butt, ht;
-
-    ht   = [];
-    butt = _watchesForm.querySelectorAll("table input:checked");
-
-    for (i = 0; i < butt.length; i++) {
-      ht.push(_app.build(butt[i]).parent("table").element().querySelector("a").getAttribute("href"));
-    }
-
-    _selected = ht;
-  }
-
-  /**
-   * Fetch Data
-   *
-   * Makes a GET request to the provided user's page in an attempt to gather
-   * the needed data to auto submit a shout.
-   *
-   * @param url {string}
-   *
-   * @returns {{key: string, action: string, name: string}|*}
-   */
-  function fetchData(url)
-  {
-    var req, data;
-
-    data = {key: "", action: "shout", name: ""};
-
-    req              = new XMLHttpRequest();
-    req.open("GET", url);
-    req.responseType = "document";
-    req.addEventListener("load", parseForKey(req, data));
-    req.addEventListener("abort", subOutGets);
-    req.addEventListener("error", subOutGets);
-    _outGets++;
-    req.send();
-
-    return data;
-  }
-
-  function subOutGets()
-  {
-    _outGets--;
-    send();
-  }
-
-  function subOutPosts()
-  {
-    _outPosts--;
-    removeSelected();
-  }
-
-  /**
-   * Parse Page Content for Key data.
-   *
-   * Sifts through the User page HTML to find the data required to make a
-   * shout post.
-   *
-   * @param req  {XMLHttpRequest}
-   * @param data {{key: string, action: string, name: string}}
-   *
-   * @returns {Function}
-   */
-  function parseForKey(req, data)
-  {
-    return function ()
-    {
-      var el;
       try {
-        el          = req.responseXML.getElementById("JSForm");
-        data.key    = el.querySelector("input[name=key]").getAttribute("value");
-        data.name   = el.querySelector("input[name=name]").getAttribute("value");
-        data.action = "shout";
-      } catch (e) {
+        document.getElementById("messages-form").addEventListener(
+          "click",
+          function () {
+            self._fetchSelected();
 
-      } finally {
-        subOutGets();
+            if (self._wShoutForm instanceof octFAH.component.WatchShoutForm) {
+              self._wShoutForm.setSelCount(self._selectedWatchers.length);
+            }
+
+            if (self._fShoutForm instanceof octFAH.component.FavShoutForm) {
+              self._fShoutForm.setSelCount(self._selectedFavs.length);
+            }
+          }
+        );
+      } catch (err) {}
+    },
+
+    /**
+     * @public
+     * @override
+     */
+    run: function () {this._modUI();},
+
+    /**
+     *
+     * @param type {int}
+     * @returns {Function}
+     * @private
+     */
+    _submitShouts: function (type) {
+      var arr, m, self;
+
+      self = this;
+      m    = this.messageType;
+      switch (type) {
+        case m.WATCH:
+          this._runningType = m.WATCH;
+          arr               = this._selectedWatchers;
+          break;
+        case m.FAVORITE:
+          this._runningType = m.FAVORITE;
+          arr               = this._selectedFavs;
+          break;
+        default:
+          arr = [];
       }
-    };
-  }
 
-  function send()
-  {
-    var i, text, temp;
+      return function () {
+        var i, l, d;
 
-    if (_outGets !== 0) {
-      return;
-    }
+        l = arr.length;
 
-    text = _shoutForm.getShoutTextElement().value;
+        for (i = 0; i < l; i++) {
+          try {
+            d = self._fetchData(arr[i]);
 
-    for (i in _collected) {
-      if (!_collected.hasOwnProperty(i)) {
-        continue;
+            self._collected[d.name] = d;
+          } catch (err) {
+
+          }
+        }
+
+        self._wShoutForm.hide();
+      };
+    },
+
+    /**
+     * Initialize New Watchers Mass Shout Form
+     *
+     * @private
+     */
+    _initWatchForm: function () {
+      this._watchesForm = document.getElementById("messages-watches");
+
+      if (!(this._watchesForm instanceof Element)) {return;}
+
+      this._wShoutForm = new octFAH.component.WatchShoutForm(this._app);
+      this._wShoutForm.getSendButton()
+        .addEventListener("click", this._submitShouts(this.messageType.WATCH));
+    },
+
+    /**
+     * Initialize New Favorites Mass Shout Form
+     *
+     * @private
+     */
+    _initFavForm: function () {
+      this._favsForm = document.getElementById("messages-favorites");
+
+      if (!(this._favsForm instanceof Element)) {return;}
+
+      this._fShoutForm = new octFAH.component.FavShoutForm(this._app);
+      this._fShoutForm.getSendButton()
+        .addEventListener("click", this._submitShouts(this.messageType.FAVORITE));
+
+    },
+
+    /**
+     * Fetch Selected Notifications
+     *
+     * @private
+     */
+    _fetchSelected: function () {
+      var i, wat, fav, ht;
+
+      wat = this._watchesForm.querySelectorAll("table input:checked");
+      fav = this._favsForm.querySelectorAll("table input:checked");
+
+      ht = new Array(wat.length);
+      for (i = 0; i < wat.length; i++) {
+        ht[i] = this._app.build(wat[i]).parent("table").element().querySelector("a").getAttribute("href");
       }
-      temp = _collected[i];
+      this._selectedWatchers = ht;
 
-      if (!temp.name || !temp.action || !temp.key) {
-        continue;
+      // ht is an object to prevent duplicates caused by multiple favorite
+      // notifications from one user.
+      ht = {};
+      for (i = 0; i < fav.length; i++) {
+        ht[this._app.build(fav[i]).parent("table").element().querySelector("a").getAttribute("href")] = 0;
+      }
+      this._selectedFavs = Object.keys(ht);
+    },
+
+    /**
+     * Make needed alterations to the Messages page
+     *
+     * @private
+     */
+    _modUI: function () {
+      var watchControls, u, favControls;
+
+      u = this._app.htmlUtil;
+
+      // This Element is only present on the page if there are new watch
+      // notifications.
+      if (this._watchesForm) {
+        watchControls = this._watchesForm.querySelector("li.section-controls");
+
+        watchControls.insertBefore(
+          this._app.build(u.makeButton("Mass Shout Selected", this._events.showShoutWatchDiv))
+            .addClass("button")
+            .element(),
+          watchControls.querySelector("input.remove")
+        );
       }
 
-      submitShout(temp.key, temp.name, temp.action, text);
-    }
-  }
+      // This element is only present on the page if there are new fav
+      // notifications.
+      if (this._favsForm) {
+        favControls = this._favsForm.querySelector("li.section-controls");
 
-  /**
-   * Submit A Shout
-   *
-   * @param key    {String}
-   * @param name   {String}
-   * @param action {String}
-   * @param shout  {String}
-   * @param [func] {Function}
-   */
-  function submitShout(key, name, action, shout, func)
-  {
-    var post;
+        favControls.insertBefore(
+          this._app.build(u.makeButton("Mass Shout Selected", this._events.showShoutFavDiv))
+            .addClass("button")
+            .element(),
+          favControls.querySelector("input.remove")
+        );
+      }
+    },
 
-    post = new octFAH.http.PostRequest();
-    post.setUrl(octFAH.app.Config.userPage + name);
-    post.setHeader("Content-type", "application/x-www-form-urlencoded")
-      .setData(
-      "action=" + action + "&key=" + key + "&name=" + name + "&shout=" + shout + "&chars_left=" + (_charLimit - shout.length).toString()
-    );
+    /**
+     * Remove Selected Notifications
+     *
+     * @private
+     */
+    _removeSelected: function () {
+      switch (this._runningType) {
+        case this.messageType.WATCH:
+          this._watchesForm.querySelector("input.remove").click();
+          break;
+        case this.messageType.FAVORITE:
+          this._favsForm.querySelector("input.remove").click();
+          break;
+      }
+    },
 
-    if (func) {
-      post.onAny(func);
-    }
+    /**
+     * Fetch Data
+     *
+     * Makes a GET request to the provided user's page in an attempt to gather the
+     * needed data to auto submit a shout.
+     *
+     * @param url {string}
+     *
+     * @returns {{key: string, action: string, name: string}|*}
+     *
+     * @private
+     */
+    _fetchData: function (url) {
+      var req, data;
 
-    post.onAny(subOutPosts);
-    post.send();
-    _outPosts++;
-  }
+      data = {key: "", action: "shout", name: ""};
 
-  function modUI()
-  {
-    var watches, watchControls, swButt, u;
+      req              = new XMLHttpRequest();
+      req.open("GET", url);
+      req.responseType = "document";
+      req.addEventListener("load", this._parseForKey(req, data));
+      req.addEventListener("abort", this._subOutGets);
+      req.addEventListener("error", this._subOutGets);
+      this._outGets++;
+      req.send();
 
-    u             = _app.getHTMLUtil();
-    watches       = document.getElementById("messages-watches");
-    watchControls = watches.querySelector("li.section-controls");
+      return data;
+    },
 
-    swButt = u.makeButton("Mass Shout Selected", showShoutWatchDiv);
-    swButt.setAttribute("class", "button octModalShow");
-    watchControls.insertBefore(swButt, watchControls.querySelector("input.remove"));
+    _subOutGets: function () {
+      this._outGets--;
+      this._send();
+    },
 
-  }
+    _subOutPosts: function () {
+      this._outPosts--;
 
-  /**
-   * Show the Shout to Watchers div
-   */
-  function showShoutWatchDiv()
-  {
-    _shoutForm.show();
-  }
+      if (this._outPosts < 1) {
+        this._removeSelected();
+      }
+    },
 
-  /**
-   *
-   */
-  function submitShouts()
-  {
-    var i, l, d;
+    /**
+     * Parse Page Content for Key data.
+     *
+     * Sifts through the User page HTML to find the data required to make a
+     * shout post.
+     *
+     * @param req  {XMLHttpRequest}
+     * @param data {{key: string, action: string, name: string}}
+     *
+     * @returns {Function}
+     */
+    _parseForKey: function (req, data) {
+      return function () {
+        var el;
+        try {
+          el          = req.responseXML.getElementById("JSForm");
+          data.key    = el.querySelector("input[name=key]").getAttribute("value");
+          data.name   = el.querySelector("input[name=name]").getAttribute("value");
+          data.action = "shout";
+        } catch (e) {
 
-    l = _selected.length;
+        } finally {
+          this._subOutGets();
+        }
+      };
+    },
 
-    for (i = 0; i < l; i++) {
-      try {
-        d                  = fetchData(_selected[i]);
-        _collected[d.name] = d;
-      } catch (err) {
+    _send: function () {
+      var i, text, temp;
+
+      if (this._outGets !== 0) {
+        return;
+      }
+
+      text = this._wShoutForm.getShoutTextElement().value;
+
+      for (i in this._collected) {
+        if (!this._collected.hasOwnProperty(i)) {
+          continue;
+        }
+        temp = this._collected[i];
+
+        if (!temp.name || !temp.action || !temp.key) {
+          continue;
+        }
+
+        this._events.submitShout(temp.key, temp.name, temp.action, text);
+      }
+    },
+
+
+    _events: {
+      showShoutFavDiv: function () {
+        var self = this;
+
+        return function () {
+          self._fShoutForm.show();
+        };
+      },
+
+      /**
+       * Show the Shout to Watchers div
+       */
+      showShoutWatchDiv: function () {
+        var self = this;
+
+        return function () {
+          self._wShoutForm.show();
+        };
+      },
+
+      /**
+       * Submit A Shout
+       *
+       * @param key    {String}
+       * @param name   {String}
+       * @param action {String}
+       * @param shout  {String}
+       * @param [func] {Function}
+       */
+      submitShout: function (key, name, action, shout, func) {
+        var self = this;
+
+        return function () {
+          var post;
+
+          post = new octFAH.http.PostRequest();
+          post.setUrl(octFAH.app.Config.userPage + name);
+          post.setHeader("Content-type", "application/x-www-form-urlencoded")
+            .setData(
+            "action=" + action + "&key=" + key + "&name=" + name + "&shout=" + shout + "&chars_left=" +
+            (self._charLimit - shout.length).toString()
+          );
+
+          if (func) {
+            post.onAny(func);
+          }
+
+          post.onAny(self._subOutPosts);
+          post.send();
+          this._outPosts++;
+        };
       }
     }
-
-    _shoutForm.hide();
   }
-
-  /**
-   *
-   */
-  function removeSelected()
-  {
-    if (_outPosts > 0) {
-      return;
-    }
-    _watchesForm.querySelector("input.remove").click();
-  }
-
-  return MessageController;
-})();
+);

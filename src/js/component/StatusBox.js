@@ -1,156 +1,89 @@
 /**
  * Status/Progress Component
  *
- * @version 1.0
- * @since   0.1
+ * @namespace octFAH.component.StatusBox
+ * @augments  octFAH.component.Component
  *
- * @author Elizabeth Harper
+ * @author Elizabeth Harper (elliefops@gmail.com)
+ * @version 1.1
+ * @since   0.4
  *
- * @namespace octFAH.component
+ * @param app {octFAH.app.Application}
+ *
+ * @constructor
  */
-octFAH.component.StatusBox = (function ()
-{
+octFAH.component.StatusBox = function (app) {
+  octFAH.component.Component.call(this, app, document.createElement("div"));
 
-  "use strict";
+  this._completion = 0;
+  this._progress   = null;
 
-  var _app;
+  this._init();
+};
 
-  /**
-   * Status Box Manager
-   *
-   * @param app {Application}
-   *
-   * @constructor
-   */
-  function StatusBox(app)
+octFAH.component.StatusBox.prototype = Object.create(
+  octFAH.component.Component.prototype,
   {
-    _app      = app;
-    var outer = document.createElement("div");
 
-    octFAH.component.Component.call(this, app, outer);
+    /**
+     * Set Completion Percent
+     *
+     * @param percent {int}
+     */
+    set completion(percent) {
+      this._completion = percent;
+      this._updateProgress();
+    },
 
-    this._completion = 0;
-    this._progress   = null;
 
-    init(this, outer);
+    /**
+     * Get Completion Percent
+     *
+     * @returns {number|int}
+     */
+    get completion() {return this._completion;},
+
+    /**
+     * Initialize
+     *
+     * @private
+     */
+    _init: function () {
+
+      this._progress = this._app
+        .build("div")
+        .style({height: "100%", backgroundColor: "#3379aa"})
+        .element;
+
+      this._app
+        .build(this._htmlElement)
+        .style(
+        {
+          padding:      "25px",
+          position:     "fixed",
+          border:       "4px solid pink",
+          borderRadius: "10px",
+          bottom:       "50px",
+          right:        "50px",
+          display:      "none"
+        }
+      )
+        .append(
+        this._app
+          .build("div")
+          .style({height: "24px", width: "200px", borderRadius: "5px", border: "1px solid #444", overflow: "hidden"})
+          .append(this._progress)
+          .element
+      );
+    },
+
+    /**
+     * Update Progress
+     *
+     * @private
+     */
+    _updateProgress: function () {
+      this._progress.style.width = this.toString() + "%";
+    }
   }
-
-  StatusBox.prototype = Object.create(octFAH.component.Component.prototype);
-
-  /**
-   * Set Completion Percent
-   *
-   * @param percent {int}
-   */
-  StatusBox.prototype.setCompletion = function (percent)
-  {
-    this._completion = percent;
-    updateProgress(this);
-  };
-
-  /**
-   * Get Completion Percent
-   *
-   * @returns {number|int}
-   */
-  StatusBox.prototype.getCompletion = function ()
-  {
-    return this._completion;
-  };
-
-  /**
-   * Initialize
-   *
-   * @param self  {octFAH.component.StatusBox|StatusBox}
-   * @param outer {HTMLElement}
-   */
-  function init(self, outer)
-  {
-    var s;
-
-    makeOuterDiv(outer);
-    self._progress = makeProgressBar();
-
-    s = makeProgressContainer();
-
-    s.appendChild(self._progress);
-    outer.appendChild(s);
-  }
-
-  /**
-   * Make Outer Div
-   */
-  function makeOuterDiv(div)
-  {
-    _app.getHTMLUtil().style(
-      div,
-      {
-        padding:      "25px",
-        position:     "fixed",
-        border:       "4px solid pink",
-        borderRadius: "10px",
-        bottom:       "50px",
-        right:        "50px",
-        display:      "none"
-      }
-    );
-
-  }
-
-  /**
-   * Make Progress Bar Container Div
-   *
-   * @returns {HTMLElement}
-   */
-  function makeProgressContainer()
-  {
-    var div;
-
-    div = document.createElement("div");
-    _app.getHTMLUtil().style(
-      div,
-      {
-        height:       "24px",
-        width:        "200px",
-        borderRadius: "5px",
-        border:       "1px solid #444",
-        overflow:     "hidden"
-      }
-    );
-
-    return div;
-  }
-
-  /**
-   * Make Progress Bar
-   *
-   * @return {HTMLElement}
-   */
-  function makeProgressBar()
-  {
-    var div;
-
-    div = document.createElement("div");
-    _app.getHTMLUtil().style(
-      div,
-      {
-        height:          "100%",
-        backgroundColor: "#3379aa"
-      }
-    );
-
-    return div;
-  }
-
-  /**
-   * Update Progress
-   *
-   * @param con {octFAH.component.StatusBox|StatusBox}
-   */
-  function updateProgress(con)
-  {
-    con._progress.style.width = con.toString() + "%";
-  }
-
-  return StatusBox;
-})();
+);

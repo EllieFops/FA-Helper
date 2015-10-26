@@ -1,273 +1,214 @@
 /**
  * FAHelper Core Application
  *
- * @version 1.1
+ * @namespace octFAH.app.Application
+ *
+ * @author  Elizabeth Harper (elliefops@gmail.com)
+ * @version 1.2
  * @since   0.1
  *
- * @author Elizabeth Harper
- *
- * @namespace octFAH.app
+ * @constructor
  */
-octFAH.app.Application = (function ()
-{
-  "use strict";
-
+octFAH.app.Application = function () {
   /**
-   * @type {octFAH.util.Browser|Browser}
    *
-   * @private
-   * @static
-   */
-  var _browserUtil;
-
-  /**
    * @type {string}
-   *
    * @private
-   * @static
    */
-  var _browser;
+  this._location = window.location.href;
 
   /**
+   *
+   * @type {octFAH.util.Router}
+   * @private
+   */
+  this._router = new octFAH.util.Router();
+
+  /**
+   *
+   * @type {octFAH.util.HTMLUtils}
+   * @private
+   */
+  this._htmlUtil = new octFAH.util.HTMLUtils(this);
+
+  /**
+   *
+   * @type {octFAH.util.Helpers}
+   * @private
+   */
+  this._helperUtil = new octFAH.util.Helpers(this);
+
+  /**
+   *
+   * @type {octFAH.util.Storage}
+   * @private
+   */
+  this._storage = new octFAH.util.Storage();
+
+  /**
+   *
+   * @type {octFAH.util.Browser}
+   * @private
+   */
+  this._browserUtil = new octFAH.util.Browser();
+
+  /**
+   *
+   * @type {{name, version}|{name: string, version: number}}
+   * @private
+   */
+  this._browser = this._helperUtil.getBrowserType();
+
+  /**
+   * Default Settings
+   *
+   * @type {{previewSize: number, showPreviews: boolean, watchShoutText: string, favShoutText: string}}
+   * @private
+   */
+  this._defSet = {
+    previewSize:    400,
+    showPreviews:   true,
+    watchShoutText: "",
+    favShoutText:   ""
+  };
+
+  /**
+   * Current Settings
+   *
    * @type {object}
-   *
    * @private
-   * @static
    */
-  var _defSet;
+  this._settings = this._storage.fetchValue("octFASettings", this._defSet);
 
-  /**
-   * @type {octFAH.util.Helpers|Helpers}
-   *
-   * @private
-   * @static
-   */
-  var _helperUtil;
 
-  /**
-   * @type {octFAH.util.HTMLUtils|HTMLUtils}
-   *
-   * @private
-   * @static
-   */
-  var _htmlUtil;
+  this._boot();
+  this._init();
+  this._run();
+};
 
-  /**
-   * @type {string}
-   *
-   * @private
-   * @static
-   */
-  var _location;
-
-  /**
-   * @type {object}
-   *
-   * @private
-   * @static
-   */
-  var _module;
-
-  /**
-   * @type {octFAH.app.Application|Application}
-   *
-   * @private
-   * @static
-   */
-  var _self;
-
-  /**
-   * @type {object}
-   *
-   * @private
-   * @static
-   */
-  var _settings;
-
-  /**
-   * @type {octFAH.component.SettingsMenu}
-   *
-   * @private
-   * @static
-   */
-  var _settingsMenu;
-
-  /**
-   * @type {octFAH.util.Storage|Storage}
-   *
-   * @private
-   * @static
-   */
-  var _storage;
-
-  /**
-   * @type {octFAH.util.Router|Router}
-   */
-  var _router;
-
-  /**
-   * Fur Affinity Helper
-   *
-   * @constructor
-   */
-  function Application()
+octFAH.app.Application.prototype = Object.create(
+  Object.prototype,
   {
-    _location    = window.location.href;
-    _router      = new octFAH.util.Router();
-    _htmlUtil    = new octFAH.util.HTMLUtils(this);
-    _helperUtil  = new octFAH.util.Helpers(this);
-    _storage     = new octFAH.util.Storage();
-    _browserUtil = new octFAH.util.Browser();
-    _browser     = _helperUtil.getBrowserType();
-    _defSet      = {
-      previewSize:    400,
-      showPreviews:   true,
-      watchShoutText: "",
-      favShoutText:   ""
-    };
-    _settings    = _storage.fetchValue("octFASettings", _defSet);
-    _module      = null;
-    _self        = this;
+    /**
+     * Boot Setup
+     *
+     * @private
+     */
+    _boot: function () {
+      this._router.registerRoute("/browse/", new octFAH.controller.BrowseController(this));
+      this._router.registerRoute("/search/", new octFAH.controller.SearchController(this));
+      this._router.registerRoute("/msg/submissions/", new octFAH.controller.SubmissionController(this));
+      this._router.registerRoute("/msg/others/", new octFAH.controller.MessageController(this));
 
-    boot(this);
-    init();
-    run();
-  }
+      this._updateSettings();
+    },
 
-  function boot(app)
-  {
-    _router.registerRoute("/browse/", new octFAH.controller.BrowseController(app));
-    _router.registerRoute("/search/", new octFAH.controller.SearchController(app));
-    _router.registerRoute("/msg/submissions/", new octFAH.controller.SubmissionController(app));
-    _router.registerRoute("/msg/others/", new octFAH.controller.MessageController(app));
+    /**
+     * Initialize Application
+     *
+     * @private
+     */
+    _init: function () {this._settingsMenu = new octFAH.component.SettingsMenu(this);},
 
-    updateSettings(app);
-  }
+    /**
+     * Run Application
+     *
+     * @private
+     */
+    _run: function () {this._router.route(window.location.pathname);},
 
-  /**
-   * Initialize Application
-   */
-  function init()
-  {
-    _settingsMenu = new octFAH.component.SettingsMenu(_self);
-  }
-
-  function run()
-  {
-    _router.route(window.location.pathname);
-  }
-
-  /**
-   * Get Application Settings
-   *
-   * @returns {{
+    /**
+     * Get Application Settings
+     *
+     * @public
+     *
+     * @returns {{
      *   previewSize:    int,
      *   showPreviews:   boolean,
      *   watchShoutText: string,
      *   favShoutText:   string
      * }}
-   */
-  Application.prototype.getSettings = function ()
-  {
-    return _settings;
-  };
+     */
+    get settings() {return this._settings;},
 
-  /**
-   * Push Settings To Browser Storage
-   */
-  Application.prototype.pushSettings = function ()
-  {
-    _storage.pushValue("octFASettings", _settings);
-  };
+    /**
+     * Push Settings To Browser Storage
+     *
+     * @public
+     */
+    pushSettings: function () {this._storage.pushValue("octFASettings", this._settings);},
 
-  /**
-   * Get HTML Helper Utility
-   *
-   * @returns {octFAH.util.HTMLUtils|HTMLUtils}
-   */
-  Application.prototype.getHTMLUtil = function ()
-  {
-    return _htmlUtil;
-  };
+    /**
+     * Get HTML Helper Utility
+     *
+     * @public
+     *
+     * @returns {octFAH.util.HTMLUtils}
+     */
+    get htmlUtil() {return this._htmlUtil;},
 
-  /**
-   * Get General Helper Utility
-   *
-   * @returns {octFAH.util.Helpers|Helpers}
-   */
-  Application.prototype.getHelperUtil = function ()
-  {
-    return _helperUtil;
-  };
+    /**
+     * Get General Helper Utility
+     *
+     * @public
+     *
+     * @returns {octFAH.util.Helpers}
+     */
+    get helperUtil() {return this._helperUtil;},
 
-  /**
-   * Get the current URL
-   *
-   * @returns {string}
-   */
-  Application.prototype.getLocation = function ()
-  {
-    return _location;
-  };
+    /**
+     * Get the current URL
+     *
+     * @public
+     *
+     * @returns {string}
+     */
+    get location() {return this._location;},
 
-  /**
-   * Get Browser Utility
-   *
-   * @returns {octFAH.util.Browser|Browser}
-   */
-  Application.prototype.getBrowserUtil = function ()
-  {
-    return _browserUtil;
-  };
+    /**
+     * Get Browser Utility
+     *
+     * @public
+     *
+     * @returns {octFAH.util.Browser}
+     */
+    get browserUtil() {return this._browserUtil;},
 
-  /**
-   * Fill any gaps in the settings object left from updates.
-   *
-   * @param self {Application}
-   */
-  function updateSettings(self)
-  {
-    var update, key;
+    /**
+     * HTML Element helper
+     *
+     * @public
+     *
+     * @param element(string|Element)
+     *
+     * @return {octFAH.util.HTML}
+     */
+    build: function (element) {return new octFAH.util.HTML(element);},
 
-    update = false;
+    /**
+     * Fill any gaps in the settings object left from updates.
+     *
+     * @private
+     */
+    _updateSettings: function () {
+      var update, key;
 
-    for (key in _defSet) {
-      if (!_defSet.hasOwnProperty(key)) {
-        continue;
+      update = false;
+
+      for (key in this._defSet) {
+        if (!this._defSet.hasOwnProperty(key)) {
+          continue;
+        }
+
+        if (typeof this._settings[key] === "undefined") {
+          update              = true;
+          this._settings[key] = this._defSet[key];
+        }
       }
 
-      if (typeof _settings[key] === "undefined") {
-        update         = true;
-        _settings[key] = _defSet[key];
+      if (update) {
+        this.pushSettings();
       }
-    }
-
-    if (update) {
-      self.pushSettings();
     }
   }
-
-  /**
-   * Get Helper Utilities
-   *
-   * @returns {Helpers}
-   */
-  Application.prototype.getHelperUtil = function ()
-  {
-    return _helperUtil;
-  };
-
-  /**
-   * HTML Element helper
-   *
-   * @param element(string|Element)
-   *
-   * @return {octFAH.util.HTML|HTML}
-   */
-  Application.prototype.build = function (element)
-  {
-    return new octFAH.util.HTML(element);
-  };
-
-  return Application;
-}());
+);
