@@ -4,7 +4,7 @@
  * @namespace octFAH.util.HTMLUtils
  *
  * @author  Elizabeth Harper (elliefops@gmail.com)
- * @version 1.1
+ * @version 1.2
  * @since   0.3
  *
  * @param app {octFAH.app.Application}
@@ -27,15 +27,9 @@ octFAH.util.HTMLUtils.prototype = Object.create(
      * @return {HTMLElement}
      */
     makeButton: function (text, click) {
-      var el = document.createElement("input");
-      el.setAttribute("type", "button");
-      el.setAttribute("value", text);
-
-      if (click) {
-        el.addEventListener("click", click);
-      }
-
-      return el;
+      var el = this._app.build("input").attribute("type", "button").value(text);
+      if (click) {el.click(click);}
+      return el.element;
     },
 
     /**
@@ -48,22 +42,13 @@ octFAH.util.HTMLUtils.prototype = Object.create(
      * @returns {Element}
      */
     makeCheckBox: function (name, value, checked) {
-      var check = document.createElement("input");
-      check.setAttribute("type", "checkbox");
+      var check = this._app.build("input").attribute("type", "checkbox");
 
-      if (name) {
-        check.setAttribute("name", name);
-      }
+      if (name)    {check.attribute("name",    name);}
+      if (value)   {check.attribute("value",   value);}
+      if (checked) {check.attribute("checked", "checked");}
 
-      if (value) {
-        check.setAttribute("value", value);
-      }
-
-      if (checked) {
-        check.setAttribute("checked", "checked");
-      }
-
-      return check;
+      return check.element;
     },
 
     /**
@@ -74,12 +59,7 @@ octFAH.util.HTMLUtils.prototype = Object.create(
      *
      * @returns {Element}
      */
-    makeSelectOption: function (val, text) {
-      var o       = document.createElement("option");
-      o.setAttribute("value", val);
-      o.innerHTML = text;
-      return o;
-    },
+    makeSelectOption: function (val, text) {return this._app.build("option").value(val).html(text).element;},
 
     /**
      * Make A Label Containing an Element
@@ -91,17 +71,13 @@ octFAH.util.HTMLUtils.prototype = Object.create(
      * @returns {Element}
      */
     makeWrapperLabel: function (text, element, before) {
-      var label, span;
+      var span;
+
       before = (typeof before === "undefined") ? true : before;
 
-      label = document.createElement("label");
-      span  = document.createElement("span");
+      span  = this._app.build("span").html(text);
 
-      span.innerHTML = text;
-      label.appendChild(before ? span : element);
-      label.appendChild(before ? element : span);
-
-      return label;
+      return this._app.build("label").append(before ? [span, element] : [element, span]).element;
     },
 
     /**
