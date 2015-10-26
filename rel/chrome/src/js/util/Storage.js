@@ -9,9 +9,6 @@
  * @namespace octFAH.util
  */
 octFAH.util.Storage = (function () {
-
-  "use strict";
-
   function Storage() {
   }
 

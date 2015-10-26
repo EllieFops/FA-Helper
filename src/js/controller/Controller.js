@@ -21,10 +21,14 @@ octFAH.controller.Controller = function (app) {
   this._app = app;
 };
 
-octFAH.controller.Controller.prototype = Object.create(
-  Object.prototype,
-  {
-    _init: function () {},
-    _run:  function () {}
-  }
-);
+octFAH.controller.Controller.prototype = Object.create(Object.prototype);
+
+/**
+ * @public
+ */
+octFAH.controller.Controller.prototype.init = function () {};
+
+/**
+ * @public
+ */
+octFAH.controller.Controller.prototype.run = function () {};

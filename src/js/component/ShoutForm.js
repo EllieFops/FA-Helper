@@ -15,18 +15,12 @@
  * @constructor
  */
 octFAH.component.ShoutForm = function (app) {
-  /**
-   * Outer Container Div
-   *
-   * @type {Element}
-   * @protected
-   */
-  this._div = document.createElement("div");
+  octFAH.component.ModalComponent.call(this, app, document.createElement("div"));
 
   /**
-   * Selected Watcher Count Input
+   * Selected User Count Input
    *
-   * @type {Element}
+   * @type {octFAH.util.HTML}
    * @private
    */
   this._num = null;
@@ -44,7 +38,7 @@ octFAH.component.ShoutForm = function (app) {
   /**
    * Shout Text Input
    *
-   * @type {Element}
+   * @type {octFAH.util.HTML}
    * @private
    */
   this._text = null;
@@ -58,64 +52,51 @@ octFAH.component.ShoutForm = function (app) {
   this._sendButton = null;
 
   this.shoutText = "";
-
-  octFAH.component.ModalComponent.call(this, app, this._div);
-
-  this._setupForm();
 };
 
-octFAH.component.ShoutForm.prototype = Object.create(
-  octFAH.component.ModalComponent.prototype,
-  {
-    /**
-     * Update Select Count
-     *
-     * @param num {int}
-     */
-    setSelCount: function (num) {this._num.value = num;},
+octFAH.component.ShoutForm.prototype = Object.create(octFAH.component.ModalComponent.prototype);
 
-    /**
-     * Get Use Default Text Checkbox
-     *
-     * @returns {Element}
-     */
-    getUseDefaultElement: function () {return this._check;},
+/**
+ * Update Select Count
+ *
+ * @param num {int}
+ * @public
+ */
+octFAH.component.ShoutForm.prototype.setSelCount = function (num) {this._num.value(num);};
 
-    /**
-     * Get Shout Text Textarea
-     *
-     * @returns {Element}
-     */
-    getShoutTextElement: function () {return this._text;},
+/**
+ * Get Use Default Text Checkbox
+ *
+ * @returns {Element}
+ * @public
+ */
+octFAH.component.ShoutForm.prototype.getUseDefaultElement = function () {return this._check;};
 
-    /**
-     * Get Shout Send Button
-     *
-     * @returns {Element}
-     */
-    getSendButton: function () {return this._sendButton;},
+/**
+ * Get Shout Text Textarea
+ *
+ * @returns {Element}
+ * @public
+ */
+octFAH.component.ShoutForm.prototype.getShoutTextElement = function () {return this._text.getElement();};
 
-    _setupForm: function () {
-      var util, a;
+/**
+ * Get Shout Send Button
+ *
+ * @returns {Element}
+ * @public
+ */
+octFAH.component.ShoutForm.prototype.getSendButton = function () {return this._sendButton;};
 
-      a = this._app;
+/**
+ * @inheritDoc octFAH.component.ModalComponent.prototype._init
+ */
+octFAH.component.ShoutForm.prototype._init = function () {
+  octFAH.component.ModalComponent.prototype._init.call(this);
 
-      util = a.getHTMLUtil();
-
-      this.shoutText = "";
-
-      this._num = a.build("input")
-        .attributes({disabled: "disabled", type: "number", "default": "0"})
-        .style({width: "25px"})
-        .element();
-
-      this._text = a.build("textarea")
-        .style({width: "200px", height: "8em"})
-        .element();
-
-      this._check = util.makeCheckBox("", "", false);
-
-      this._sendButton = util.makeButton("Send");
-    }
-  }
-);
+  this._num        = this._app.wrap("<input>").attributes({disabled: "true", type: "number", "default": "0"})
+    .style({width: "25px"});
+  this._check      = this._app.getHTMLUtil().makeCheckBox("", "", false);
+  this._text       = this._app.wrap("<textarea>").style({width: "200px", height: "8em"});
+  this._sendButton = this._app.getHTMLUtil().makeButton("Send");
+};

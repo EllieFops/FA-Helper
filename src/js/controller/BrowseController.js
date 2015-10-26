@@ -13,17 +13,20 @@
  * @constructor
  */
 octFAH.controller.BrowseController = function (app) {
-  octFAH.controller.Controller.call(this, app);
-
   /**
    * @type {octFAH.component.HoverView}
    */
   this._hoverView = null;
+
+  octFAH.controller.Controller.call(this, app);
 };
 
-octFAH.controller.BrowseController.prototype = Object.create(
-  octFAH.controller.Controller.prototype,
-  {
-    init: function () {this._hoverView = new octFAH.component.HoverView(this._app);}
-  }
-);
+octFAH.controller.BrowseController.prototype = Object.create(octFAH.controller.Controller.prototype);
+
+/**
+ * @override
+ * @public
+ */
+octFAH.controller.BrowseController.prototype.init = function () {
+  this._hoverView = new octFAH.component.HoverView(this._app);
+};

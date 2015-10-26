@@ -13,7 +13,6 @@
  * @constructor
  */
 octFAH.controller.SubmissionController = function (app) {
-  octFAH.controller.Controller.call(this, app);
 
   /**
    * Notification Removal Form
@@ -28,58 +27,66 @@ octFAH.controller.SubmissionController = function (app) {
    * @type {octFAH.component.HoverView}
    */
   this._hoverView = null;
+
+  octFAH.controller.Controller.call(this, app);
 };
 
-octFAH.controller.SubmissionController.prototype = Object.create(
-  octFAH.controller.Controller.prototype,
-  {
-    init: function () {
-      this._form      = document.getElementById("messages-form");
-      this._hoverView = new octFAH.component.HoverView(this._app);
+octFAH.controller.SubmissionController.prototype = Object.create(octFAH.controller.Controller.prototype);
 
-      this._modSubmissionUI();
-    },
+/**
+ * @override
+ * @public
+ */
+octFAH.controller.SubmissionController.prototype.init = function () {
+  this._form      = document.getElementById("messages-form");
+  this._hoverView = new octFAH.component.HoverView(this._app);
 
-    /**
-     * Modify the Submissions User Interface
-     */
-    _modSubmissionUI: function () {
-      var forms;
-      forms = document.querySelectorAll(".actions");
-      for (var i = 0; i < forms.length; i++) {
-        forms[i].appendChild(this._makeTabsButton());
-      }
-    },
+  this._modSubmissionUI();
+};
 
-    /**
-     * Make "Load In Tabs" Button
-     *
-     * @returns {Element}
-     */
-    _makeTabsButton: function () {
-      return this._app
-        .build(this._app.htmlUtil.makeButton("Load In Tabs", this._handleTabsButton))
-        .attribute("class", "octoTabsButton button")
-        .element();
-    },
-
-    /**
-     * Handle "Load In Tabs" Button Click
-     */
-    _handleTabsButton: function () {
-      var self = this;
-
-      return function () {
-        var boxes = self._form.querySelectorAll("input[type=checkbox]:checked");
-        var id, i;
-
-        for (i = 0; i < boxes.length; i++) {
-          id = parseInt(boxes[i].getAttribute("value"));
-          if (id > 0) {
-            self._app.browserUtil.makeNewTab(octFAH.app.Config.viewPage + id, true);
-          }
-        }
-      };
-    }
+/**
+ * Modify the Submissions User Interface
+ *
+ * @private
+ */
+octFAH.controller.SubmissionController.prototype._modSubmissionUI = function () {
+  var forms;
+  forms = document.querySelectorAll(".actions");
+  for (var i = 0; i < forms.length; i++) {
+    forms[i].appendChild(this._makeTabsButton());
   }
-);
+};
+
+/**
+ * Make "Load In Tabs" Button
+ *
+ * @returns {Element}
+ * @private
+ */
+octFAH.controller.SubmissionController.prototype._makeTabsButton = function () {
+  return this._app
+    .wrap(this._app.getHTMLUtil().makeButton("Load In Tabs", this._handleTabsButton))
+    .attribute("class", "octoTabsButton button")
+    .getElement();
+};
+
+/**
+ * Handle "Load In Tabs" Button Click
+ *
+ * @private
+ */
+octFAH.controller.SubmissionController.prototype._handleTabsButton = function () {
+  var self = this;
+
+  return function () {
+    var boxes = self._form.querySelectorAll("input[type=checkbox]:checked");
+    var id, i;
+
+    for (i = 0; i < boxes.length; i++) {
+      id = parseInt(boxes[i].getAttribute("value"));
+      if (id > 0) {
+        self._app.getBrowserUtil().makeNewTab(octFAH.app.Config.viewPage + id, true);
+      }
+    }
+  };
+};

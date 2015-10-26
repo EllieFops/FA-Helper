@@ -9,8 +9,6 @@
  * @namespace octFAH.util
  */
 octFAH.util.Browser = (function () {
-  "use strict";
-
   function Browser() {
   }
 

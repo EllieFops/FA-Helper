@@ -10,33 +10,36 @@
  * @constructor
  */
 octFAH.util.Router = function () {
+  /**
+   *
+   * @type {Object.<string, octFAH.controller.Controller>}
+   * @private
+   */
   this._routes = {};
 };
 
-octFAH.util.Router.prototype = Object.create(
-  Object.prototype,
-  {
-    /**
-     *
-     * @param route      {string}
-     * @param controller {octFAH.controller.Controller|Controller}
-     */
-    registerRoute: function (route, controller) {
-      this._routes[route] = controller;
-    },
+octFAH.util.Router.prototype = Object.create(Object.prototype);
 
-    /**
-     *
-     * @param route {string}
-     *
-     * @returns {*}
-     */
-    route: function (route) {
-      if (this._routes.hasOwnProperty(route)) {
-        this._routes[route]._init();
-        this._routes[route]._run();
-      }
-    }
+/**
+ *
+ * @param route      {string}
+ * @param controller {octFAH.controller.Controller}
+ *
+ * @public
+ */
+octFAH.util.Router.prototype.registerRoute = function (route, controller) {
+  this._routes[route] = controller;
+};
 
+/**
+ *
+ * @param route {string}
+ *
+ * @public
+ */
+octFAH.util.Router.prototype.route = function (route) {
+  if (this._routes.hasOwnProperty(route)) {
+    this._routes[route].init();
+    this._routes[route].run();
   }
-);
+};
