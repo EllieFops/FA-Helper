@@ -5,7 +5,7 @@
  *
  * @depend ShoutForm.js
  *
- * @namespace octFAH.component.FavShoutForm
+ * @memberof octFAH.component
  * @augments  octFAH.component.ShoutForm
  *
  * @author  Elizabeth Harper (elliefops@gmail.com)

@@ -1,7 +1,7 @@
 /**
  * Search Page Module
  *
- * @namespace octFAH.controller.SearchController
+ * @memberof octFAH.controller
  * @augments octFAH.controller.Controller
  *
  * @author  Elizabeth Harper (elliefops@gmail.com)

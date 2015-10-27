@@ -1,7 +1,7 @@
 /**
  * HTML Utilities
  *
- * @namespace octFAH.util.HTMLUtils
+ * @memberof octFAH.util
  *
  * @author  Elizabeth Harper (elliefops@gmail.com)
  * @version 1.2

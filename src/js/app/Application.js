@@ -1,7 +1,7 @@
 /**
  * FAHelper Core Application
  *
- * @namespace octFAH.app.Application
+ * @memberof octFAH.app
  *
  * @author  Elizabeth Harper (elliefops@gmail.com)
  * @version 1.2
@@ -21,6 +21,7 @@ octFAH.app.Application = function () {
 
 
   /**
+   * Internal Router
    *
    * @type {octFAH.util.Router}
    * @private
@@ -29,6 +30,7 @@ octFAH.app.Application = function () {
 
 
   /**
+   * Simple HTML Generation & Manipulation Utilities
    *
    * @type {octFAH.util.HTMLUtils}
    * @private
@@ -37,6 +39,7 @@ octFAH.app.Application = function () {
 
 
   /**
+   * Generic Helper Utilities
    *
    * @type {octFAH.util.Helpers}
    * @private
@@ -45,6 +48,7 @@ octFAH.app.Application = function () {
 
 
   /**
+   * Browser Storage Interface
    *
    * @type {octFAH.util.Storage}
    * @private
@@ -53,6 +57,7 @@ octFAH.app.Application = function () {
 
 
   /**
+   * Browser Functionality Interface
    *
    * @type {octFAH.util.Browser}
    * @private
@@ -61,6 +66,7 @@ octFAH.app.Application = function () {
 
 
   /**
+   * Stored Information About the current Browser
    *
    * @type {{name, version}|{name: string, version: number}}
    * @private
@@ -69,6 +75,9 @@ octFAH.app.Application = function () {
 
 
   /**
+   * Settings Menu Component
+   *
+   * @ToDo: Shift to Separate Controller
    *
    * @type {octFAH.component.SettingsMenu}
    * @private
@@ -93,7 +102,7 @@ octFAH.app.Application = function () {
   /**
    * Current Settings
    *
-   * @type {object}
+   * @type {object <string, *>}
    * @private
    */
   this._settings = this._storage.fetchValue("octFASettings", this._defSet);
@@ -109,7 +118,9 @@ octFAH.app.Application = function () {
  *
  * @public
  */
-octFAH.app.Application.prototype.pushSettings = function () {this._storage.pushValue("octFASettings", this._settings);};
+octFAH.app.Application.prototype.pushSettings = function () {
+  this._storage.pushValue("octFASettings", this._settings);
+};
 
 
 /**
@@ -120,7 +131,9 @@ octFAH.app.Application.prototype.pushSettings = function () {this._storage.pushV
  * @return {octFAH.util.HTML}
  * @public
  */
-octFAH.app.Application.prototype.wrap = function (element) {return new octFAH.util.HTML(element);};
+octFAH.app.Application.prototype.wrap = function (element) {
+  return new octFAH.util.HTML(element);
+};
 
 /**
  * Get Current URL
@@ -128,7 +141,9 @@ octFAH.app.Application.prototype.wrap = function (element) {return new octFAH.ut
  * @returns {string}
  * @public
  */
-octFAH.app.Application.prototype.getLocation = function () {return this._location;};
+octFAH.app.Application.prototype.getLocation = function () {
+  return this._location;
+};
 
 /**
  * HTML Utility
@@ -136,7 +151,9 @@ octFAH.app.Application.prototype.getLocation = function () {return this._locatio
  * @returns {octFAH.util.HTMLUtils}
  * @public
  */
-octFAH.app.Application.prototype.getHTMLUtil = function () {return this._htmlUtil;};
+octFAH.app.Application.prototype.getHTMLUtil = function () {
+  return this._htmlUtil;
+};
 
 /**
  * Browser Utility
@@ -144,7 +161,9 @@ octFAH.app.Application.prototype.getHTMLUtil = function () {return this._htmlUti
  * @returns {octFAH.util.Browser}
  * @public
  */
-octFAH.app.Application.prototype.getBrowserUtil = function () {return this._browserUtil;};
+octFAH.app.Application.prototype.getBrowserUtil = function () {
+  return this._browserUtil;
+};
 
 /**
  * Get Helper Utility
@@ -152,7 +171,9 @@ octFAH.app.Application.prototype.getBrowserUtil = function () {return this._brow
  * @returns {octFAH.util.Helpers}
  * @public
  */
-octFAH.app.Application.prototype.getHelperUtil = function () {return this._helperUtil;};
+octFAH.app.Application.prototype.getHelperUtil = function () {
+  return this._helperUtil;
+};
 
 /**
  * Get Storage Util
@@ -160,7 +181,9 @@ octFAH.app.Application.prototype.getHelperUtil = function () {return this._helpe
  * @returns {octFAH.util.Storage}
  * @public
  */
-octFAH.app.Application.prototype.getStorageUtil = function () {return this._storage;};
+octFAH.app.Application.prototype.getStorageUtil = function () {
+  return this._storage;
+};
 
 /**
  * Get Settings
@@ -168,7 +191,9 @@ octFAH.app.Application.prototype.getStorageUtil = function () {return this._stor
  * @returns {object}
  * @public
  */
-octFAH.app.Application.prototype.getSettings = function () {return this._settings;};
+octFAH.app.Application.prototype.getSettings = function () {
+  return this._settings;
+};
 
 /**
  * Boot Setup
@@ -189,14 +214,18 @@ octFAH.app.Application.prototype._boot = function () {
  *
  * @private
  */
-octFAH.app.Application.prototype._init = function () {this._settingsMenu = new octFAH.component.SettingsMenu(this);};
+octFAH.app.Application.prototype._init = function () {
+  this._settingsMenu = new octFAH.component.SettingsMenu(this);
+};
 
 /**
  * Run Application
  *
  * @private
  */
-octFAH.app.Application.prototype._run = function () {this._router.route(window.location.pathname);};
+octFAH.app.Application.prototype._run            = function () {
+  this._router.route(window.location.pathname);
+};
 /**
  * Fill any gaps in the settings object left from updates.
  *

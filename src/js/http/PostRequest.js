@@ -1,7 +1,7 @@
 /**
  * HTTP Post Request
  *
- * @namespace octFAH.http.PostRequest
+ * @memberof octFAH.http
  *
  * @author  Elizabeth Harper (elliefops@gmail.com)
  * @version 1.1

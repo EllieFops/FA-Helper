@@ -1,7 +1,7 @@
 /**
  * Browse Page Module
  *
- * @namespace octFAH.controller.BrowseController
+ * @memberof octFAH.controller
  * @augments  octFAH.controller.Controller
  *
  * @author Elizabeth Harper

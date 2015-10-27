@@ -1,7 +1,7 @@
 /**
  * Message Page Controller
  *
- * @namespace octFAH.controller.MessageController
+ * @memberof octFAH.controller
  * @augments octFAH.controller.Controller
  *
  * @author  Elizabeth Harper (elliefops@gmail.com)

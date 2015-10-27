@@ -1,7 +1,7 @@
 /**
  * Settings Menu Component
  *
- * @namespace octFAH.component.SettingsMenu
+ * @memberof octFAH.component
  * @augments  octFAH.component.ModalComponent
  *
  * @author  Elizabeth Harper (elliefops@gmail.com)

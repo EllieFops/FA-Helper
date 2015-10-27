@@ -1,7 +1,7 @@
 /**
  * Router
  *
- * @namespace octFAH.util.Router
+ * @memberof octFAH.util
  *
  * @author  Elizabeth Harper (elliefops@gmail.com)
  * @version 1.0

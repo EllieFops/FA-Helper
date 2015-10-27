@@ -1,7 +1,7 @@
 /**
  * New Submissions Page Controller
  *
- * @namespace octFAH.controller.SubmissionController
+ * @memberof octFAH.controller
  * @augments octFAH.controller.Controller
  *
  * @author  Elizabeth Harper (elliefops@gmail.com)

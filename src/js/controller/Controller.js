@@ -1,7 +1,7 @@
 /**
  * Controller
  *
- * @namespace octFAH.controller.Controller
+ * @memberof octFAH.controller
  *
  * @author Elizabeth Harper (elliefops@gmail.com)
  * @version 1.1

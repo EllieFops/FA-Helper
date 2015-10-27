@@ -1,7 +1,7 @@
 /**
  * Hover Preview Component
  *
- * @namespace octFAH.component.HoverView
+ * @memberof octFAH.component
  * @augments  octFAH.component.Component
  *
  * @author Elizabeth Harper (elliefops@gmail.com)

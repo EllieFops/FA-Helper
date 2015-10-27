@@ -61,8 +61,14 @@ module.exports = function (grunt) {
   // Project configuration.
   grunt.initConfig(
     {
-      pkg:   grunt.file.readJSON("package.json"),
-      clean: ["build"],
+      pkg: grunt.file.readJSON("package.json"),
+
+      clean: {
+        build: ["build"],
+        doc: ["doc"]
+      },
+
+
       less:  {
         options: {
           compress:     true,
@@ -194,6 +200,15 @@ module.exports = function (grunt) {
           }
         },
         files: ["build/**/*.js"]
+      },
+
+      jsdoc: {
+        src: ["src/**/*.js", "versions.md", "readme.md"],
+        options: {
+          destination: "doc",
+          template:    "node_modules/jsdoc-oblivion/template",
+          configure:   "node_modules/jsdoc-oblivion/config/conf.json"
+        }
       }
     }
   );
@@ -202,14 +217,19 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-contrib-concat");
   grunt.loadNpmTasks("grunt-contrib-clean");
   grunt.loadNpmTasks("grunt-jsbeautifier");
-  grunt.loadNpmTasks("grunt-contrib-uglify");
   grunt.loadNpmTasks("grunt-stripcomments");
+  grunt.loadNpmTasks("grunt-jsdoc");
 
-  grunt.registerTask("default", ["clean", "jshint", "concat", "jshint", "uglify"]);
+  grunt.registerTask("default", ["clean", "jshint", "concat", "jshint"]);
 
   // Tampermonkey / Greasemonkey
   grunt.registerTask("monkey", ["concat:monkey", "jshint:monkey"]);
   grunt.registerTask("chrome", ["concat:chrome", "jshint:chrome"]);
 
-  grunt.registerTask("dev", ["jshint:pre", "clean", "monkey", "chrome", "comments", "jsbeautifier", "concat:monkeyHeader"]);
+  grunt.registerTask(
+    "dev",
+    ["jshint:pre", "clean:build", "monkey", "chrome", "comments", "jsbeautifier", "concat:monkeyHeader"]
+  );
+
+  grunt.registerTask("doc", ["clean:doc", "jsdoc"]);
 };

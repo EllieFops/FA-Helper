@@ -1,7 +1,7 @@
 /**
  * Status/Progress Component
  *
- * @namespace octFAH.component.StatusBox
+ * @memberof octFAH.component
  * @augments  octFAH.component.Component
  *
  * @author Elizabeth Harper (elliefops@gmail.com)

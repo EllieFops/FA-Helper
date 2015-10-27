@@ -1,7 +1,7 @@
 /**
  * Modal UI Component
  *
- * @namespace octFAH.component.ModalComponent
+ * @memberof octFAH.component
  * @augments  octFAH.component.Component
  *
  * @author  Elizabeth Harper (elliefops@gmail.com)

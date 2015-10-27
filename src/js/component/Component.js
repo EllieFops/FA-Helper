@@ -3,7 +3,7 @@
  *
  * Basic UI Component Element
  *
- * @namespace octFAH.component.Component
+ * @memberof octFAH.component
  *
  * @author  Elizabeth Harper (elliefops@gmail.com)
  * @version 1.1

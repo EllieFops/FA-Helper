@@ -1,7 +1,17 @@
 /**
- * Element Helper
+ * HTML Helper/Wrapper
  *
- * @namespace octFAH.util.HTML
+ * <p>
+ *   Provides tools for manipulating, creating, and locating HTML elements. Allows cleanly and easily making major
+ *   adjustments to the document, and all altering methods are chainable.
+ * </p>
+ *
+ * <p>
+ *   On instantiation, pass the HTMLElement, {@link octFAH.util.HTML#_parseCreationString Creation String}, or selector
+ *   string as a parameter.
+ * </p>
+ *
+ * @memberof octFAH.util
  *
  * @author  Elizabeth Harper (elliefops@gmail.com)
  * @version 1.2
@@ -50,6 +60,34 @@ octFAH.util.HTML.prototype._parseInput = function (element) {
 
 /**
  * Parse a given Element creation string
+ *
+ *
+ * <strong>Examples of creation strings:</strong>
+ *
+ * <p>
+ *   Creating a plain div element
+ *   <pre>
+ *     "&lt;div&gt;"</pre>
+ * </p>
+ * <p>
+ *   Creating a div with the class "Test"
+ *   <pre>
+ *     "&lt;div.test&gt;"
+ *     // or
+ *     "&lt;div class=\"test\"&gt;"</pre>
+ * </p>
+ * <p>
+ *   Creating an element with the id "test-id"
+ *   <pre>
+ *     "&lt;div#test-id&gt;"
+ *     // or
+ *     "&lt;div id=\"test-id\"&gt;"</pre>
+ * </p>
+ * <p>
+ *   Creating an element with content
+ *   <pre>
+ *     "&lt;option value="hello" selected&gt;Hello World!&lt;/option&gt;"</pre>
+ * </p>
  *
  * @param elString {string}
  * @private
@@ -113,32 +151,32 @@ octFAH.util.HTML.prototype._parseCreationString = function (elString) {
  * @returns {Element}
  * @public
  */
-octFAH.util.HTML.prototype.getElement           = function () {return this._htmlElement;};
+octFAH.util.HTML.prototype.getElement = function () {return this._htmlElement;};
 
 /**
  * Add Classes
  *
- * @param c {string|string[]}
+ * @param classes {string|string[]}
  *
  * @return {octFAH.util.HTML}
  * @public
  */
-octFAH.util.HTML.prototype.addClass = function (c) {
+octFAH.util.HTML.prototype.addClass = function (classes) {
   var a;
 
   a = this._htmlElement.classList;
 
-  if (c instanceof Array) {
-    a.add.apply(a, c);
-  } else if (typeof c === "string") {
-    a.add(c);
+  if (classes instanceof Array) {
+    a.add.apply(a, classes);
+  } else if (typeof classes === "string") {
+    a.add(classes);
   }
 
   return this;
 };
 
 /**
- * Append children to given element.
+ * Append a child or children to given element.
  *
  * @param children {Node|Node[]|octFAH.util.HTML|octFAH.util.HTML[]}
  *

@@ -1,7 +1,7 @@
 /**
  * General Utilities & Helpers
  *
- * @namespace octFAH.util.Helpers
+ * @memberof octFAH.util
  *
  * @author  Elizabeth Harper (elliefops@gmail.com)
  * @version 1.1

@@ -2,6 +2,7 @@
  * Static Configuration
  *
  * @namespace octFAH.app.Config
+ * @memberof  octFAH.app
  *
  * @author  Elizabeth Harper (elliefops@gmail.com)
  * @version 1.1

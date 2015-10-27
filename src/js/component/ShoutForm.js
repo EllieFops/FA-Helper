@@ -3,7 +3,7 @@
  *
  * Modal form for submitting mass shouts to watchers.
  *
- * @namespace octFAH.component.ShoutForm
+ * @memberof octFAH.component
  * @augments  octFAH.component.ModalComponent
  *
  * @author Elizabeth Harper (elliefops@gmail.com)
