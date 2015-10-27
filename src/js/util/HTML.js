@@ -4,7 +4,7 @@
  * @namespace octFAH.util.HTML
  *
  * @author  Elizabeth Harper (elliefops@gmail.com)
- * @version 1.1
+ * @version 1.2
  * @since   0.3
  *
  * @param element {string|Node|octFAH.util.HTML}
@@ -22,57 +22,98 @@ octFAH.util.HTML = function (element) {
    */
   this._htmlElement = null;
 
+  this._parseInput(element);
 };
 
 octFAH.util.HTML.prototype = Object.create(Object.prototype);
 
-octFAH.util.HTML.prototype._parseInput = function(e) {
-  var a, i, tAttribute, tValue, ti;
+/**
+ * Figure out what to do with the constructor parameter
+ *
+ * @param element {Node|string}
+ * @private
+ */
+octFAH.util.HTML.prototype._parseInput = function (element) {
 
-  if (e instanceof Node) {
-    this._htmlElement = e;
-  } else if (e.indexOf("<") === 0 && e.indexOf(">") === e.length - 1){
-    a = e.split(/((?:\.|#)[\w\-]+)|([\w\-]+\s*=\s*("|').*\3)|([\w\-]+\s*=\s*[\w\-]+)|([\w\-]+)/g);
-
-    this._htmlElement = document.createElement(a.shift());
-
-    for (i = 0; i < a.length; i++) {
-
-      if (a[i].indexOf(".") === 0) {this.addClass(a[i].substr(1)); continue}
-
-      if (a[i].indexOf("#") === 0) {this.attribute("id", a[i].substr(1)); continue;}
-
-      ti = a[i].indexOf("=");
-      if (ti !== -1) {
-        tAttribute = a[i].substring(0, ti).trim();
-        tValue = a[i].substring(ti+1).trim();
-
-        if (tValue.indexOf("'") === 0 || tValue.indexOf("\"") === 0) {tValue = tValue.slice(1, -1);}
-
-        this.setAttribute(tAttribute, tValue);
-        tAttribute = tValue = null;
-        continue;
-      }
-
-      this.setAttribute(a[i], "");
-    }
-
+  if (element instanceof Node) {
+    this._htmlElement = element;
+  } else if (element.indexOf("<") === 0 && element.indexOf(">") === element.length - 1) {
+    this._parseCreationString(element);
   } else {
-    this._htmlElement = document.querySelector(e);
+    this._htmlElement = document.querySelector(element);
   }
 
   if (!this._htmlElement) {
-    throw "FAHelper: Could not parse argument " + e.toString();
+    throw "FAHelper: Could not parse argument " + element.toString();
   }
-
 };
+
+/**
+ * Parse a given Element creation string
+ *
+ * @param elString {string}
+ * @private
+ */
+octFAH.util.HTML.prototype._parseCreationString = function (elString) {
+  var a, i, ti, tAttribute, tValue;
+
+  a = elString.split(
+    /<([-\w]+)|((?:\.|#)[-\w]+)|([-\w]+\s*=\s*("|')(\\+\4|[^\4])*?\4)|([-\w]+\s*=\s*[-\w]+)|(>[^<]+<)|(\s[-\w]+\s)/g
+  );
+
+  this._htmlElement = document.createElement(a.shift());
+
+  for (i = 0; i < a.length; i++) {
+
+    // Selector Notation Class
+    if (a[i].indexOf(".") === 0) {
+      this.addClass(a[i].substr(1));
+      continue;
+    }
+
+    // Selector Notation ID
+    if (a[i].indexOf("#") === 0) {
+      this.attribute("id", a[i].substr(1));
+      continue;
+    }
+
+    // Skip End
+    if (a[i].indexOf("/") === 0) {continue;}
+
+    // Node inner text
+    if (a[i].indexOf(">") === 0) {
+      this.html(a[i].slice(1, -1));
+      continue;
+    }
+
+    // Attribute: Value
+    ti = a[i].indexOf("=");
+    if (ti !== -1) {
+      tAttribute = a[i].substring(0, ti).trim();
+      tValue     = a[i].substring(ti + 1).trim();
+
+      if (tValue.indexOf("'") === 0 || tValue.indexOf("\"") === 0) {tValue = tValue.slice(1, -1);}
+
+      // Filter empty sets
+      if (tAttribute.length > 0) {
+        this.setAttribute(tAttribute, tValue);
+      }
+      tAttribute = tValue = null;
+      continue;
+    }
+
+    // Solo Attribute
+    this.setAttribute(a[i], "");
+  }
+};
+
 /**
  * Get Wrapped Element
  *
  * @returns {Element}
  * @public
  */
-octFAH.util.HTML.prototype.getElement = function () {return this._htmlElement;};
+octFAH.util.HTML.prototype.getElement           = function () {return this._htmlElement;};
 
 /**
  * Add Classes

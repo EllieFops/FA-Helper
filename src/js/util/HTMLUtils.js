@@ -26,9 +26,9 @@ octFAH.util.HTMLUtils.prototype = Object.create(Object.prototype);
  * @return {HTMLElement}
  */
 octFAH.util.HTMLUtils.prototype.makeButton = function (text, click) {
-  var el = this._app.wrap("<input>").attribute("type", "button").value(text);
-  if (click) {el.click(click);}
-  return el.getElement();
+  var element = this._app.wrap("<input type='button' value='"+ text + "'>");
+  if (click) {element.click(click);}
+  return element.getElement();
 };
 
 /**
@@ -41,7 +41,7 @@ octFAH.util.HTMLUtils.prototype.makeButton = function (text, click) {
  * @returns {Element}
  */
 octFAH.util.HTMLUtils.prototype.makeCheckBox = function (name, value, checked) {
-  var check = this._app.wrap("<input>").attribute("type", "checkbox");
+  var check = this._app.wrap("<input type=checkbox>");
 
   if (name) {check.attribute("name", name);}
   if (value) {check.attribute("value", value);}
