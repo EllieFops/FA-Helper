@@ -1,0 +1,113 @@
+@modalText: #777;
+@modalLightBorder: #888;
+@modalDarkBorder: #666;
+@modalBackground: #fafafa;
+
+.octCurtain {
+  position:   fixed;
+  top:        0;
+  bottom:     0;
+  left:       0;
+  right:      0;
+  width:      100%;
+  height:     100%;
+  z-index:    9999;
+  background: #ddd;
+  opacity:    0.7;
+  display:    none;
+}
+
+.octAlignRight {
+  text-align: right;
+}
+.octShoutForm {
+  font-size: 1.1em;
+  label span:first-child {
+    display: block;
+  }
+}
+
+.octSubHeading {
+  font-size: 1.3em;
+}
+
+.octModalContainer {
+  position:           fixed;
+  display:            none;
+  z-index:            10000;
+  border:             2px solid @modalDarkBorder;
+  border-radius:      4px;
+  background:         @modalBackground;
+  width:              600px;
+  height:             400px;
+  margin-top:         -202px;
+  margin-left:        -302px;
+  top:                50%;
+  left:               50%;
+  -webkit-box-shadow: 2px 2px 12px 0 rgba(0, 0, 0, 0.5);
+  -moz-box-shadow:    2px 2px 12px 0 rgba(0, 0, 0, 0.5);
+  box-shadow:         2px 2px 12px 0 rgba(0, 0, 0, 0.5);
+
+  &.show {
+    display: block;
+  }
+
+  .octContent {
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    padding: 5px;
+    position: relative;
+    border: 1px solid @modalLightBorder;
+  }
+}
+
+.octOverlay {
+  position: absolute;
+
+  &.show {
+    display: block;
+  }
+}
+
+.octHoverPreview {
+  z-index: 10000;
+  display: none;
+  border: 2px solid @modalLightBorder;
+  border-radius: 4px;
+}
+
+.octTab {
+
+  display:                 inline-block;
+  padding:                 10px 20px;
+  font-size:               1.1em;
+  text-transform:          uppercase;
+  border:                  1px solid @modalText;
+  border-bottom-width:     0;
+  border-top-right-radius: 3px;
+  border-top-left-radius:  3px;
+
+  .selected {
+    background: #feffff;
+    background: -moz-linear-gradient(top, #feffff 0%, #f4f4f4 12%, #ffffff 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #feffff), color-stop(12%, #f4f4f4), color-stop(100%, #ffffff)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #feffff 0%, #f4f4f4 12%, #ffffff 100%);
+    background: -o-linear-gradient(top, #feffff 0%, #f4f4f4 12%, #ffffff 100%);
+    background: -ms-linear-gradient(top, #feffff 0%, #f4f4f4 12%, #ffffff 100%);
+    background: linear-gradient(to bottom, #feffff 0%, #f4f4f4 12%, #ffffff 100%);
+    filter:     progid:DXImageTransform.Microsoft.gradient(startColorstr='#feffff', endColorstr='#ffffff', GradientType=0);
+  }
+
+  .deselected {
+    background: #feffff;
+    background: -moz-linear-gradient(top, #feffff 75%, #f4f4f4 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(75%, #feffff), color-stop(100%, #f4f4f4));
+    background: -webkit-linear-gradient(top, #feffff 75%, #f4f4f4 100%);
+    background: -o-linear-gradient(top, #feffff 75%, #f4f4f4 100%);
+    background: -ms-linear-gradient(top, #feffff 75%, #f4f4f4 100%);
+    background: linear-gradient(to bottom, #feffff 75%, #f4f4f4 100%);
+    filter:     progid:DXImageTransform.Microsoft.gradient(startColorstr='#feffff', endColorstr='#f4f4f4', GradientType=0);
+  }
+}

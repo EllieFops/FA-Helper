@@ -1,145 +1,145 @@
 module.exports = function (grunt) {
 
-  var monkeyOut = "build/monkey/monkey.js";
-  var chromeOut = "build/chrome/background.js";
+  var pack = grunt.file.readJSON("package.json");
 
-  var octFAH = {
+  var vAppend = "-v" + pack.version.toString() + "-b" + (parseInt(pack.build) + 1).toString();
 
-    // App Namespace
-    app: [
-      "src/js/app/Application.js",
-      "src/js/app/Config.js"
-    ],
-
-    // Component Namespace
-    component: [
-      "src/js/component/Component.js",
-      "src/js/component/ModalComponent.js",
-      "src/js/component/ShoutForm.js",
-      "src/js/component/HoverView.js",
-      "src/js/component/SettingsMenu.js",
-      "src/js/component/StatusBox.js",
-      "src/js/component/FavShoutForm.js",
-      "src/js/component/WatchShoutForm.js"
-    ],
-
-    // Controller Namespace
-    controller: [
-      "src/js/controller/Controller.js",
-      "src/js/controller/BrowseController.js",
-      "src/js/controller/MessageController.js",
-      "src/js/controller/SearchController.js",
-      "src/js/controller/SubmissionController.js"
-    ],
-
-    // HTTP Namespace
-    http: [
-      "src/js/http/PostRequest.js"
-    ],
-
-    // Util Namespace
-    util: [
-      "src/js/util/Helpers.js",
-      "src/js/util/HTML.js",
-      "src/js/util/HTMLUtils.js",
-      "src/js/util/Router.js"
-    ]
+  var chrome = {
+    outFile:  "fa-helper-chrome.js",
+    distDir:  "dist/chrome/" + "-v" + pack.version.toString() + "-b" + (parseInt(pack.build) + 1).toString() + "/",
+    buildDir: "build/chrome/"
   };
 
-  // Environment Interfaces
-  var env = {
-    chrome: [
-      "rel/chrome/src/js/util/Browser.js",
-      "rel/chrome/src/js/util/Storage.js"
-    ],
-    monkey: [
-      "rel/monkey/src/js/util/Browser.js",
-      "rel/monkey/src/js/util/Storage.js"
-    ]
+  var monkey = {
+    outFile:  "fa-helper-monkey" + vAppend + ".js",
+    distDir:  "dist/monkey/",
+    buildDir: "build/monkey/"
   };
+
+  var octFAH = function () {
+    var a = grunt.file.readJSON("files.json");
+    return [].concat(a.app, a.component, a.controller, a.http, a.util);
+  }();
 
   // Project configuration.
   grunt.initConfig(
     {
-      pkg: grunt.file.readJSON("package.json"),
+      pkg: pack,
 
-      clean: {
-        build: ["build"],
-        doc: ["doc"]
+      buildnumber: {options: {field: "build"}, files: ["package.json", "manifest.json"]},
+
+      clean: {build: ["build"], doc: ["doc"]},
+
+      concat: {
+
+        monkey: {
+          src:  [].concat("rel/monkey/tm-header.js", "src/start.txt", monkey.buildDir + "**/*.js", "src/end.txt"),
+          dest: monkey.distDir + monkey.outFile
+        },
+
+        chrome: {
+          src:  [].concat("src/start.txt", chrome.buildDir + "**/*.js", "src/end.txt"),
+          dest: chrome.distDir + chrome.outFile
+        }
       },
 
+      less: {
+        "dev": {
+          options: {
 
-      less:  {
-        options: {
-          compress:     true,
-          optimization: 0
-        },
-        dev:     {
+          },
           files: {
-            "dist/<%= pkg.name %>-<%= pkg.version %>-<%= pkg.build %>/<%= pkg.name %>-<%= pkg.version %>-<%= pkg.build %>.min.css": "src/EF.less"
+            "build/generic.css": "src/less/generic.less"
           }
         }
       },
 
-      uglify: {
+      tslint: {
         options: {
-          beautify:   true,
-          quoteStyle: 2,
-          screwIE8:   true
-        },
-
-        build: {
-          files: [
-            {
-              expand: true,
-              cwd:    "build/",
-              src:    ["./**/*.js"],
-              dest:   "build/",
-              ext:    ".js",
-              extDot: "first"
+          configuration: {
+            rules: {
+              "align":                     [true, "parameters", "arguments", "statements"],
+              "class-name":                true,
+              "comment-format":            [true, "check-space", "check-uppercase"],
+              "curly":                     true,
+              "eofline":                   true,
+              "forin":                     true,
+              "indent":                    [true, "spaces"],
+              "jsdoc-format":              true,
+              "max-line-length":           [true, 120],
+              "member-access":             true,
+              "member-ordering":           [true, "variables-before-functions", "public-before-private"],
+              "no-any":                    true,
+              "no-conditional-assignment": true,
+              "no-constructor-vars":       true,
+              "no-duplicate-key":          true,
+              "no-duplicate-variable":     true,
+              "no-eval":                   true,
+              "no-internal-module":        true,
+              "quotemark":                 [true, "double"],
+              "semicolon":                 true,
+              "sort-object-literal-keys":  true,
+              "switch-default":            true,
+              "triple-equals":             true,
+              "typedef":                   [
+                true,
+                "call-signature",
+                "parameter",
+                "property-declaration",
+                "variable-declaration",
+                "member-variable-declaration"
+              ],
+              "typedef-whitespace":        [
+                true,
+                {
+                  "call-signature":       "nospace",
+                  "parameter":            "nospace",
+                  "property-declaration": "nospace",
+                  "variable-declaration": "nospace"
+                }
+              ],
+              "variable-name":             [true, "allow-leading-underscore"],
+              "whitespace":                [true, "check-decl", "check-operator", "check-separator", "check-type"],
             }
-          ]
+          }
+        },
+        monkey:  {
+          src: ["src/ts/**/*.ts", "src/rel/monkey/ts/**/*.ts"]
+        },
+        chrome:  {
+          src: ["src/ts/**/*.ts", "src/rel/chrome/ts/**/*.ts"]
         }
       },
 
-      concat: {
-
-        // Append Grease/Tamper monkey header to output
-        monkeyHeader: {
-          src:  ["rel/monkey/src/js/tm-header.js", monkeyOut],
-          dest: monkeyOut
-        },
-
+      typescript: {
         monkey: {
-          src:  [].concat(
-            "src/start.txt",
-            "src/declarations.js",
-            octFAH.app,
-            octFAH.component,
-            octFAH.controller,
-            octFAH.http,
-            octFAH.util,
-            env.monkey,
-            "src/end.txt"
-          ),
-          dest: monkeyOut
+          src: ["src/ts/**/*.ts", "src/rel/monkey/ts/**/*.ts"]
         },
-
         chrome: {
-          src:  [].concat(
-            "src/start.txt",
-            "src/declarations.js",
-            octFAH.app,
-            octFAH.component,
-            octFAH.controller,
-            octFAH.http,
-            octFAH.util,
-            env.chrome,
-            "src/end.txt"
-          ),
-          dest: chromeOut
+          src: ["src/ts/**/*.ts", "src/rel/chrome/ts/**/*.ts"]
         }
       },
+
+      uglify: {
+        options: {beautify: true, quoteStyle: 2, screwIE8: true},
+        build:   {
+          files: [{expand: true, cwd: "build/", src: ["./**/*.js"], dest: "build/", ext: ".js", extDot: "first"}]
+        }
+      },
+
+      "string-replace": {
+        monkey: {
+          options: {
+            replacements: [
+              {pattern: "@@version", replacement: pack.version.toString()},
+              {pattern: "@@oct-css", replacement: function() {return grunt.file.read("build/generics.css", {encoding: "utf-8"});}}
+            ]
+          },
+          build:   {src: [monkey.distDir + monkey.outFile], dest: monkey.distDir + monkey.outFile}
+        },
+        chrome: {}
+      },
+
 
       jshint: {
         options: {
@@ -154,82 +154,69 @@ module.exports = function (grunt) {
           newcap:    false
         },
 
-        pre: {
-          options: {
-            globals: {
-              "octFAH": true
-            }
-          },
-          src:     "src/js/**/*.js"
-        },
-
+        pre:    {options: {globals: {"oct": true}}, src: "src/ts/**/*.js"},
         monkey: {
-          options: {
-            globals: {
-              "GM_openInTab": true,
-              "GM_getValue":  true,
-              "GM_setValue":  true
-            }
-          },
-          src:     monkeyOut
+          options: {globals: {"GM_openInTab": true, "GM_getValue": true, "GM_setValue": true}},
+          src:     monkey.distDir + monkey.outFile
         },
-
         chrome: {
-          options: {
-            globals: {
-              "chrome": true
-            }
-          },
-          src:     chromeOut
+          options: {globals: {"chrome": true}},
+          src:     chrome.distDir + chrome.outFile
         }
       },
 
       comments: {
-        monkey: {
-          src: monkeyOut
-        },
-        chrome: {
-          src: chromeOut
-        }
+        monkey: {src: ["src/ts/**/*.js", "src/rel/monkey/js/**/*.js"], dest: monkey.buildDir},
+        chrome: {src: ["src/ts/**/*.js", "src/rel/chrome/js/**/*.js"], dest: chrome.buildDir}
       },
 
-      jsbeautifier: {
-        options: {
-          js: {
-            indentSize: 2
+      jsbeautifier: {options: {js: {indentSize: 2}}, files: ["build/**/*.js"]},
+
+      jasmine: {
+        unit: {
+          src:     ["src/declarations.js"].concat(octFAH),
+          options: {
+            specs: "test/jasmine/**/*.spec.js"
           }
-        },
-        files: ["build/**/*.js"]
-      },
-
-      jsdoc: {
-        src: ["src/**/*.js", "versions.md", "readme.md"],
-        options: {
-          destination: "doc",
-          template:    "node_modules/jsdoc-oblivion/template",
-          configure:   "node_modules/jsdoc-oblivion/config/conf.json"
         }
       }
     }
   );
 
+  grunt.loadNpmTasks("grunt-contrib-less");
+  grunt.loadNpmTasks("grunt-tslint");
+  grunt.loadNpmTasks("grunt-typescript");
+  grunt.loadNpmTasks("grunt-string-replace");
+  grunt.loadNpmTasks("grunt-build-number");
   grunt.loadNpmTasks("grunt-contrib-jshint");
   grunt.loadNpmTasks("grunt-contrib-concat");
   grunt.loadNpmTasks("grunt-contrib-clean");
   grunt.loadNpmTasks("grunt-jsbeautifier");
   grunt.loadNpmTasks("grunt-stripcomments");
-  grunt.loadNpmTasks("grunt-jsdoc");
+  grunt.loadNpmTasks("grunt-contrib-less");
 
-  grunt.registerTask("default", ["clean", "jshint", "concat", "jshint"]);
-
-  // Tampermonkey / Greasemonkey
-  grunt.registerTask("monkey", ["concat:monkey", "jshint:monkey"]);
-  grunt.registerTask("chrome", ["concat:chrome", "jshint:chrome"]);
+  grunt.registerTask("default", "jshint");
 
   grunt.registerTask(
     "dev",
-    ["jshint:pre", "clean:build", "monkey", "chrome", "comments", "jsbeautifier", "concat:monkeyHeader"]
+    [
+      "buildnumber",    // Index Build Number
+      "typescript",     // Compile TS
+      "jshint:pre",     // Pre-Check JS (no env specific checks)
+      "less",
+      "comments",       // Strip comments and copy to build directory
+      "jsbeautifier",   // Sort Out Formatting
+      "concat",         // Piece files together, copy to dist directory
+      "string-replace", // Replace Tags
+      "jshint:monkey",  // Check Monkey Env Build
+      "jshint:chrome"   // Check Chrome Env Build
+    ]
   );
 
-  grunt.registerTask("doc", ["clean:doc", "jsdoc"]);
+  grunt.registerTask(
+    "git-prep",
+    [
+      "tslint" // Lint TS
+    ]
+  );
 };
