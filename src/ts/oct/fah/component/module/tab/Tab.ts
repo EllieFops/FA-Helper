@@ -13,8 +13,11 @@ namespace oct.fah.component.module.tab
     protected next: TabInterface;
     protected parent: TabSetInterface;
 
-    constructor(app: oct.fah.app.App)
+    constructor(app: oct.fah.app.App, title: string)
     {
+      this.implementationOf("TabInterface");
+      this.title = title;
+
       super(app, document.createElement("div"));
     }
 
@@ -25,7 +28,7 @@ namespace oct.fah.component.module.tab
 
     public hasPreviousSibling(): boolean
     {
-      return (typeof this.previous !== "undefined" && this.previous);
+      return (this.previous instanceof OctObject && this.previous.isImplementationOf("TabInterface"));
     }
 
     public getPreviousSibling(): TabInterface
@@ -38,15 +41,15 @@ namespace oct.fah.component.module.tab
       this.previous = tab;
       tab.setNextSibling(this, con);
 
-      // If the call is not coming from the parent, call the parent sort manually.
-      if (con !== (<OctObject> this.parent) && typeof this.parent !== "undefined") {
+      // If the call is not coming from the setParent, call the setParent sort manually.
+      if (con !== (<OctObjectInterface> this.parent) && typeof this.parent !== "undefined") {
         this.parent.sortTabs();
       }
     }
 
     public hasNextSibling(): boolean
     {
-      return (typeof this.next !== "undefined" && this.next);
+      return (this.next instanceof OctObject && this.next.isImplementationOf("TabInterface"));
     }
 
     public getNextSibling(): TabInterface
@@ -58,8 +61,8 @@ namespace oct.fah.component.module.tab
     {
       this.previous = tab;
 
-      // If the call is not coming from the parent, call the parent sort manually.
-      if (con !== (<OctObject> this.parent) && typeof this.parent !== "undefined") {
+      // If the call is not coming from the setParent, call the setParent sort manually.
+      if (con !== (<OctObjectInterface> this.parent) && typeof this.parent !== "undefined") {
         this.parent.sortTabs();
       }
     }

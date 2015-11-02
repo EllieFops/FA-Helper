@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name         L-E's FA Helper
 // @version      @@version
+// @build        @@build
 // @description  Useful tools to improve your FA experience.
 // @author       Elizabeth Harper <elliefops@gmail.com>
 // @match        https://www.furaffinity.net/*

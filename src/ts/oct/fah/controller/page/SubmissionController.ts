@@ -13,7 +13,7 @@ namespace oct.fah.controller.page
 
     public init(): void
     {
-      return super.init();
+      super.init();
     }
 
     public run(): void

@@ -10,8 +10,9 @@ namespace oct.fah.component {
 
     constructor(element: HTMLElement)
     {
-      super();
       this.htmlElement = element;
+      this.implementationOf("ComponentInterface");
+      super();
     }
 
     public getElement(): HTMLElement

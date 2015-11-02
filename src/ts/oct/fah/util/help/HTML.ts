@@ -13,12 +13,12 @@ namespace oct.fah.util.help
       this.app = app;
     }
 
-    public wrapperLabel(e: oct.wrap.OctWrap, t: string, b?: boolean): oct.wrap.OctWrap
+    public wrapperLabel(e: oct.wrap.OctWrapInterface, t: string, b?: boolean): oct.wrap.OctWrap
     {
       var l: oct.wrap.OctWrap, s: oct.wrap.OctWrap;
 
       l = this.app.getOctWrapFactory().wrapNew("<label>");
-      s = this.app.getOctWrapFactory().wrapNew("<span>").html(t);
+      s = this.app.getOctWrapFactory().wrapNew("<span>").setHTML(t);
 
       if (b === false) {
         l.append([e, s]);

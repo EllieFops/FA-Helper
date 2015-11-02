@@ -18,7 +18,7 @@ namespace oct.fah.component.modal.shout
     {
       super.init();
 
-      this.title.html("Shout To Selected Watchers");
+      this.title.setHTML("Shout To Selected Watchers");
     }
   }
 }

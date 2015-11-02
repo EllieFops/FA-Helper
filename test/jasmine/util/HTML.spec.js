@@ -211,21 +211,21 @@ describe("An HTML Wrapper:", function() {
   });
 
 
-  // parent()
+  // setParent()
 
 
-  it("can get it's wrapped element's parent element, wrapped", function () {
+  it("can get it's wrapped element's setParent element, wrapped", function () {
     var parent = document.createElement("div");
     var check;
     parent.appendChild(elem);
 
-    check = html.parent();
+    check = html.setParent();
 
     expect(check instanceof octFAH.util.HTML).toBe(true);
     expect(check.getElement()).toBe(parent);
   });
 
-  it("can find a specific parent of it's wrapped element", function () {
+  it("can find a specific setParent of it's wrapped element", function () {
     var top  = document.createElement("div");
     // Place the key element randomly
     var key  = Math.floor(Math.random() * (11 - 1 + 1)) + 1;
@@ -244,7 +244,7 @@ describe("An HTML Wrapper:", function() {
     }
 
     ret = html.appendTo(temp);
-    testReturn = html.parent("div[title=testing]");
+    testReturn = html.setParent("div[title=testing]");
 
     expect(testReturn.getElement()).toBe(find);
     expect(ret).toBe(html);

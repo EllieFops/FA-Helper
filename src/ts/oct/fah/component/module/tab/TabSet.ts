@@ -3,6 +3,7 @@
 ///<reference path="TabSetInterface.ts"/>
 ///<reference path="TabInterface.ts"/>
 ///<reference path="..\..\..\..\wrap\OctWrap.ts"/>
+///<reference path="..\..\..\app\App.ts"/>
 
 namespace oct.fah.component.module.tab
 {
@@ -10,21 +11,21 @@ namespace oct.fah.component.module.tab
   {
     protected firstChild: TabInterface;
     protected lastChild: TabInterface;
-    protected children: Array<TabInterface>;
+    protected children: TabInterface[];
     protected selected: TabInterface;
-    protected tabHeaders: Array<wrap.OctWrap>;
-    protected headerBlock: wrap.OctWrap;
+    protected tabHeaders: wrap.OctWrapInterface[];
+    protected headerBlock: wrap.OctWrapInterface;
     protected body: HTMLDivElement;
 
-    constructor(app: App, element: HTMLElement)
+    constructor(app: oct.fah.app.App)
     {
       this.implementationOf("TabSetInterface");
-      super(app, element);
+      super(app, document.createElement("div"));
     }
 
     public init(): void
     {
-      this.headerBlock = this.app.getOctWrapFactory().wrapNew("<ul>").style({listStyle: CSS.NONE, padding: "0"});
+      this.headerBlock = this.app.getOctWrapFactory().wrapNew("<ul>").addClass("octTabRow");
     }
 
     public getTabs(): Array<TabInterface>
@@ -98,9 +99,7 @@ namespace oct.fah.component.module.tab
 
     protected deSelectStyle(tab: TabInterface): void
     {
-      this.app.getOctWrapFactory()
-        .wrapNode(tab.getElement())
-        .style({display: CSSDisplay.NONE});
+      this.app.getOctWrapFactory().wrapNode(tab.getElement()).dropClass("selected");
     }
 
     protected selectStyle(ind: number): void
@@ -109,22 +108,22 @@ namespace oct.fah.component.module.tab
       a = this.children[ind].getElement();
       b = this.headerBlock[ind];
 
-      this.app.getOctWrapFactory().wrapNode(a).style({display: CSSDisplay.BLOCK});
+      this.app.getOctWrapFactory().wrapNode(a).addClass("selected");
       // TODO stopped here for some reason
     }
 
     public sortTabs(): void
     {
       var
-        nChil: Array<TabInterface>,
-        nHead: Array<wrap.OctWrap>,
+        nChil: TabInterface[],
+        nHead: wrap.OctWrapInterface[],
         index: number,
         curChild: TabInterface,
         tKey: number,
         tHead: HTMLElement;
 
       nChil    = new Array<TabInterface>(this.children.length);
-      nHead    = new Array<wrap.OctWrap>(this.tabHeaders.length);
+      nHead    = new Array<wrap.OctWrapInterface>(this.tabHeaders.length);
       index    = 0;
       curChild = this.firstChild;
       tHead    = this.headerBlock.getElement();
@@ -149,9 +148,9 @@ namespace oct.fah.component.module.tab
       this.tabHeaders = nHead;
     }
 
-    private makeHeader(title: string): wrap.OctWrap
+    private makeHeader(title: string): wrap.OctWrapInterface
     {
-      return this.app.getOctWrapFactory().wrapNew("<li>").html(title).addClass(["octTab", "deselected"]);
+      return this.app.getOctWrapFactory().wrapNew("<li>").setHTML(title).addClasses(["octTab", "deselected"]);
     }
   }
 }

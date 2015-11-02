@@ -5,61 +5,58 @@ namespace oct.wrap
 {
   export interface OctWrapInterface
   {
-    addClass(c: string[]): OctWrapInterface;
     addClass(c: string): OctWrapInterface;
-    addClass(c: string[]|string): OctWrapInterface;
 
-    after(): OctWrapInterface;
-    after(e: OctWrapInterface): OctWrapInterface;
-    after(e: HTMLElement): OctWrapInterface;
-    after(e?: OctWrapInterface|HTMLElement): OctWrapInterface;
+    addClasses(c: string[]): OctWrapInterface;
 
-    append(c: OctWrap[]): OctWrapInterface;
-    append(c: OctWrapInterface): OctWrapInterface;
-    append(c: Node[]): OctWrapInterface;
-    append(c: Node): OctWrapInterface;
     append(c: OctWrap|OctWrap[]|Node|Node[]): OctWrapInterface;
 
-    appendTo(p: string): OctWrapInterface;
-    appendTo(p: OctWrapInterface): OctWrapInterface;
-    appendTo(p: Node): OctWrapInterface;
     appendTo(p: string|OctWrapInterface|Node): OctWrapInterface;
 
-    before(): OctWrapInterface;
-    before(e: OctWrapInterface): OctWrapInterface;
-    before(e: Node): OctWrapInterface;
-    before(e?: OctWrapInterface|Node): OctWrapInterface;
+    change(f: Function): OctWrapInterface;
 
-    click(): OctWrapInterface;
+    children(s?: string): OctWrapElementSetInterface;
+
     click(e: Function): OctWrapInterface;
-    click(e?: Function): OctWrapInterface;
+
+    doClick(): OctWrapInterface;
 
     dropClass(c: string): OctWrapInterface;
-    dropClass(c: string[]): OctWrapInterface;
-    dropClass(c: string|string[]): OctWrapInterface;
+
+    dropClasses(c: string[]): OctWrapInterface;
 
     find(s: string): OctWrapElementSetInterface;
 
-    html(): string;
-    html(x: string): OctWrapInterface;
-    html(x?: string): string|OctWrapInterface;
+    getAfter(): OctWrapInterface;
+
+    getAttribute(k: string): string;
+
+    getBefore(): OctWrapInterface;
+
+    getElement(): HTMLElement;
+
+    getHTML(): string;
+
+    getParent(): OctWrapInterface;
+
+    getValue(): string;
 
     input(e: Function): OctWrapInterface;
 
-    matches(s: string): boolean;
-    matches(s: string, r: Element): boolean;
     matches(s: string, r?: Element): boolean;
 
-    parent(): OctWrapInterface;
-    parent(q: string): OctWrapInterface;
-    parent(q?: string): OctWrapInterface;
+    setAfter(e: OctWrapInterface|HTMLElement): OctWrapInterface;
+
+    setAttribute(k: string, v: string): OctWrapInterface;
+
+    setBefore(e: OctWrapInterface|Node): OctWrapInterface;
+
+    setHTML(x: string): OctWrapInterface;
+
+    setParent(q: string): OctWrapInterface;
+
+    setValue(v: string): OctWrapInterface;
 
     style(s: {[name: string]: string; }): OctWrapInterface;
-
-    value(): string;
-    value(v: string): OctWrapInterface;
-    value(v?: string): string|OctWrapInterface;
-
-    getElement(): HTMLElement;
   }
 }

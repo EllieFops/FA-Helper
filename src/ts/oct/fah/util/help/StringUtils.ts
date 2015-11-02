@@ -4,15 +4,11 @@ namespace oct.fah.util.help
 {
   export class StringUtils
   {
-    public trim(s: string[], c?: string): string[];
-    public trim(s: string, c?: string): string;
     public trim(s: string|string[], c?: string): string|string[]
     {
       return this.trimRight(this.trimLeft(s, c), c);
     }
 
-    public trimLeft(s: string[], c?: string): string[];
-    public trimLeft(s: string, c?: string): string;
     public trimLeft(s: string|string[], c?: string): string|string[]
     {
       var r: RegExp, i: number;
@@ -27,11 +23,9 @@ namespace oct.fah.util.help
         return s;
       }
 
-      return s.replace(r, "");
+      return  (<string> s).replace(r, "");
     }
 
-    public trimRight(s: Array<string>, c?: string): Array<string>;
-    public trimRight(s: string, c?: string): string;
     public trimRight(s: string|string[], c?: string): string|string[]
     {
       var r: RegExp, i: number;
@@ -46,7 +40,7 @@ namespace oct.fah.util.help
         return s;
       }
 
-      return s.replace(r, "");
+      return (<string> s).replace(r, "");
     }
   }
 }

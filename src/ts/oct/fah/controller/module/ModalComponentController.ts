@@ -21,7 +21,7 @@ namespace oct.fah.controller.module
     {
       super.init();
 
-      this.component.getCurtain().click();
+      this.component.getCurtain().doClick();
     }
 
     private handleCurtainClick(): EventListener

@@ -5,7 +5,12 @@ namespace oct
 {
   export class OctObject implements OctObjectInterface
   {
-    private interfaces: { [name: string]: boolean; } = {"OctObjectInterface": true};
+    private interfaces: { [name: string]: boolean; };
+
+    constructor()
+    {
+      this.create();
+    }
 
     public isImplementationOf(name: string): boolean
     {
@@ -14,7 +19,13 @@ namespace oct
 
     protected implementationOf(name: string): void
     {
+      if (!this.interfaces) {this.create();}
       this.interfaces[name] = true;
+    }
+
+    private create()
+    {
+      this.interfaces = {"OctObjectInterface": true};
     }
   }
 }

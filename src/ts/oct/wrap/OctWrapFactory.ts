@@ -46,8 +46,8 @@ namespace oct.wrap
 
       charVal = /^[a-zA-Z]$/;
       regex   = new RegExp(
-        "<([-\w]+)|((?:\.|#)[-\w]+)|([-\w]+\s*=\s*(\"|')" +
-          "(?:\\+\4|[^\4])*?\4)|([-\w]+\s*=\s*[-\w]+)|(>[^<]+<)|(\s[-\w]+\s)",
+        "<([-\\w]+)|((?:\\.|#)[-\\w]+)|([-\\w]+\\s*=\\s*(\\\"|')" +
+          "(?:\\+\\4|[^\\4])*?\\4)|([-\\w]+\\s*=\\s*[-\\w]+)|(>[^<]+<)|(\s[-\\w]+\\s)",
         "g"
       );
 
@@ -74,7 +74,7 @@ namespace oct.wrap
 
         // Selector Notation ID
         if (filtered[index].indexOf("#") === 0) {
-          ret.attribute("id", filtered[index].substr(1));
+          ret.setAttribute("id", filtered[index].substr(1));
           continue;
         }
 
@@ -85,7 +85,7 @@ namespace oct.wrap
 
         // Node inner text
         if (filtered[index].indexOf(">") === 0) {
-          ret.html(filtered[index].slice(1, -1));
+          ret.setHTML(filtered[index].slice(1, -1));
           continue;
         }
 
@@ -104,7 +104,7 @@ namespace oct.wrap
             if (tAttr === "class") {
               ret.addClass(tVal);
             } else {
-              ret.attribute(tAttr, tVal);
+              ret.setAttribute(tAttr, tVal);
             }
           }
           continue;
@@ -112,7 +112,7 @@ namespace oct.wrap
 
         filtered[index] = filtered[index].trim();
         // Solo Attribute
-        ret.attribute(filtered[index], filtered[index]);
+        ret.setAttribute(filtered[index], filtered[index]);
       }
 
       return ret;

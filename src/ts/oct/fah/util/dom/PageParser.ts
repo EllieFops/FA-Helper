@@ -15,7 +15,7 @@ namespace oct.fah.util.dom
 
     public runParser(doc: HTMLDocument, input: {[name: string]: Function; }): {[name: string]: Object; }
     {
-      var dom: wrap.OctWrap <HTMLDocument>, out: {[name: string]: Object; }, temp: string;
+      var dom: wrap.OctWrap, out: {[name: string]: Object; }, temp: string;
 
       dom = this.app.getOctWrapFactory().wrapNode(doc);
 

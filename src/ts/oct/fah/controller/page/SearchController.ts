@@ -12,19 +12,21 @@ namespace oct.fah.controller.page
 
     constructor(app: oct.fah.app.App)
     {
-      this.hoverView = new controller.module.HoverPreviewController(this.app);
       super(app);
     }
 
     public init(): void
     {
       super.init();
+
+      this.hoverView = new controller.module.HoverPreviewController(this.app);
       this.hoverView.init();
     }
 
     public run(): void
     {
       super.run();
+
       this.hoverView.run();
     }
   }

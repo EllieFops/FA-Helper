@@ -5,15 +5,15 @@ module.exports = function (grunt) {
   var vAppend = "-v" + pack.version.toString() + "-b" + (parseInt(pack.build) + 1).toString();
 
   var chrome = {
-    outFile:  "fa-helper-chrome.js",
-    distDir:  "dist/chrome/" + "-v" + pack.version.toString() + "-b" + (parseInt(pack.build) + 1).toString() + "/",
-    buildDir: "build/chrome/"
+    "outFile":  "fa-helper-chrome.js",
+    "distDir":  "dist/chrome/" + "v" + pack.version.toString() + "-b" + (parseInt(pack.build) + 1).toString() + "/",
+    "buildDir": "build/chrome/"
   };
 
   var monkey = {
-    outFile:  "fa-helper-monkey" + vAppend + ".js",
-    distDir:  "dist/monkey/",
-    buildDir: "build/monkey/"
+    "outFile":  "fa-helper-monkey" + vAppend + ".js",
+    "distDir":  "dist/monkey/",
+    "buildDir": "build/monkey/"
   };
 
   var octFAH = function () {
@@ -24,40 +24,120 @@ module.exports = function (grunt) {
   // Project configuration.
   grunt.initConfig(
     {
-      pkg: pack,
+      "pkg": pack,
 
-      buildnumber: {options: {field: "build"}, files: ["package.json", "manifest.json"]},
+      "buildnumber": {"options": {"field": "build"}, "files": ["package.json", "manifest.json"]},
 
-      clean: {build: ["build"], doc: ["doc"]},
+      "clean": {"build": ["build"], "doc": ["doc"]},
 
-      concat: {
+      "comments": {
+        "monkey": {"src": [monkey.buildDir + monkey.outFile], "dest": monkey.buildDir + monkey.outFile},
+        "chrome": {"src": [chrome.buildDir + chrome.outFile], "dest": chrome.buildDir + chrome.outFile}
+      },
 
-        monkey: {
-          src:  [].concat("rel/monkey/tm-header.js", "src/start.txt", monkey.buildDir + "**/*.js", "src/end.txt"),
-          dest: monkey.distDir + monkey.outFile
+      "concat": {
+
+        "options": {
+          "footer": "new oct.fah.app.App();"
         },
 
-        chrome: {
-          src:  [].concat("src/start.txt", chrome.buildDir + "**/*.js", "src/end.txt"),
-          dest: chrome.distDir + chrome.outFile
+        "monkey": {
+          "src":  ["src/rel/monkey/tm-header.js", monkey.buildDir + monkey.outFile],
+          "dest": monkey.distDir + monkey.outFile
+        },
+
+        "chrome": {
+          "src":  [chrome.buildDir + chrome.outFile],
+          "dest": chrome.distDir + chrome.outFile
         }
       },
 
-      less: {
-        "dev": {
-          options: {
+      "jsbeautifier": {"options": {"js": {"indentSize": 2}}, "files": ["build/**/*.js"]},
 
+      "jshint": {
+        "options": {
+          "curly":     true,
+          "forin":     true,
+          "eqeqeq":    true,
+          "maxparams": 5,
+          "nonew":     true,
+          "unused":    true,
+          "undef":     true,
+          "browser":   true,
+          "newcap":    false
+        },
+
+        "preMonkey": {
+          "options": {"globals": {"GM_openInTab": true, "GM_getValue": true, "GM_setValue": true}},
+          "src":     monkey.buildDir + "**/*.js"
+        },
+
+        "preChrome": {
+          "options": {"globals": {"chrome": true}},
+          "src":     chrome.buildDir + "**/*.js"
+        },
+
+        "monkey": {
+          "options": {"globals": {"GM_openInTab": true, "GM_getValue": true, "GM_setValue": true}},
+          "src":     monkey.distDir + monkey.outFile
+        },
+        "chrome": {
+          "options": {"globals": {"chrome": true}},
+          "src":     chrome.distDir + chrome.outFile
+        }
+      },
+
+      "less": {
+        "dev": {
+          "options": {
+            compress: true
           },
-          files: {
-            "build/generic.css": "src/less/generic.less"
+          "files":   {
+            "build/generics.css": ["src/less/generics.less"]
           }
         }
       },
 
-      tslint: {
-        options: {
-          configuration: {
-            rules: {
+      "string-replace": {
+        "options": {
+          "replacements": [
+            {"pattern": "@@version", "replacement": pack.version.toString()},
+            {"pattern": "@@build",   "replacement": (parseInt(pack.build) + 1).toString()}
+          ]
+        },
+        "monkey": {
+          "options": {
+            "replacements": [
+              {
+                "pattern":     "@@cssText",
+                "replacement": function () {
+                  return grunt.file.read("build/generics.css", {"encoding": "utf-8"});
+                }
+              }
+            ]
+          },
+          "src": [monkey.distDir + monkey.outFile],
+          "dest": monkey.distDir + monkey.outFile
+        },
+        "chrome": {
+          "src": [monkey.distDir + "**/*.js"],
+          dest: monkey.distDir
+        }
+      },
+
+      "ts": {
+        "build": {
+          "files": [
+            {"src": ["src/ts/**/*.ts", "src/rel/monkey/ts/**/*.ts"], "dest": monkey.buildDir + monkey.outFile},
+            {"src": ["src/ts/**/*.ts", "src/rel/chrome/ts/**/*.ts"], "dest": chrome.buildDir + chrome.outFile}
+          ]
+        }
+      },
+
+      "tslint": {
+        "options": {
+          "configuration": {
+            "rules": {
               "align":                     [true, "parameters", "arguments", "statements"],
               "class-name":                true,
               "comment-format":            [true, "check-space", "check-uppercase"],
@@ -103,80 +183,35 @@ module.exports = function (grunt) {
             }
           }
         },
-        monkey:  {
-          src: ["src/ts/**/*.ts", "src/rel/monkey/ts/**/*.ts"]
+        "monkey":  {
+          "src": ["src/ts/**/*.ts", "src/rel/monkey/ts/**/*.ts"]
         },
-        chrome:  {
-          src: ["src/ts/**/*.ts", "src/rel/chrome/ts/**/*.ts"]
+        "chrome":  {
+          "src": ["src/ts/**/*.ts", "src/rel/chrome/ts/**/*.ts"]
         }
       },
 
-      typescript: {
-        monkey: {
-          src: ["src/ts/**/*.ts", "src/rel/monkey/ts/**/*.ts"]
-        },
-        chrome: {
-          src: ["src/ts/**/*.ts", "src/rel/chrome/ts/**/*.ts"]
+      "uglify": {
+        "options": {"beautify": true, "quoteStyle": 2, "screwIE8": true},
+        "build":   {
+          "files": [
+            {
+              "expand": true,
+              "cwd":    "build/",
+              "src":    ["./**/*.js"],
+              "dest":   "build/",
+              "ext":    ".js",
+              "extDot": "first"
+            }
+          ]
         }
       },
 
-      uglify: {
-        options: {beautify: true, quoteStyle: 2, screwIE8: true},
-        build:   {
-          files: [{expand: true, cwd: "build/", src: ["./**/*.js"], dest: "build/", ext: ".js", extDot: "first"}]
-        }
-      },
-
-      "string-replace": {
-        monkey: {
-          options: {
-            replacements: [
-              {pattern: "@@version", replacement: pack.version.toString()},
-              {pattern: "@@oct-css", replacement: function() {return grunt.file.read("build/generics.css", {encoding: "utf-8"});}}
-            ]
-          },
-          build:   {src: [monkey.distDir + monkey.outFile], dest: monkey.distDir + monkey.outFile}
-        },
-        chrome: {}
-      },
-
-
-      jshint: {
-        options: {
-          curly:     true,
-          forin:     true,
-          eqeqeq:    true,
-          maxparams: 5,
-          nonew:     true,
-          unused:    true,
-          undef:     true,
-          browser:   true,
-          newcap:    false
-        },
-
-        pre:    {options: {globals: {"oct": true}}, src: "src/ts/**/*.js"},
-        monkey: {
-          options: {globals: {"GM_openInTab": true, "GM_getValue": true, "GM_setValue": true}},
-          src:     monkey.distDir + monkey.outFile
-        },
-        chrome: {
-          options: {globals: {"chrome": true}},
-          src:     chrome.distDir + chrome.outFile
-        }
-      },
-
-      comments: {
-        monkey: {src: ["src/ts/**/*.js", "src/rel/monkey/js/**/*.js"], dest: monkey.buildDir},
-        chrome: {src: ["src/ts/**/*.js", "src/rel/chrome/js/**/*.js"], dest: chrome.buildDir}
-      },
-
-      jsbeautifier: {options: {js: {indentSize: 2}}, files: ["build/**/*.js"]},
-
-      jasmine: {
-        unit: {
-          src:     ["src/declarations.js"].concat(octFAH),
-          options: {
-            specs: "test/jasmine/**/*.spec.js"
+      "jasmine": {
+        "unit": {
+          "src":     ["src/declarations.js"].concat(octFAH),
+          "options": {
+            "specs": "test/jasmine/**/*.spec.js"
           }
         }
       }
@@ -185,7 +220,7 @@ module.exports = function (grunt) {
 
   grunt.loadNpmTasks("grunt-contrib-less");
   grunt.loadNpmTasks("grunt-tslint");
-  grunt.loadNpmTasks("grunt-typescript");
+  grunt.loadNpmTasks("grunt-ts");
   grunt.loadNpmTasks("grunt-string-replace");
   grunt.loadNpmTasks("grunt-build-number");
   grunt.loadNpmTasks("grunt-contrib-jshint");
@@ -200,16 +235,18 @@ module.exports = function (grunt) {
   grunt.registerTask(
     "dev",
     [
+      "clean:build",
       "buildnumber",    // Index Build Number
-      "typescript",     // Compile TS
-      "jshint:pre",     // Pre-Check JS (no env specific checks)
-      "less",
-      "comments",       // Strip comments and copy to build directory
+      "ts",     // Compile TS
       "jsbeautifier",   // Sort Out Formatting
+//      "jshint:preMonkey",     // Pre-Check JS (no env specific checks)
+//      "jshint:preChrome",     // Pre-Check JS (no env specific checks)
+      "less",
+      "comments",
       "concat",         // Piece files together, copy to dist directory
-      "string-replace", // Replace Tags
-      "jshint:monkey",  // Check Monkey Env Build
-      "jshint:chrome"   // Check Chrome Env Build
+      "string-replace" // Replace Tags
+//      "jshint:monkey",  // Check Monkey Env Build
+//      "jshint:chrome"   // Check Chrome Env Build
     ]
   );
 

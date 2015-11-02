@@ -48,11 +48,11 @@ namespace oct.fah.controller.module
     private modUI(): void
     {
       this.shoutButton = this.app.getOctWrapFactory()
-        .wrapNew("<input type=button value='Shout &amp; Remove'>")
+        .wrapNew("<input type=button getValue='Shout &amp; Remove'>")
         .addClass("button")
         .click(this.handleShowShoutMenu());
 
-      this.watcherControls.children().last().before(this.shoutButton);
+      this.watcherControls.children().last().setBefore(this.shoutButton);
     }
 
     private handleShowShoutMenu(): EventListener

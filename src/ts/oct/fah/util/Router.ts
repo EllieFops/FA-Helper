@@ -5,24 +5,30 @@ namespace oct.fah.util
 {
   export class Router
   {
-    private routes: { [route: string]: controller.ControllerInterface; };
+    private routes: { controller: controller.ControllerInterface, route: string; }[];
 
     constructor()
     {
-      this.routes = {};
+      this.routes = [];
     }
 
     public register(route: string, controller: controller.ControllerInterface): Router
     {
-      this.routes[route] = controller;
+      this.routes.push({
+        "route": route,
+        "controller": controller
+      });
       return this;
     }
 
     public route(path: string): void
     {
-      if (typeof this.routes[path] !== "undefined") {
-        this.routes[path].init();
-        this.routes[path].run();
+      var n: number;
+      for (n = 0; n < this.routes.length; n++) {
+        if (path.indexOf(this.routes[n].route) !== -1) {
+          this.routes[n].controller.init();
+          this.routes[n].controller.run();
+        }
       }
     }
   }

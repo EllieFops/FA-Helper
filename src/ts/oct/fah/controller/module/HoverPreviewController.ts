@@ -13,7 +13,6 @@ namespace oct.fah.controller.module
 
     constructor(app: oct.fah.app.App)
     {
-      this.preview = new component.overlay.HoverPreview(this.app);
       super(app);
     }
 
@@ -22,6 +21,8 @@ namespace oct.fah.controller.module
       var a: NodeList, i: number;
 
       super.init();
+
+      this.preview = new oct.fah.component.overlay.HoverPreview(this.app);
 
       a = document.querySelectorAll("b img");
 
