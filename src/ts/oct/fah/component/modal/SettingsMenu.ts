@@ -24,7 +24,7 @@ namespace oct.fah.component.modal
     constructor(app: oct.fah.app.App)
     {
       this.implementationOf("ModalComponentInterface");
-      super(app);
+      super(app, app.getOctWrapFactory().wrapNew("<div>"));
     }
 
     public init(): void

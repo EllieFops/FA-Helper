@@ -10,11 +10,12 @@ namespace oct.fah.component.modal
 
   export class ModalComponent extends UIComponent implements ModalComponentInterface
   {
-    protected content: wrap.OctWrap;
+    protected content: oct.wrap.OctWrap;
 
-    constructor(app: oct.fah.app.App)
+    constructor(app: oct.fah.app.App, content: oct.wrap.OctWrap)
     {
       this.implementationOf("ModalComponentInterface");
+      this.content = content;
       super(app, document.createElement("div"));
     }
 

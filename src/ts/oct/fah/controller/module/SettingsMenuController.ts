@@ -20,20 +20,22 @@ namespace oct.fah.controller.module
 
     public init(): void
     {
-      var e: oct.wrap.OctWrapInterface;
+      var e: oct.fah.component.modal.SettingsMenu;
 
       // Create Elements
       this.toggle = this.app.getOctWrapFactory().wrapNew("<span class=octShowSettingsMenu>").setHTML('@@svg-gear');
-      this.menu   = new oct.fah.component.modal.SettingsMenu(this.app);
+      this.component   = new oct.fah.component.modal.SettingsMenu(this.app);
 
       super.init();
 
 
       // Latch Onto Inputs
-      this.menu.getPreviewToggle().click(this.handlePreviewToggle());
-      this.menu.getPrevSizeSelect().change(this.handlePrevSizeChange());
-      this.menu.getNewFavTextArea().input(this.handleFavTextChange());
-      this.menu.getNewWatchTextArea().input(this.handleWatchTextChange());
+      e = <oct.fah.component.modal.SettingsMenu> this.component;
+
+      e.getPreviewToggle().click(this.handlePreviewToggle());
+      e.getPrevSizeSelect().change(this.handlePrevSizeChange());
+      e.getNewFavTextArea().input(this.handleFavTextChange());
+      e.getNewWatchTextArea().input(this.handleWatchTextChange());
     }
 
     public run(): void

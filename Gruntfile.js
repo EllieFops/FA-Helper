@@ -102,10 +102,10 @@ module.exports = function (grunt) {
         "options": {
           "replacements": [
             {"pattern": "@@version", "replacement": pack.version.toString()},
-            {"pattern": "@@build",   "replacement": (parseInt(pack.build) + 1).toString()}
+            {"pattern": "@@build", "replacement": (parseInt(pack.build) + 1).toString()}
           ]
         },
-        "monkey": {
+        "monkey":  {
           "options": {
             "replacements": [
               {
@@ -116,12 +116,12 @@ module.exports = function (grunt) {
               }
             ]
           },
-          "src": [monkey.distDir + monkey.outFile],
-          "dest": monkey.distDir + monkey.outFile
+          "src":     [monkey.distDir + monkey.outFile],
+          "dest":    monkey.distDir + monkey.outFile
         },
-        "chrome": {
+        "chrome":  {
           "src": [monkey.distDir + "**/*.js"],
-          dest: monkey.distDir
+          dest:  monkey.distDir
         }
       },
 
@@ -138,17 +138,18 @@ module.exports = function (grunt) {
         "options": {
           "configuration": {
             "rules": {
-              "align":                     [true, "parameters", "arguments", "statements"],
-              "class-name":                true,
-              "comment-format":            [true, "check-space", "check-uppercase"],
-              "curly":                     true,
-              "eofline":                   true,
-              "forin":                     true,
-              "indent":                    [true, "spaces"],
-              "jsdoc-format":              true,
-              "max-line-length":           [true, 120],
-              "member-access":             true,
-              "member-ordering":           [true, "variables-before-functions", "public-before-private"],
+              "align":           [true, "parameters", "arguments", "statements"],
+              "class-name":      true,
+              "comment-format":  [true, "check-space", "check-uppercase"],
+              "curly":           true,
+              "eofline":         true,
+              "forin":           true,
+              "indent":          [true, "spaces"],
+              "jsdoc-format":    true,
+              "max-line-length": [true, 120],
+              "member-access":   true,
+              "member-ordering": [true, "variables-before-functions", "public-before-private"],
+
               "no-any":                    true,
               "no-conditional-assignment": true,
               "no-constructor-vars":       true,
@@ -156,12 +157,13 @@ module.exports = function (grunt) {
               "no-duplicate-variable":     true,
               "no-eval":                   true,
               "no-internal-module":        true,
-              "quotemark":                 [true, "double"],
-              "semicolon":                 true,
-              "sort-object-literal-keys":  true,
-              "switch-default":            true,
-              "triple-equals":             true,
-              "typedef":                   [
+
+              "quotemark":                [true, "double"],
+              "semicolon":                true,
+              "sort-object-literal-keys": true,
+              "switch-default":           true,
+              "triple-equals":            true,
+              "typedef":                  [
                 true,
                 "call-signature",
                 "parameter",
@@ -169,7 +171,7 @@ module.exports = function (grunt) {
                 "variable-declaration",
                 "member-variable-declaration"
               ],
-              "typedef-whitespace":        [
+              "typedef-whitespace":       [
                 true,
                 {
                   "call-signature":       "nospace",
@@ -178,8 +180,8 @@ module.exports = function (grunt) {
                   "variable-declaration": "nospace"
                 }
               ],
-              "variable-name":             [true, "allow-leading-underscore"],
-              "whitespace":                [true, "check-decl", "check-operator", "check-separator", "check-type"],
+              "variable-name":            [true, "allow-leading-underscore"],
+              "whitespace":               [true, "check-decl", "check-operator", "check-separator", "check-type"],
             }
           }
         },
