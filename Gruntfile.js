@@ -102,14 +102,7 @@ module.exports = function (grunt) {
         "options": {
           "replacements": [
             {"pattern": "@@version", "replacement": pack.version.toString()},
-            {"pattern": "@@build", "replacement": (parseInt(pack.build) + 1).toString()},
-            {
-              "pattern":     "@@svg-gear",
-              "replacement": function () {
-                "use strict";
-                return grunt.file.read("src/img/gear.svg", {"encoding": "utf-8"});
-              }
-            }
+            {"pattern": "@@build", "replacement": (parseInt(pack.build) + 1).toString()}
           ]
         },
         "monkey":  {
@@ -118,7 +111,7 @@ module.exports = function (grunt) {
               {
                 "pattern":     "@@cssText",
                 "replacement": function () {
-                  return grunt.file.read("build/generics.css", {"encoding": "utf-8"});
+                  return grunt.file.read("build/generics.css", {"encoding": "utf-8"}).trim();
                 }
               }
             ]

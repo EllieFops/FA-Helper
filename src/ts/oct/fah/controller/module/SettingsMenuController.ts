@@ -23,7 +23,7 @@ namespace oct.fah.controller.module
       var e: oct.fah.component.modal.SettingsMenu;
 
       // Create Elements
-      this.toggle = this.app.getOctWrapFactory().wrapNew("<span class=octShowSettingsMenu>").setHTML('@@svg-gear');
+      this.toggle = this.app.getOctWrapFactory().wrapNew("<span.octShowSettingsMenu.octGearSVG>").setHTML('&nbsp;');
       this.component   = new oct.fah.component.modal.SettingsMenu(this.app);
 
       super.init();
