@@ -20,6 +20,9 @@ namespace oct.fah.component.module.tab
     constructor(app: oct.fah.app.App)
     {
       this.implementationOf("TabSetInterface");
+      this.children   = [];
+      this.tabHeaders = [];
+
       super(app, document.createElement("div"));
     }
 
@@ -66,6 +69,8 @@ namespace oct.fah.component.module.tab
       this.children.push(t);
       this.tabHeaders.push(this.makeHeader(t.getTitle()));
       this.lastChild = t;
+
+      this.checkFirstInsert();
     }
 
     public prependTab(t: TabInterface): void
@@ -157,6 +162,16 @@ namespace oct.fah.component.module.tab
     private makeHeader(title: string): wrap.OctWrapInterface
     {
       return this.app.getOctWrapFactory().wrapNew("<li>").setHTML(title).addClasses(["octTab", "deselected"]);
+    }
+
+    private checkFirstInsert(): void
+    {
+      if (this.children.length === 1)
+      {
+        this.selectTab(0);
+        this.firstChild = this.children[0];
+        this.lastChild = this.children[0];
+      }
     }
   }
 }
