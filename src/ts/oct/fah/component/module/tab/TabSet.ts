@@ -59,7 +59,10 @@ namespace oct.fah.component.module.tab
 
     public appendTab(t: TabInterface): void
     {
-      this.lastChild.setNextSibling(t, this);
+      if (this.children.length > 0) {
+        this.lastChild.setNextSibling(t, this);
+        t.setPreviousSibling(this.lastChild, this);
+      }
       this.children.push(t);
       this.tabHeaders.push(this.makeHeader(t.getTitle()));
       this.lastChild = t;
@@ -67,7 +70,10 @@ namespace oct.fah.component.module.tab
 
     public prependTab(t: TabInterface): void
     {
-      this.firstChild.setPreviousSibling(t, this);
+      if (this.children.length > 0) {
+        this.firstChild.setPreviousSibling(t, this);
+        t.setNextSibling(this.firstChild, this);
+      }
       this.children   = [t].concat(this.children);
       this.tabHeaders = [this.makeHeader(t.getTitle())].concat(this.tabHeaders);
       this.firstChild = t;
@@ -82,7 +88,7 @@ namespace oct.fah.component.module.tab
         return;
       }
 
-      if (i >= this.children.length) {
+      if (i >= this.children.length || this.children.length === 0) {
         this.appendTab(t);
         return;
       }
