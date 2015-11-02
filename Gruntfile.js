@@ -102,7 +102,14 @@ module.exports = function (grunt) {
         "options": {
           "replacements": [
             {"pattern": "@@version", "replacement": pack.version.toString()},
-            {"pattern": "@@build", "replacement": (parseInt(pack.build) + 1).toString()}
+            {"pattern": "@@build", "replacement": (parseInt(pack.build) + 1).toString()},
+            {
+              "pattern":     "@@svg-gear",
+              "replacement": function () {
+                "use strict";
+                return grunt.file.read("src/img/gear.svg", {"encoding": "utf-8"});
+              }
+            }
           ]
         },
         "monkey":  {

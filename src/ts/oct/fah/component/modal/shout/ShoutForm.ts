@@ -19,7 +19,7 @@ namespace oct.fah.component.modal.shout
     constructor(app: oct.fah.app.App)
     {
       this.implementationOf("ShoutFormInterface");
-      super(app);
+      super(app, app.getOctWrapFactory().wrapNew("<form>"));
     }
 
     public init(): void
@@ -30,7 +30,8 @@ namespace oct.fah.component.modal.shout
       o = this.app.getOctWrapFactory();
       h = this.app.getHTMLHelper();
 
-      this.form       = o.wrapNew("<form>").addClass("octShoutForm");
+      this.form.addClass("octShoutForm");
+
       this.title      = o.wrapNew("<span>");
       this.warning    = o.wrapNew("<p>");
       this.shoutText  = o.wrapNew("<textarea>");
