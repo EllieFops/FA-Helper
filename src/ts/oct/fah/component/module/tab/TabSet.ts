@@ -54,7 +54,9 @@ namespace oct.fah.component.module.tab
     public selectTab(i: TabInterface|number): void
     {
       if (typeof i === "number") {
-        this.deSelectStyle(this.selected);
+        if (this.selected) {
+          this.deSelectStyle(this.selected);
+        }
         this.selected = this.children[i];
         this.selectStyle(i);
       }
@@ -82,6 +84,8 @@ namespace oct.fah.component.module.tab
       this.children   = [t].concat(this.children);
       this.tabHeaders = [this.makeHeader(t.getTitle())].concat(this.tabHeaders);
       this.firstChild = t;
+
+      this.checkFirstInsert();
     }
 
     public insertTab(t: TabInterface, i: number): void
@@ -95,6 +99,7 @@ namespace oct.fah.component.module.tab
 
       if (i >= this.children.length || this.children.length === 0) {
         this.appendTab(t);
+        this.checkFirstInsert();
         return;
       }
 
@@ -106,6 +111,7 @@ namespace oct.fah.component.module.tab
       this.children.push(t);
       this.tabHeaders.push(this.makeHeader(t.getTitle()));
       this.sortTabs();
+
     }
 
     protected deSelectStyle(tab: TabInterface): void
