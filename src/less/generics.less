@@ -1,33 +1,31 @@
 @modalText: #777;
-@modalLightBorder: #888;
+@modalLightBorder: #ccc;
 @modalDarkBorder: #666;
 @modalBackground: #fafafa;
 
 .octCurtain {
   position:   fixed;
   top:        0;
-  bottom:     0;
   left:       0;
-  right:      0;
   width:      100%;
   height:     100%;
   z-index:    9999;
   background: #ddd;
   opacity:    0.7;
-  display:    none;
 }
 
 .octShowSettingsMenu {
-  padding: 5px;
-  position: absolute;
-  right: 35px;
-  border: 1px solid @modalLightBorder;
-  border-top: 0;
-  border-bottom-left-radius: 3px;
+  padding:                    5px;
+  position:                   absolute;
+  right:                      35px;
+  border:                     1px solid @modalLightBorder;
+  border-top:                 0;
+  border-bottom-left-radius:  3px;
   border-bottom-right-radius: 3px;
-  background: @modalBackground;
-  width: 30px;
-  height: 30px;
+  background-color:           @modalBackground;
+  cursor:                     pointer;
+  width:                      20px;
+  height:                     20px;
 }
 
 .octAlignRight {
@@ -67,18 +65,23 @@
   }
 
   .octContent {
-    top:      5px;
-    left:     5px;
-    right:    5px;
-    bottom:   5px;
-    padding:  5px;
+    width:    588px;
+    margin:   5px;
+    height:   388px;
     position: relative;
     border:   1px solid @modalLightBorder;
+  }
+
+  label span:first-child {
+    display: block;
   }
 }
 
 .octGearSVG {
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0" y="0" width="512" height="512" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path d="M462 280.7v-49.4l-46.4-16.5c-3.9-15.1-9.9-29.3-17.7-42.4l0.1-0.1 21.2-44.5 -35-35 -44.5 21.2 -0.1 0.1c-13.1-7.8-27.4-13.8-42.4-17.7L280.7 50h-49.4L214.8 96.4c-15.1 3.9-29.3 9.9-42.4 17.7l-0.1-0.1 -44.5-21.2 -35 35 21.2 44.5 0.1 0.1c-7.8 13.1-13.8 27.4-17.7 42.4L50 231.3v49.4l46.4 16.5c3.9 15.1 9.9 29.3 17.7 42.4l-0.1 0.1 -21.2 44.5 35 35 44.5-21.2 0.1-0.1c13.1 7.8 27.4 13.8 42.4 17.7L231.3 462h49.4l16.5-46.4c15.1-3.9 29.3-9.9 42.4-17.7l0.1 0.1 44.5 21.2 35-35 -21.2-44.5 -0.1-0.1c7.8-13.1 13.8-27.4 17.7-42.4L462 280.7zM256 338.4c-45.5 0-82.4-36.9-82.4-82.4 0-45.5 36.9-82.4 82.4-82.4 45.5 0 82.4 36.9 82.4 82.4C338.4 301.5 301.5 338.4 256 338.4z"/></svg>');
+  background-image:    url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' version=\'1.1\' x=\'0\' y=\'0\' width=\'512\' height=\'512\' viewBox=\'0 0 512 512\' enable-background=\'new 0 0 512 512\' xml:space=\'preserve\'><path d=\'M462 280.7v-49.4l-46.4-16.5c-3.9-15.1-9.9-29.3-17.7-42.4l0.1-0.1 21.2-44.5 -35-35 -44.5 21.2 -0.1 0.1c-13.1-7.8-27.4-13.8-42.4-17.7L280.7 50h-49.4L214.8 96.4c-15.1 3.9-29.3 9.9-42.4 17.7l-0.1-0.1 -44.5-21.2 -35 35 21.2 44.5 0.1 0.1c-7.8 13.1-13.8 27.4-17.7 42.4L50 231.3v49.4l46.4 16.5c3.9 15.1 9.9 29.3 17.7 42.4l-0.1 0.1 -21.2 44.5 35 35 44.5-21.2 0.1-0.1c13.1 7.8 27.4 13.8 42.4 17.7L231.3 462h49.4l16.5-46.4c15.1-3.9 29.3-9.9 42.4-17.7l0.1 0.1 44.5 21.2 35-35 -21.2-44.5 -0.1-0.1c7.8-13.1 13.8-27.4 17.7-42.4L462 280.7zM256 338.4c-45.5 0-82.4-36.9-82.4-82.4 0-45.5 36.9-82.4 82.4-82.4 45.5 0 82.4 36.9 82.4 82.4C338.4 301.5 301.5 338.4 256 338.4z\'/></svg>");
+  background-repeat:   no-repeat;
+  background-position: center center;
+  background-size:     90% 90%;
 }
 
 .octOverlay {
@@ -93,13 +96,16 @@
   z-index:       10000;
   display:       none;
   border:        2px solid @modalLightBorder;
+  overflow:      hidden;
   border-radius: 4px;
 }
 
 .octTab {
   .octTabRow {
-    list-style: none;
-    padding: 0;
+    list-style:    none;
+    padding:       0;
+    width:         100%;
+    border-bottom: 1px solid @modalLightBorder;
   }
   .octTabHead {
     display:                 inline-block;
@@ -110,6 +116,9 @@
     border-bottom-width:     0;
     border-top-right-radius: 3px;
     border-top-left-radius:  3px;
+    margin-left: 5px;
+    cursor: pointer;
+
     &.selected {
       background: #feffff;
       background: -moz-linear-gradient(top, #feffff 0%, #f4f4f4 12%, #ffffff 100%);
@@ -118,8 +127,9 @@
       background: -o-linear-gradient(top, #feffff 0%, #f4f4f4 12%, #ffffff 100%);
       background: -ms-linear-gradient(top, #feffff 0%, #f4f4f4 12%, #ffffff 100%);
       background: linear-gradient(to bottom, #feffff 0%, #f4f4f4 12%, #ffffff 100%);
-      filter:     progid:DXImageTransform.Microsoft.gradient(startColorstr='#feffff', endColorstr='#ffffff', GradientType=0);
+      filter:     progid:DXImageTransform.Microsoft.gradient(startColorstr="#feffff", endColorstr="#ffffff", GradientType=0);
     }
+
     &.deselected {
       background: #feffff;
       background: -moz-linear-gradient(top, #feffff 75%, #f4f4f4 100%);
@@ -128,15 +138,21 @@
       background: -o-linear-gradient(top, #feffff 75%, #f4f4f4 100%);
       background: -ms-linear-gradient(top, #feffff 75%, #f4f4f4 100%);
       background: linear-gradient(to bottom, #feffff 75%, #f4f4f4 100%);
-      filter:     progid:DXImageTransform.Microsoft.gradient(startColorstr='#feffff', endColorstr='#f4f4f4', GradientType=0);
+      filter:     progid:DXImageTransform.Microsoft.gradient(startColorstr="#feffff", endColorstr="#f4f4f4", GradientType=0);
     }
   }
-  .octTabBody {
-    &.selected {
-      display: block;
-    }
-    &.deselected {
-      display: none;
-    }
-  }
+}
+
+.octTabBody {
+  position: relative;
+  width:    100%;
+  height:   100%;
+}
+
+.octDisplayNone {
+  display: none;
+}
+
+.octDisplayBlock {
+  display: block;
 }

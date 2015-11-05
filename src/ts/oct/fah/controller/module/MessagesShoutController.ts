@@ -22,7 +22,7 @@ namespace oct.fah.controller.module
       this.shoutForm = form;
       this.fieldId   = field;
 
-      super(app);
+      super(app, form);
     }
 
     public init(): void

@@ -105,8 +105,9 @@ namespace oct.wrap
           e.appendChild(this.getElement());
         }
       } else if (p instanceof Node) {
-        // Done this way to catch both Elements and HTML instances
         new OctWrap(p).append(this);
+      } else if (p instanceof OctWrap) {
+        p.append(this);
       }
 
       return this;

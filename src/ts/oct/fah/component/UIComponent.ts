@@ -22,12 +22,12 @@ namespace oct.fah.component
 
     public show(): void
     {
-      this.htmlElement.style.display = "inherit";
+      this.htmlElement.classList.remove("octDisplayNone");
     }
 
     public hide(): void
     {
-      this.htmlElement.style.display = "none";
+      this.htmlElement.classList.add("octDisplayNone");
     }
 
     /**
@@ -35,7 +35,7 @@ namespace oct.fah.component
      */
     protected init(): void
     {
-
+      document.querySelector("body").appendChild(this.htmlElement);
     }
   }
 }

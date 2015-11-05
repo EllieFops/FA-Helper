@@ -8,14 +8,10 @@ namespace oct.fah.component.module.tab
   {
     getTitle(): string;
 
-    hasPreviousSibling(): boolean;
-    getPreviousSibling(): TabInterface;
-    setPreviousSibling(tab: TabInterface, con: OctObject): void;
-
-    hasNextSibling(): boolean;
-    getNextSibling(): TabInterface;
-    setNextSibling(tab: TabInterface, con: OctObject): void;
-
     getParent(): TabSetInterface;
+
+    getHeader(): oct.wrap.OctWrapInterface;
+
+    getTabId(): string;
   }
 }

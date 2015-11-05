@@ -9,6 +9,7 @@
 ///<reference path="..\controller\page\SearchController.ts"/>
 ///<reference path="..\controller\page\SubmissionController.ts"/>
 ///<reference path="..\controller\page\MessageController.ts"/>
+///<reference path="SettingsManager.ts"/>
 
 namespace oct.fah.app
 {
@@ -24,6 +25,8 @@ namespace oct.fah.app
     private htHelp: util.help.HTML;
     private config: StaticConfig;
     private stoMan: util.StorageManagerInterface;
+    private setMan: SettingsManager;
+    private util: util.Util;
 
     constructor()
     {
@@ -52,6 +55,16 @@ namespace oct.fah.app
       return this.stoMan;
     }
 
+    public getSettings(): SettingsManager
+    {
+      return this.setMan;
+    }
+
+    public getUtilities(): util.Util
+    {
+      return this.util;
+    }
+
     private boot(): void
     {
       oct.fah.app.boot.CSSInjector.injectCSS();
@@ -60,11 +73,15 @@ namespace oct.fah.app
       this.octFac = new wrap.OctWrapFactory();
       this.htHelp = new util.help.HTML(this);
       this.config = new StaticConfig();
-      // This.stoMan = new util.StorageManager();
+      this.stoMan = new util.StorageManager();
+      this.setMan = new SettingsManager(this.stoMan);
+      this.util   = new util.Util();
     }
 
     private init(): void
     {
+      this.setMan.init();
+
       this.router.register("/browse/", new controller.page.BrowseController(this));
       this.router.register("/search/", new controller.page.SearchController(this));
       this.router.register("/msg/submissions/", new controller.page.SubmissionController(this));

@@ -4,7 +4,7 @@ namespace oct.fah.app.boot
 {
   export class CSSInjector
   {
-    private static cssText: string = "@@cssText";
+    private static cssText: string = '@@cssText';
 
     public static injectCSS(): void
     {

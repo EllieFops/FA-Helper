@@ -14,8 +14,7 @@ namespace oct.fah.component.module.tab
 
     getSelectedTabIndex(): number;
 
-    selectTab(i: TabInterface): void;
-    selectTab(i: number): void;
+    selectTab(guid: string): void;
 
     appendTab(t: TabInterface): void;
 
@@ -23,6 +22,10 @@ namespace oct.fah.component.module.tab
 
     insertTab(t: TabInterface, i: number): void;
 
+    removeTab(guid: string): void;
+
     sortTabs(): void;
+
+    createTab(title: string): TabInterface;
   }
 }

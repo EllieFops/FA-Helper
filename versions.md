@@ -1,5 +1,16 @@
 # FA Helper Version History
 
+## v0.7
+* Complete codebase rewrite using TypeScript &amp; Less.
+* Added tabbed menu generation.
+* Shifted from JS applied styles to CSS injected on load.
+* Added mass shout to users under New Favorites
+* Sorted Settings menu using new Tab system.
+* Restructured and unified DOM wrapper class
+
+## v0.5 &amp; v0.6
+* Scrapped due to rewrite.
+
 ## v0.4
 * added mass shout/reply to new watchers on the messages page
 * added option to settings menu to set the default new watcher shout

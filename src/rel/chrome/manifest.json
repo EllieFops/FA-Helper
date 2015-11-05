@@ -2,7 +2,8 @@
   "manifest_version": 2,
 
   "name": "FA Helper",
-  "version": "0.1",
+  "version": "@@version",
+  "build": "@@build",
 
   "description": "Helpful tools for FurAffinity",
 

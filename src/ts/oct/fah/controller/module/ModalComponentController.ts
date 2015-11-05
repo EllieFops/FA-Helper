@@ -12,8 +12,10 @@ namespace oct.fah.controller.module
   {
     protected component: component.modal.ModalComponentInterface;
 
-    constructor(app: oct.fah.app.App)
+    constructor(app: oct.fah.app.App, component: component.modal.ModalComponentInterface)
     {
+      this.component = component;
+
       super(app);
     }
 

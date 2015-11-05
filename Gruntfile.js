@@ -16,17 +16,12 @@ module.exports = function (grunt) {
     "buildDir": "build/monkey/"
   };
 
-  var octFAH = function () {
-    var a = grunt.file.readJSON("files.json");
-    return [].concat(a.app, a.component, a.controller, a.http, a.util);
-  }();
-
   // Project configuration.
   grunt.initConfig(
     {
       "pkg": pack,
 
-      "buildnumber": {"options": {"field": "build"}, "files": ["package.json", "manifest.json"]},
+      "buildnumber": {"options": {"field": "build"}, "files": ["package.json"]},
 
       "clean": {"build": ["build"], "doc": ["doc"]},
 
@@ -38,52 +33,41 @@ module.exports = function (grunt) {
       "concat": {
 
         "options": {
-          "footer": "new oct.fah.app.App();"
+          "banner": "(function() {",
+          "footer": "new oct.fah.app.App();})();"
         },
 
         "monkey": {
           "src":  ["src/rel/monkey/tm-header.js", monkey.buildDir + monkey.outFile],
-          "dest": monkey.distDir + monkey.outFile
+          "dest": monkey.buildDir + monkey.outFile
         },
 
         "chrome": {
           "src":  [chrome.buildDir + chrome.outFile],
-          "dest": chrome.distDir + chrome.outFile
+          "dest": chrome.buildDir + chrome.outFile
         }
       },
 
-      "jsbeautifier": {"options": {"js": {"indentSize": 2}}, "files": ["build/**/*.js"]},
+      "copy": {
+        "build": {
+          "files": [
 
-      "jshint": {
-        "options": {
-          "curly":     true,
-          "forin":     true,
-          "eqeqeq":    true,
-          "maxparams": 5,
-          "nonew":     true,
-          "unused":    true,
-          "undef":     true,
-          "browser":   true,
-          "newcap":    false
-        },
+            // Chrome Copy
+            {"src": ["src/ts/**/*.ts", "src/rel/chrome/ts/**/*.ts"], "dest": chrome.buildDir + "ts/"},
+            {"src": "src/rel/chrome/manifest.json", "dest": chrome.buildDir + "manifest.json"},
 
-        "preMonkey": {
-          "options": {"globals": {"GM_openInTab": true, "GM_getValue": true, "GM_setValue": true}},
-          "src":     monkey.buildDir + "**/*.js"
+            // Monkey Copy
+            {"src": ["src/ts/**/*.ts", "src/rel/monkey/ts/**/*.ts"], "dest": monkey.buildDir + "ts/"}
+          ]
         },
-
-        "preChrome": {
-          "options": {"globals": {"chrome": true}},
-          "src":     chrome.buildDir + "**/*.js"
-        },
-
-        "monkey": {
-          "options": {"globals": {"GM_openInTab": true, "GM_getValue": true, "GM_setValue": true}},
-          "src":     monkey.distDir + monkey.outFile
-        },
-        "chrome": {
-          "options": {"globals": {"chrome": true}},
-          "src":     chrome.distDir + chrome.outFile
+        "dist":  {
+          "files": [
+            {"src": monkey.buildDir + monkey.outFile, "dest": monkey.distDir + monkey.outFile},
+            {"src": chrome.buildDir + chrome.outFile, "dest": chrome.distDir + chrome.outFile},
+            {"expand": true, "flatten": true, "src": "src/rel/chrome/img/*", "dest": chrome.distDir + "img/"},
+            {"src": chrome.buildDir + "manifest.json", "dest": chrome.distDir + "manifest.json"},
+            {"expand": true, "flatten": true, "src": "build/*.css", "dest": chrome.distDir + "css/"}
+          ]
         }
       },
 
@@ -108,6 +92,8 @@ module.exports = function (grunt) {
         "monkey":  {
           "options": {
             "replacements": [
+              {"pattern": "@@version", "replacement": pack.version.toString()},
+              {"pattern": "@@build", "replacement": (parseInt(pack.build) + 1).toString()},
               {
                 "pattern":     "@@cssText",
                 "replacement": function () {
@@ -116,20 +102,30 @@ module.exports = function (grunt) {
               }
             ]
           },
-          "src":     [monkey.distDir + monkey.outFile],
-          "dest":    monkey.distDir + monkey.outFile
+          "src":     monkey.buildDir + monkey.outFile,
+          "dest":    monkey.buildDir + monkey.outFile
         },
         "chrome":  {
-          "src": [monkey.distDir + "**/*.js"],
-          dest:  monkey.distDir
+          "options": {
+            "replacements": [
+              {"pattern": "@@version", "replacement": pack.version.toString()},
+              {"pattern": "@@build", "replacement": (parseInt(pack.build) + 1).toString()}
+            ]
+          },
+          "src":  monkey.buildDir + "manifest.json",
+          "dest": monkey.buildDir + "manifest.json"
         }
       },
 
       "ts": {
-        "build": {
+        "options": {
+          "failOnTypeErrors": true,
+          "sourceMap": false
+        },
+        "build":   {
           "files": [
-            {"src": ["src/ts/**/*.ts", "src/rel/monkey/ts/**/*.ts"], "dest": monkey.buildDir + monkey.outFile},
-            {"src": ["src/ts/**/*.ts", "src/rel/chrome/ts/**/*.ts"], "dest": chrome.buildDir + chrome.outFile}
+            {"src": [monkey.buildDir + "ts/**/*.ts"], "dest": monkey.buildDir + monkey.outFile},
+            {"src": [chrome.buildDir + "ts/**/*.ts"], "dest": chrome.buildDir + chrome.outFile}
           ]
         }
       },
@@ -181,7 +177,7 @@ module.exports = function (grunt) {
                 }
               ],
               "variable-name":            [true, "allow-leading-underscore"],
-              "whitespace":               [true, "check-decl", "check-operator", "check-separator", "check-type"],
+              "whitespace":               [true, "check-decl", "check-operator", "check-separator", "check-type"]
             }
           }
         },
@@ -191,64 +187,32 @@ module.exports = function (grunt) {
         "chrome":  {
           "src": ["src/ts/**/*.ts", "src/rel/chrome/ts/**/*.ts"]
         }
-      },
-
-      "uglify": {
-        "options": {"beautify": true, "quoteStyle": 2, "screwIE8": true},
-        "build":   {
-          "files": [
-            {
-              "expand": true,
-              "cwd":    "build/",
-              "src":    ["./**/*.js"],
-              "dest":   "build/",
-              "ext":    ".js",
-              "extDot": "first"
-            }
-          ]
-        }
-      },
-
-      "jasmine": {
-        "unit": {
-          "src":     ["src/declarations.js"].concat(octFAH),
-          "options": {
-            "specs": "test/jasmine/**/*.spec.js"
-          }
-        }
       }
     }
   );
 
-  grunt.loadNpmTasks("grunt-contrib-less");
-  grunt.loadNpmTasks("grunt-tslint");
-  grunt.loadNpmTasks("grunt-ts");
-  grunt.loadNpmTasks("grunt-string-replace");
   grunt.loadNpmTasks("grunt-build-number");
-  grunt.loadNpmTasks("grunt-contrib-jshint");
-  grunt.loadNpmTasks("grunt-contrib-concat");
   grunt.loadNpmTasks("grunt-contrib-clean");
-  grunt.loadNpmTasks("grunt-jsbeautifier");
-  grunt.loadNpmTasks("grunt-stripcomments");
+  grunt.loadNpmTasks("grunt-contrib-concat");
+  grunt.loadNpmTasks("grunt-contrib-copy");
   grunt.loadNpmTasks("grunt-contrib-less");
-
-  grunt.registerTask("default", "jshint");
+  grunt.loadNpmTasks("grunt-string-replace");
+  grunt.loadNpmTasks("grunt-stripcomments");
+  grunt.loadNpmTasks("grunt-ts");
+  grunt.loadNpmTasks("grunt-tslint");
 
   grunt.registerTask(
     "dev",
     [
-      "clean:build",
+      "clean:build",    // Clean build directory
+      "copy:build",     // Copy files to build directory
       "buildnumber",    // Index Build Number
-      "ts",     // Compile TS
-      "jsbeautifier",   // Sort Out Formatting
-//      "jshint:preMonkey",     // Pre-Check JS (no env specific checks)
-//      "jshint:preChrome",     // Pre-Check JS (no env specific checks)
-      "less",
-      "comments",
-      "concat",         // Piece files together, copy to dist directory
-      "string-replace" // Replace Tags
-//      "jshint:monkey",  // Check Monkey Env Build
-//      "jshint:chrome"   // Check Chrome Env Build
+      "ts",             // Compile TS
+      "less",           // Compile Less files
+      "comments",       // Strip remaining comments
+      "concat",         // Piece files together
+      "string-replace", // Replace Tags
+      "copy:dist"       // Copy to dist directory
     ]
   );
 

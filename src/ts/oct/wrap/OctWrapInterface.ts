@@ -9,7 +9,7 @@ namespace oct.wrap
 
     addClasses(c: string[]): OctWrapInterface;
 
-    append(c: OctWrap|OctWrap[]|Node|Node[]): OctWrapInterface;
+    append(c: OctWrapInterface|OctWrapInterface[]|Node|Node[]): OctWrapInterface;
 
     appendTo(p: string|OctWrapInterface|Node): OctWrapInterface;
 
