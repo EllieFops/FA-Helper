@@ -1,9 +1,12 @@
 ///<reference path="../_.ts"/>
 ///<reference path="..\..\UIComponentInterface.ts"/>
 ///<reference path="TabInterface.ts"/>
+///<reference path="TabSet.ts"/>
 
 namespace oct.fah.component.module.tab
 {
+  import OctWrapInterface = oct.wrap.OctWrapInterface;
+
   export interface TabSetInterface extends UIComponentInterface
   {
     getTabs(): Array<TabInterface>;
@@ -27,5 +30,7 @@ namespace oct.fah.component.module.tab
     sortTabs(): void;
 
     createTab(title: string): TabInterface;
+
+    getTabRow(): OctWrapInterface;
   }
 }

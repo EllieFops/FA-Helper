@@ -6,19 +6,19 @@ namespace oct.fah.component.modal.shout
 {
   export interface ShoutFormInterface extends ModalComponentInterface
   {
-    getShoutForm(): wrap.OctWrap;
+    getShoutForm(): wrap.OctWrapInterface;
 
-    getTitleSpan(): wrap.OctWrap;
+    getTitleSpan(): wrap.OctWrapInterface;
 
-    getWarningText(): wrap.OctWrap;
+    getWarningText(): wrap.OctWrapInterface;
 
-    getShoutTextArea(): wrap.OctWrap;
+    getShoutTextArea(): wrap.OctWrapInterface;
 
-    getSubmitButton(): wrap.OctWrap;
+    getSubmitButton(): wrap.OctWrapInterface;
 
-    getDefaultCheckBox(): wrap.OctWrap;
+    getDefaultCheckBox(): wrap.OctWrapInterface;
 
-    getCountInput(): wrap.OctWrap;
+    getCountInput(): wrap.OctWrapInterface;
 
   }
 }

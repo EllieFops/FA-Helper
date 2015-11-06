@@ -6,7 +6,7 @@
 
 namespace oct.fah.controller.page
 {
-  export class SearchController extends Controller implements ControllerInterface
+  export class SearchController extends PageController implements ControllerInterface
   {
     private hoverView: controller.module.HoverPreviewController;
 

@@ -33,8 +33,8 @@ namespace oct.fah.controller.module
 
     public init(): void
     {
-      var e: SettingsMenu;
-
+      var e: SettingsMenu, s: SettingsManager;
+      s = this.app.getSettings();
 
       // Create Elements
       this.toggle = this.app.getOctWrapFactory()
@@ -43,15 +43,29 @@ namespace oct.fah.controller.module
         .click(this.handleShowSettingsMenu());
 
       super.init();
+      this.tabSet.init();
 
 
       // Latch Onto Inputs
       e = <SettingsMenu> this.component;
 
       e.getPreviewToggle().click(this.handlePreviewToggle());
-      e.getPrevSizeSelect().change(this.handlePrevSizeChange());
-      e.getNewFavTextArea().input(this.handleFavTextChange());
-      e.getNewWatchTextArea().input(this.handleWatchTextChange());
+
+      if (s.getBooleanSetting(Settings.HOVER_PREVIEW_ENABLED)) {
+        e.getPreviewToggle().setAttribute("checked", "checked");
+      }
+
+      e.getPrevSizeSelect()
+        .setValue(s.getSetting(Settings.HOVER_PREVIEW_SIZE).toString())
+        .change(this.handlePrevSizeChange());
+
+      e.getNewFavTextArea()
+        .setValue(<string> s.getSetting(Settings.NEW_FAVORITE_SHOUT))
+        .input(this.handleFavTextChange());
+
+      e.getNewWatchTextArea()
+        .setValue(<string> s.getSetting(Settings.NEW_WATCHER_SHOUT))
+        .input(this.handleWatchTextChange());
     }
 
     public run(): void
@@ -63,7 +77,7 @@ namespace oct.fah.controller.module
     private modUI(): void
     {
       var y: number;
-      y = document.querySelector("table.block-menu-top").getBoundingClientRect().bottom;
+      y = document.querySelector("table.block-menu-top").getBoundingClientRect().height;
       this.toggle.style({"top": y.toString() + "px"}).appendTo("body");
     }
 

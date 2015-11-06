@@ -66,5 +66,15 @@ namespace oct.fah.app
         this.storage.putValue(SETTINGS, this.settings);
       }
     }
+
+    getBooleanSetting(key: string): boolean
+    {
+      return (this.settings[key] === true);
+    }
+
+    getNumberSetting(key: string): number
+    {
+      return parseInt(this.settings[key]);
+    }
   }
 }

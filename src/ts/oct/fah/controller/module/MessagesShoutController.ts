@@ -8,16 +8,21 @@
 
 namespace oct.fah.controller.module
 {
+  import ShoutFormInterface = oct.fah.component.modal.shout.ShoutFormInterface;
+  import OctWrapInterface   = oct.wrap.OctWrapInterface;
+  import App                = oct.fah.app.App;
+  import OctWrapFactory     = oct.wrap.OctWrapFactory;
+
   export class MessagesShoutController <T> extends ModalComponentController implements ControllerInterface
   {
-    private shoutForm: component.modal.shout.ShoutFormInterface;
-    private watcherControls: wrap.OctWrap;
-    private watcherFieldSet: wrap.OctWrap;
-    private shoutButton: wrap.OctWrap;
-    private fieldId: string;
-    private selected: {name: string, id: string}[];
+    protected shoutForm:       ShoutFormInterface;
+    protected watcherControls: OctWrapInterface;
+    protected watcherFieldSet: OctWrapInterface;
+    protected shoutButton:     OctWrapInterface;
+    protected fieldId:         string;
+    protected selected:        { [name: string]: string};
 
-    constructor(app: oct.fah.app.App, field: string, form: component.modal.shout.ShoutFormInterface)
+    constructor(app: App, field: string, form: ShoutFormInterface)
     {
       this.shoutForm = form;
       this.fieldId   = field;
@@ -27,12 +32,19 @@ namespace oct.fah.controller.module
 
     public init(): void
     {
-      var o: wrap.OctWrapFactory;
+      var o: OctWrapFactory;
+
       super.init();
 
       o = this.app.getOctWrapFactory();
 
       this.watcherFieldSet = o.wrapSelector(this.fieldId);
+
+      if (!this.watcherFieldSet) {
+        this.watcherFieldSet = null;
+        return;
+      }
+
       this.watcherControls = this.watcherFieldSet.children("li.section-controls").first();
 
       this.modUI();
@@ -40,6 +52,10 @@ namespace oct.fah.controller.module
 
     public run(): void
     {
+      if (!this.watcherFieldSet) {
+        return;
+      }
+
       super.run();
 
       document.querySelector("body").appendChild(this.shoutForm.getElement());
@@ -48,7 +64,7 @@ namespace oct.fah.controller.module
     private modUI(): void
     {
       this.shoutButton = this.app.getOctWrapFactory()
-        .wrapNew("<input type=button getValue='Shout &amp; Remove'>")
+        .wrapNew("<input type=button value='Shout & Remove'>")
         .addClass("button")
         .click(this.handleShowShoutMenu());
 

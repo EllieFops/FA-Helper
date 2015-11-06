@@ -4,21 +4,45 @@
 
 namespace oct.fah.controller.page
 {
-  export class SubmissionController extends Controller implements ControllerInterface
+  import HoverPreviewController = oct.fah.controller.module.HoverPreviewController;
+  import App                    = oct.fah.app.App;
+
+  /**
+   * Submission Controller
+   *
+   * @author Elizabeth Harper
+   *
+   * @since   0.7
+   * @version 1.0
+   */
+  export class SubmissionController extends PageController implements ControllerInterface
   {
-    constructor(app: oct.fah.app.App)
+    private hoverView: HoverPreviewController;
+
+    constructor(app: App)
     {
       super(app);
     }
 
+    /**
+     * Initialize Controller
+     */
     public init(): void
     {
       super.init();
+
+      this.hoverView = new HoverPreviewController(this.app);
+      this.hoverView.init();
     }
 
+    /**
+     * Run Controller
+     */
     public run(): void
     {
-      return super.run();
+      super.run();
+
+      this.hoverView.run();
     }
   }
 }

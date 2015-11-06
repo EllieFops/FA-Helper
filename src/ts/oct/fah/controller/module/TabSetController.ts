@@ -2,6 +2,8 @@
 ///<reference path="../../app/App.ts"/>
 ///<reference path="../../component/module/tab/TabSet.ts"/>
 ///<reference path="../../component/module/tab/TabSetInterface.ts"/>
+///<reference path="ModuleController.ts"/>
+///<reference path="ModuleControllerInterface.ts"/>
 
 namespace oct.fah.controller.module
 {
@@ -18,6 +20,12 @@ namespace oct.fah.controller.module
     {
       this.implementationOf("ModuleControllerInterface");
       super(app, new TabSet(app));
+    }
+
+    public init(): void
+    {
+      super.init();
+      this.module.getTabRow().click(this.handleTabHeaderClick());
     }
 
     private handleTabHeaderClick(): EventListener

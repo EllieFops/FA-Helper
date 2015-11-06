@@ -7,12 +7,16 @@
 
 namespace oct.fah.controller.page
 {
-  export class MessageController extends Controller implements ControllerInterface
-  {
-    private watchShout: module.ShoutToWatchersController;
-    private watchFav: module.ShoutToFavoritesController;
+  import ShoutToWatchersController  = oct.fah.controller.module.ShoutToWatchersController;
+  import ShoutToFavoritesController = oct.fah.controller.module.ShoutToFavoritesController;
+  import App                        = oct.fah.app.App;
 
-    constructor(app: oct.fah.app.App)
+  export class MessageController extends PageController implements ControllerInterface
+  {
+    private watchShout: ShoutToWatchersController;
+    private favShout: ShoutToFavoritesController;
+
+    constructor(app: App)
     {
       super(app);
     }
@@ -21,8 +25,11 @@ namespace oct.fah.controller.page
     {
       super.init();
 
+      this.watchShout = new ShoutToWatchersController(this.app);
+      this.favShout   = new ShoutToFavoritesController(this.app);
+
       this.watchShout.init();
-      this.watchFav.init();
+      this.favShout.init();
     }
 
     public run(): void
@@ -30,7 +37,7 @@ namespace oct.fah.controller.page
       super.run();
 
       this.watchShout.run();
-      this.watchFav.run();
+      this.favShout.run();
     }
   }
 }

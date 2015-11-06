@@ -3,9 +3,14 @@
 ///<reference path="..\Controller.ts"/>
 ///<reference path="..\ControllerInterface.ts"/>
 ///<reference path="..\..\app\App.ts"/>
+///<reference path="../../app/Settings.ts"/>
+///<reference path="../../app/SettingsManager.ts"/>
 
 namespace oct.fah.controller.module
 {
+
+  import Settings = oct.fah.app.Settings;
+  import SettingsManager = oct.fah.app.SettingsManager;
 
   export class HoverPreviewController extends Controller implements ControllerInterface
   {
@@ -41,25 +46,36 @@ namespace oct.fah.controller.module
 
     private handleMouseOver(): EventListener
     {
-      var self: HoverPreviewController = this;
+      var self: HoverPreviewController, sett: SettingsManager;
+      self = this;
+      sett = this.app.getSettings();
 
       return function (e: MouseEvent): void
       {
+        if (!sett.getBooleanSetting(Settings.HOVER_PREVIEW_ENABLED)) {
+          return;
+        }
+
         self.preview.show();
         self.preview.getImage().setAttribute(
           "src",
-          (<Element> e.target).getAttribute("src").replace("@200", "@400")
+          (<Element> e.target).getAttribute("src").replace("@200", "@" + sett.getNumberSetting(Settings.HOVER_PREVIEW_SIZE))
         );
       };
     }
 
     private handleMouseMove(): EventListener
     {
-      var self: HoverPreviewController = this;
+      var self: HoverPreviewController, sett: SettingsManager;
+      self = this;
+      sett = this.app.getSettings();
 
       return function (e: MouseEvent): void
       {
         var x: number, y: number, i: ClientRect;
+        if (!sett.getBooleanSetting(Settings.HOVER_PREVIEW_ENABLED)) {
+          return;
+        }
 
         i = self.preview.getImage().getBoundingClientRect();
 

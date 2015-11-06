@@ -15,5 +15,7 @@ namespace oct.wrap
     last(): OctWrap;
 
     lastRaw(): HTMLElement;
+
+    size(): number;
   }
 }

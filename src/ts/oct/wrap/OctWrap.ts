@@ -141,7 +141,7 @@ namespace oct.wrap
       return (a) ? new OctWrap(a) : null;
     }
 
-    public setBefore(e?: OctWrap|Node): OctWrap
+    public setBefore(e?: OctWrapInterface|Node): OctWrap
     {
       if (e instanceof OctWrap) {
         this.getElement().parentElement.insertBefore(e.getElement(), this.getElement());
@@ -157,12 +157,19 @@ namespace oct.wrap
       return this;
     }
 
+    /**
+     * Children
+     *
+     * @param [s] {string} Query selector string.
+     *
+     * @returns OctWrapElementSet
+     */
     public children(s?: string): OctWrapElementSetInterface
     {
       var l: NodeList;
 
       if (!this.getElement().hasChildNodes()) {
-        return null;
+        return new OctWrapElementSet(null);
       }
 
       if (typeof s === "string") {
@@ -264,28 +271,32 @@ namespace oct.wrap
       return false;
     }
 
-    public getParent(): oct.wrap.OctWrapInterface
+    public getParent(q?: string): oct.wrap.OctWrapInterface
     {
+      if (typeof q === "string") {
+        var parent: Node, i: number;
+
+        parent = this.getElement().parentNode;
+
+        for (i = 0; i < 300; i++) {
+          if (this.matches(q, <Element> parent)) {
+            return new OctWrap(parent);
+          }
+
+          parent = parent.parentNode;
+        }
+
+        return null;
+      }
+
       return new OctWrap(this.getElement().parentNode);
     }
 
-    public setParent(q: string): OctWrap
-    {
-      var parent: Node, i: number;
-
-      parent = this.getElement().parentNode;
-
-      for (i = 0; i < 300; i++) {
-        if (this.matches(q, <Element> parent)) {
-          return new OctWrap(parent);
-        }
-
-        parent = parent.parentNode;
-      }
-
-      return null;
-    }
-
+    /**
+     *
+     * @param s
+     * @returns {oct.wrap.OctWrap}
+     */
     public style(s: {[name: string]: string; }): OctWrap
     {
       var i: string, c: Object;
@@ -312,11 +323,39 @@ namespace oct.wrap
 
     public setValue(v: string): OctWrap
     {
+      if (this.htmlElement instanceof HTMLSelectElement) {
+        return this.setSelectValue(v);
+      }
+
       (<HTMLInputElement> this.getElement()).value = v;
+
+      return this;
+    }
+
+    private setSelectValue(v: string): OctWrap
+    {
+      var e: HTMLSelectElement, i: number, o: HTMLOptionElement;
+
+      e = <HTMLSelectElement> this.htmlElement;
+      o = e.namedItem(v);
+
+      if (o) {
+        i = o.index;
+        e.selectedIndex = i;
+      }
+
       return this;
     }
   }
 
+  /**
+   * Oct Wrap Element Set
+   *
+   * @since   v0.7
+   * @version 1.0
+   *
+   * @author Elizabeth Harper
+   */
   class OctWrapElementSet implements OctWrapElementSetInterface
   {
 
@@ -326,12 +365,17 @@ namespace oct.wrap
     public constructor(a: NodeList)
     {
       var i: number;
-      if (a instanceof NodeList) {
+
+      if (a instanceof NodeList || a instanceof HTMLCollection) {
         this.collection = new Array<HTMLElement>(a.length);
         for (i = 0; i < a.length; i++) {
           this.collection[i] = <HTMLElement> ((<NodeList> a).item(i));
         }
+      } else {
+
+        this.collection = [];
       }
+
       this.pointer = 0;
     }
 
@@ -342,37 +386,66 @@ namespace oct.wrap
 
     public next(): OctWrap
     {
+      if (!this.collection.length) {
+        return null;
+      }
+
       return new OctWrap(this.nextRaw());
     }
 
     public nextRaw(): HTMLElement
     {
+      if (!this.collection.length) {
+        return null;
+      }
+
       this.pointer++;
       return this.collection[this.pointer - 1];
     }
 
     public first(): OctWrap
     {
+      if (!this.collection.length) {
+        return null;
+      }
+
       this.pointer = 0;
       return this.next();
     }
 
     public firstRaw(): HTMLElement
     {
+      if (!this.collection.length) {
+        return null;
+      }
+
       this.pointer = 0;
       return this.nextRaw();
     }
 
     public last(): OctWrap
     {
+      if (!this.collection.length) {
+        return null;
+      }
+
       this.pointer = this.collection.length - 1;
       return this.next();
     }
 
     public lastRaw(): HTMLElement
     {
+      if (!this.collection.length) {
+        return null;
+      }
+
       this.pointer = this.collection.length - 1;
       return this.nextRaw();
+    }
+
+    public size(): number
+    {
+      return this.collection.length;
     }
   }
 }

@@ -77,15 +77,21 @@ namespace oct.fah.component.module.tab
 
     public selectTab(guid: string): void
     {
-      if (typeof this.children[guid] === "undefined") {
+      if (typeof this.children[guid] === "undefined" || guid === this.selected) {
         return;
       }
 
       this.children[guid].tab.getHeader().dropClass("deselected").addClass("selected");
+      this.app.getOctWrapFactory().wrapNode(this.children[guid].tab.getElement())
+        .dropClass("octDisplayNone")
+        .addClass("octDisplayBlock");
 
       // The old selection may have been dropped from the tab set.
-      if (typeof this.children[this.selected] === "undefined") {
+      if (typeof this.children[this.selected] !== "undefined") {
         this.children[this.selected].tab.getHeader().dropClass("selected").addClass("deselected");
+        this.app.getOctWrapFactory().wrapNode(this.children[this.selected].tab.getElement())
+          .dropClass("octDisplayBlock")
+          .addClass("octDisplayNone");
       }
 
       this.selected = guid;
@@ -113,6 +119,10 @@ namespace oct.fah.component.module.tab
       this.size++;
       this.headerBlock.append(h);
       this.htmlElement.appendChild(t.getElement());
+
+      if (this.size === 1) {
+        this.selectTab(g);
+      }
     }
 
     /**
@@ -123,6 +133,11 @@ namespace oct.fah.component.module.tab
     public prependTab(t: TabInterface): void
     {
       this.insertTab(t, 0);
+    }
+
+    public getTabRow(): OctWrapInterface
+    {
+      return this.headerBlock;
     }
 
     /**
@@ -155,6 +170,10 @@ namespace oct.fah.component.module.tab
       this.headerBlock.append(h);
       this.htmlElement.appendChild(t.getElement());
       this.sortTabs();
+
+      if (this.size === 1) {
+        this.selectTab(g);
+      }
     }
 
     /**
@@ -216,9 +235,7 @@ namespace oct.fah.component.module.tab
      */
     private makeHeader(head: OctWrapInterface): OctWrapInterface
     {
-      return this.app.getOctWrapFactory()
-        .wrapNew("<li>")
-        .append(head.addClass((this.size === 0) ? "selected" : "deselected"));
+      return this.app.getOctWrapFactory().wrapNew("<li>").append(head.addClass("deselected"));
     }
 
     /**
@@ -264,6 +281,11 @@ namespace oct.fah.component.module.tab
     }
   }
 
+  /**
+   * Tab Class
+   *
+   *
+   */
   class Tab extends UIComponent implements TabInterface
   {
     protected title:  string;
@@ -287,7 +309,7 @@ namespace oct.fah.component.module.tab
       o = this.app.getOctWrapFactory();
 
       this.guid = this.app.getUtilities().makeGUID();
-      this.header = o.wrapNew("<a.octTabHead>").setAttribute(TAB_ID_ATTRIBUTE, this.guid);
+      this.header = o.wrapNew("<a.octTabHead>").setAttribute(TAB_ID_ATTRIBUTE, this.guid).setHTML(this.title);
 
       o.wrapNode(this.htmlElement)
         .addClasses(["octTabBody", "octDisplayNone"])

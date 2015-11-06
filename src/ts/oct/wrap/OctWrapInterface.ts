@@ -37,7 +37,7 @@ namespace oct.wrap
 
     getHTML(): string;
 
-    getParent(): OctWrapInterface;
+    getParent(q?: string): OctWrapInterface;
 
     getValue(): string;
 
@@ -52,8 +52,6 @@ namespace oct.wrap
     setBefore(e: OctWrapInterface|Node): OctWrapInterface;
 
     setHTML(x: string): OctWrapInterface;
-
-    setParent(q: string): OctWrapInterface;
 
     setValue(v: string): OctWrapInterface;
 

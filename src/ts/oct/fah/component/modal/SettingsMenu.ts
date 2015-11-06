@@ -23,12 +23,12 @@ namespace oct.fah.component.modal
 
   export class SettingsMenu extends ModalComponent implements ModalComponentInterface
   {
-    private tabSet:   TabSetInterface;
-    private status:   OctWrapInterface;
-    private togPrev:  OctWrapInterface;
+    private tabSet: TabSetInterface;
+    private status: OctWrapInterface;
+    private togPrev: OctWrapInterface;
     private prevSize: OctWrapInterface;
-    private favText:  OctWrapInterface;
-    private watText:  OctWrapInterface;
+    private favText: OctWrapInterface;
+    private watText: OctWrapInterface;
 
     constructor(app: App, controller: TabSetController)
     {
@@ -50,13 +50,13 @@ namespace oct.fah.component.modal
       this.prevSize = o.wrapNew("<select name='octPrevSize'>").append(
         [
           o.wrapNew("<option value='200'>200px</option>"),
-          o.wrapNew("<option value='300'>400px</option>"),
-          o.wrapNew("<option value='300'>400px</option>"),
+          o.wrapNew("<option value='300'>300px</option>"),
+          o.wrapNew("<option value='400'>400px</option>"),
         ]
       );
-      this.favText  = o.wrapNew("<textarea name='octFavShout'>");
-      this.watText  = o.wrapNew("<textarea name='octWatShout'>");
 
+      this.favText = o.wrapNew("<textarea name='octFavShout'>");
+      this.watText = o.wrapNew("<textarea name='octWatShout'>");
 
       tTab = this.tabSet.createTab("Basic");
 
@@ -78,8 +78,13 @@ namespace oct.fah.component.modal
       this.tabSet.appendTab(tTab);
       o.wrapNode(tTab.getElement()).append(
         [
-          h.FORM.wrapperLabel(this.favText, "New Favorite Mass Shout Text"),
-          h.FORM.wrapperLabel(this.watText, "New Watcher Mass Shout Text")
+          o.wrapNew("<fieldset>").append(
+            [
+              o.wrapNew("<legend>").setHTML("Default Shout Messages"),
+              h.FORM.wrapperLabel(this.favText, "New Favorite Mass Shout Text"),
+              h.FORM.wrapperLabel(this.watText, "New Watcher Mass Shout Text")
+            ]
+          )
         ]
       );
 
