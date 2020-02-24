@@ -1,5 +1,7 @@
 # FA Helper
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Foxcapades/FA-Helper.svg)](https://greenkeeper.io/)
+
 A script to add helpful or needed features to Fur Affinity.
 
 ## Features:
